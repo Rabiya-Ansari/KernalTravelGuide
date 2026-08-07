@@ -1,5 +1,5 @@
-
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using KernalTravelGuide.Models;
 
@@ -12,13 +12,17 @@ public class TouristSpotsController : Controller
         _context = context;
     }
 
-    // GET: TOURISTSPOTS
-    public async Task<IActionResult> Index()    
+    // GET: TouristSpots
+    public async Task<IActionResult> Index()
     {
-        return View(await _context.TouristSpots.ToListAsync());
+        var touristSpots = await _context.TouristSpots
+            .Include(t => t.City)
+            .ToListAsync();
+
+        return View(touristSpots);
     }
 
-    // GET: TOURISTSPOTS/Details/5
+    // GET: TouristSpots/Details/5
     public async Task<IActionResult> Details(int? id)
     {
         if (id == null)
@@ -26,39 +30,57 @@ public class TouristSpotsController : Controller
             return NotFound();
         }
 
-        var touristspot = await _context.TouristSpots
-            .FirstOrDefaultAsync(m => m.Id == id);
-        if (touristspot == null)
+        var touristSpot = await _context.TouristSpots
+            .Include(t => t.City)
+            .FirstOrDefaultAsync(t => t.Id == id);
+
+        if (touristSpot == null)
         {
             return NotFound();
         }
 
-        return View(touristspot);
+        return View(touristSpot);
     }
 
-    // GET: TOURISTSPOTS/Create
+    // GET: TouristSpots/Create
     public IActionResult Create()
     {
+        ViewBag.CityId = new SelectList(
+            _context.Cities,
+            "Id",
+            "Name"
+        );
+
         return View();
     }
 
-    // POST: TOURISTSPOTS/Create
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+    // POST: TouristSpots/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("Id,Name,Description,CityId,City,EntryFee,MapUrl,ImagePath,IsActive")] TouristSpot touristspot)
+    public async Task<IActionResult> Create(
+        [Bind("Id,Name,Description,CityId,EntryFee,MapUrl,ImagePath,IsActive")]
+        TouristSpot touristSpot)
     {
         if (ModelState.IsValid)
         {
-            _context.Add(touristspot);
+            _context.TouristSpots.Add(touristSpot);
+
             await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
-        return View(touristspot);
+
+        ViewBag.CityId = new SelectList(
+            _context.Cities,
+            "Id",
+            "Name",
+            touristSpot.CityId
+        );
+
+        return View(touristSpot);
     }
 
-    // GET: TOURISTSPOTS/Edit/5
+    // GET: TouristSpots/Edit/5
     public async Task<IActionResult> Edit(int? id)
     {
         if (id == null)
@@ -66,22 +88,32 @@ public class TouristSpotsController : Controller
             return NotFound();
         }
 
-        var touristspot = await _context.TouristSpots.FindAsync(id);
-        if (touristspot == null)
+        var touristSpot = await _context.TouristSpots.FindAsync(id);
+
+        if (touristSpot == null)
         {
             return NotFound();
         }
-        return View(touristspot);
+
+        ViewBag.CityId = new SelectList(
+            _context.Cities,
+            "Id",
+            "Name",
+            touristSpot.CityId
+        );
+
+        return View(touristSpot);
     }
 
-    // POST: TOURISTSPOTS/Edit/5
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+    // POST: TouristSpots/Edit/5
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int? id, [Bind("Id,Name,Description,CityId,City,EntryFee,MapUrl,ImagePath,IsActive")] TouristSpot touristspot)
+    public async Task<IActionResult> Edit(
+        int? id,
+        [Bind("Id,Name,Description,CityId,EntryFee,MapUrl,ImagePath,IsActive")]
+        TouristSpot touristSpot)
     {
-        if (id != touristspot.Id)
+        if (id != touristSpot.Id)
         {
             return NotFound();
         }
@@ -90,26 +122,34 @@ public class TouristSpotsController : Controller
         {
             try
             {
-                _context.Update(touristspot);
+                _context.Update(touristSpot);
+
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!TouristSpotExists(touristspot.Id))
+                if (!TouristSpotExists(touristSpot.Id))
                 {
                     return NotFound();
                 }
-                else
-                {
-                    throw;
-                }
+
+                throw;
             }
+
             return RedirectToAction(nameof(Index));
         }
-        return View(touristspot);
+
+        ViewBag.CityId = new SelectList(
+            _context.Cities,
+            "Id",
+            "Name",
+            touristSpot.CityId
+        );
+
+        return View(touristSpot);
     }
 
-    // GET: TOURISTSPOTS/Delete/5
+    // GET: TouristSpots/Delete/5
     public async Task<IActionResult> Delete(int? id)
     {
         if (id == null)
@@ -117,32 +157,36 @@ public class TouristSpotsController : Controller
             return NotFound();
         }
 
-        var touristspot = await _context.TouristSpots
-            .FirstOrDefaultAsync(m => m.Id == id);
-        if (touristspot == null)
+        var touristSpot = await _context.TouristSpots
+            .Include(t => t.City)
+            .FirstOrDefaultAsync(t => t.Id == id);
+
+        if (touristSpot == null)
         {
             return NotFound();
         }
 
-        return View(touristspot);
+        return View(touristSpot);
     }
 
-    // POST: TOURISTSPOTS/Delete/5
+    // POST: TouristSpots/Delete/5
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int? id)
     {
-        var touristspot = await _context.TouristSpots.FindAsync(id);
-        if (touristspot != null)
+        var touristSpot = await _context.TouristSpots.FindAsync(id);
+
+        if (touristSpot != null)
         {
-            _context.TouristSpots.Remove(touristspot);
+            _context.TouristSpots.Remove(touristSpot);
+
+            await _context.SaveChangesAsync();
         }
 
-        await _context.SaveChangesAsync();
         return RedirectToAction(nameof(Index));
     }
 
-    private bool TouristSpotExists(int? id)
+    private bool TouristSpotExists(int id)
     {
         return _context.TouristSpots.Any(e => e.Id == id);
     }

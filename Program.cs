@@ -5,50 +5,65 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Connection String
 var connectionString = builder.Configuration.GetConnectionString("AppDbContext")
     ?? throw new InvalidOperationException("Connection string 'AppDbContext' not found.");
 
-// Register Services
+// Register DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(connectionString));
 
+// Register Identity + Roles
 builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
-    options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<AppDbContext>();
+{
+    options.SignIn.RequireConfirmedAccount = true;
+})
+.AddRoles<IdentityRole>()
+.AddEntityFrameworkStores<AppDbContext>();
 
+// Add MVC
 builder.Services.AddControllersWithViews();
 
-// Build App (ONLY ONCE)
+// Add Razor Pages (Required for Identity)
+builder.Services.AddRazorPages();
+
+// Build App
 var app = builder.Build();
 
-// Seed Roles
+// =======================
+// Seed Roles & Admin User
+// =======================
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
 
     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-
     await SeedRoles.SeedAsync(roleManager);
 
     var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
     await SeedAdmin.SeedAdminAsync(userManager);
 }
 
-// Configure the HTTP request pipeline.
+// Configure HTTP Request Pipeline
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
+    app.UseHsts();
 }
+
+app.UseHttpsRedirection();
+
+app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
-
-app.MapStaticAssets();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Admin}/{action=Index}/{id?}")
-    .WithStaticAssets();
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapRazorPages();
 
 app.Run();

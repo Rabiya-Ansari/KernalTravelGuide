@@ -1,5 +1,5 @@
-
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using KernalTravelGuide.Models;
 
@@ -12,13 +12,14 @@ public class CitiesController : Controller
         _context = context;
     }
 
-    // GET: CITYS
-    public async Task<IActionResult> Index()    
+    // GET: Cities
+    public async Task<IActionResult> Index()
     {
-        return View(await _context.Cities.ToListAsync());
+        var cities = _context.Cities.Include(c => c.Country);
+        return View(await cities.ToListAsync());
     }
 
-    // GET: CITYS/Details/5
+    // GET: Cities/Details/5
     public async Task<IActionResult> Details(int? id)
     {
         if (id == null)
@@ -27,7 +28,9 @@ public class CitiesController : Controller
         }
 
         var city = await _context.Cities
+            .Include(c => c.Country)
             .FirstOrDefaultAsync(m => m.Id == id);
+
         if (city == null)
         {
             return NotFound();
@@ -36,18 +39,17 @@ public class CitiesController : Controller
         return View(city);
     }
 
-    // GET: CITYS/Create
+    // GET: Cities/Create
     public IActionResult Create()
     {
+        ViewBag.CountryId = new SelectList(_context.Countries, "Id", "Name");
         return View();
     }
 
-    // POST: CITYS/Create
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+    // POST: Cities/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("Id,Name,CountryId,Country")] City city)
+    public async Task<IActionResult> Create([Bind("Id,Name,CountryId")] City city)
     {
         if (ModelState.IsValid)
         {
@@ -55,10 +57,12 @@ public class CitiesController : Controller
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+        ViewBag.CountryId = new SelectList(_context.Countries, "Id", "Name", city.CountryId);
         return View(city);
     }
 
-    // GET: CITYS/Edit/5
+    // GET: Cities/Edit/5
     public async Task<IActionResult> Edit(int? id)
     {
         if (id == null)
@@ -67,19 +71,20 @@ public class CitiesController : Controller
         }
 
         var city = await _context.Cities.FindAsync(id);
+
         if (city == null)
         {
             return NotFound();
         }
+
+        ViewBag.CountryId = new SelectList(_context.Countries, "Id", "Name", city.CountryId);
         return View(city);
     }
 
-    // POST: CITYS/Edit/5
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+    // POST: Cities/Edit/5
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int? id, [Bind("Id,Name,CountryId,Country")] City city)
+    public async Task<IActionResult> Edit(int? id, [Bind("Id,Name,CountryId")] City city)
     {
         if (id != city.Id)
         {
@@ -99,17 +104,18 @@ public class CitiesController : Controller
                 {
                     return NotFound();
                 }
-                else
-                {
-                    throw;
-                }
+
+                throw;
             }
+
             return RedirectToAction(nameof(Index));
         }
+
+        ViewBag.CountryId = new SelectList(_context.Countries, "Id", "Name", city.CountryId);
         return View(city);
     }
 
-    // GET: CITYS/Delete/5
+    // GET: Cities/Delete/5
     public async Task<IActionResult> Delete(int? id)
     {
         if (id == null)
@@ -118,7 +124,9 @@ public class CitiesController : Controller
         }
 
         var city = await _context.Cities
+            .Include(c => c.Country)
             .FirstOrDefaultAsync(m => m.Id == id);
+
         if (city == null)
         {
             return NotFound();
@@ -127,12 +135,13 @@ public class CitiesController : Controller
         return View(city);
     }
 
-    // POST: CITYS/Delete/5
+    // POST: Cities/Delete/5
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int? id)
     {
         var city = await _context.Cities.FindAsync(id);
+
         if (city != null)
         {
             _context.Cities.Remove(city);

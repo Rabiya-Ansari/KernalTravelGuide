@@ -50,7 +50,7 @@
 				<a href="index.html" class="logo m-0">Tour <span class="text-primary">.</span></a>
 
 				<ul class="js-clone-nav d-none d-lg-inline-block text-left site-menu float-right">
-					<li class="active"><a href="index.html">Home</a></li>
+					<li class="active"><a asp-controller="Home" asp-action="Index">Home</a></li>
 					<li class="has-children">
 						<a href="#">Dropdown</a>
 						<ul class="dropdown">
@@ -68,8 +68,8 @@
 						</ul>
 					</li>
 					<li><a href="services.html">Services</a></li>
-					<li><a href="about.html">About</a></li>
-					<li><a href="contact.html">Contact Us</a></li>
+					<li><a asp-controller="About" asp-action="Index">About</a></li>
+					<li><a asp-controller="Contact" asp-action="Index">Contact Us</a></li>
 				</ul>
 
 				<a href="#" class="burger ml-auto float-right site-menu-toggle js-menu-toggle d-inline-block d-lg-none light" data-toggle="collapse" data-target="#main-navbar">
@@ -201,8 +201,8 @@
 	</script>
 
 	<script src="~/client/assets/js/custom.js"></script>
-
+	@await RenderSectionAsync("Scripts", required: false)
 </body>
 
 </html>
-</html>
+

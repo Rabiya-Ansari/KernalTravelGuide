@@ -1,0 +1,24 @@
+@model KernalTravelGuide.Models.Country
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h2>Delete Country</h2>
+
+<h4>Are you sure you want to delete this country?</h4>
+
+<table class="table">
+    <tr>
+        <th>Country Name</th>
+        <td>@Model.Name</td>
+    </tr>
+</table>
+
+<form asp-action="Delete">
+    <input type="hidden" asp-for="Id" />
+
+    <button class="btn btn-danger">Delete</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+
+</form>

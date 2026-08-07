@@ -1,0 +1,78 @@
+@model KernalTravelGuide.Models.TouristSpot
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Tourist Spot Details</h2>
+
+<table class="table table-bordered">
+
+    <tr>
+        <th>Name</th>
+        <td>@Model.Name</td>
+    </tr>
+
+    <tr>
+        <th>Description</th>
+        <td>@Model.Description</td>
+    </tr>
+
+    <tr>
+        <th>City</th>
+        <td>@Model.City?.Name</td>
+    </tr>
+
+    <tr>
+        <th>Entry Fee</th>
+        <td>@Model.EntryFee</td>
+    </tr>
+
+    <tr>
+        <th>Map URL</th>
+        <td>
+            @if (!string.IsNullOrEmpty(Model.MapUrl))
+            {
+                <a href="@Model.MapUrl"
+                   target="_blank">
+                    View Map
+                </a>
+            }
+            else
+            {
+                <span>No map available</span>
+            }
+        </td>
+    </tr>
+
+    <tr>
+        <th>Image</th>
+        <td>@Model.ImagePath</td>
+    </tr>
+
+    <tr>
+        <th>Status</th>
+        <td>
+            @if (Model.IsActive)
+            {
+                <span class="badge bg-success">Active</span>
+            }
+            else
+            {
+                <span class="badge bg-danger">Inactive</span>
+            }
+        </td>
+    </tr>
+
+</table>
+
+<a asp-action="Edit"
+   asp-route-id="@Model.Id"
+   class="btn btn-warning">
+    Edit
+</a>
+
+<a asp-action="Index"
+   class="btn btn-secondary">
+    Back
+</a>
