@@ -1,66 +1,124 @@
 @model KernalTravelGuide.Models.TravelInformation
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create Travel Information";
 }
 
-<h1>Create</h1>
+<h1>Create Travel Information</h1>
 
-<h4>TravelInformation</h4>
 <hr />
+
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6">
+
         <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-            <div class="form-group">
-                <label asp-for="TransportName" class="control-label"></label>
-                <input asp-for="TransportName" class="form-control" />
-                <span asp-validation-for="TransportName" class="text-danger"></span>
-            </div>
+            <div asp-validation-summary="ModelOnly"
+                 class="text-danger"></div>
 
-            <div class="form-group">
-                <label asp-for="FromCityId" class="control-label"></label>
-                <input asp-for="FromCityId" class="form-control" />
-                <span asp-validation-for="FromCityId" class="text-danger"></span>
-            </div>
+            <div class="form-group mb-3">
+                <label asp-for="TransportName"
+                       class="control-label"></label>
 
-            <div class="form-group">
-                <label asp-for="ToCityId" class="control-label"></label>
-                <input asp-for="ToCityId" class="form-control" />
-                <span asp-validation-for="ToCityId" class="text-danger"></span>
+                <input asp-for="TransportName"
+                       class="form-control"
+                       placeholder="e.g. Daewoo Express" />
+
+                <span asp-validation-for="TransportName"
+                      class="text-danger"></span>
             </div>
 
-            <div class="form-group">
-                <label asp-for="FromCity" class="control-label"></label>
-                <input asp-for="FromCity" class="form-control" />
-                <span asp-validation-for="FromCity" class="text-danger"></span>
+            <div class="form-group mb-3">
+                <label asp-for="FromCityId"
+                       class="control-label">
+                    From City
+                </label>
+
+                <select asp-for="FromCityId"
+                        class="form-control">
+
+                    <option value="">-- Select From City --</option>
+
+                    @foreach (var city in ViewBag.Cities)
+                    {
+                        <option value="@city.Id">
+                            @city.Name
+                        </option>
+                    }
+
+                </select>
+
+                <span asp-validation-for="FromCityId"
+                      class="text-danger"></span>
             </div>
 
-            <div class="form-group">
-                <label asp-for="ToCity" class="control-label"></label>
-                <input asp-for="ToCity" class="form-control" />
-                <span asp-validation-for="ToCity" class="text-danger"></span>
+            <div class="form-group mb-3">
+                <label asp-for="ToCityId"
+                       class="control-label">
+                    To City
+                </label>
+
+                <select asp-for="ToCityId"
+                        class="form-control">
+
+                    <option value="">-- Select To City --</option>
+
+                    @foreach (var city in ViewBag.Cities)
+                    {
+                        <option value="@city.Id">
+                            @city.Name
+                        </option>
+                    }
+
+                </select>
+
+                <span asp-validation-for="ToCityId"
+                      class="text-danger"></span>
             </div>
 
-            <div class="form-group">
-                <label asp-for="Fare" class="control-label"></label>
-                <input asp-for="Fare" class="form-control" />
-                <span asp-validation-for="Fare" class="text-danger"></span>
+            <div class="form-group mb-3">
+                <label asp-for="Fare"
+                       class="control-label"></label>
+
+                <input asp-for="Fare"
+                       type="number"
+                       class="form-control"
+                       placeholder="Enter fare" />
+
+                <span asp-validation-for="Fare"
+                      class="text-danger"></span>
             </div>
 
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
+            <div class="form-group mb-3">
+                <label asp-for="Description"
+                       class="control-label"></label>
+
+                <textarea asp-for="Description"
+                          class="form-control"
+                          rows="4"
+                          placeholder="Travel information"></textarea>
+
+                <span asp-validation-for="Description"
+                      class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
+
+            <button type="submit"
+                    class="btn btn-primary">
+                Create
+            </button>
+
+            <a asp-action="Index"
+               class="btn btn-secondary">
+                Back
+            </a>
+
         </form>
+
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

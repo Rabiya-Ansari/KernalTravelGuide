@@ -1,4 +1,3 @@
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using KernalTravelGuide.Models;
@@ -12,138 +11,172 @@ public class TravelInformationsController : Controller
         _context = context;
     }
 
-    // GET: TRAVELINFORMATIONS
-    public async Task<IActionResult> Index()    
+    // GET: TravelInformations
+    public async Task<IActionResult> Index()
     {
-        return View(await _context.TravelInformations.ToListAsync());
+        var travelInformations = await _context.TravelInformations
+            .Include(t => t.FromCity)
+            .Include(t => t.ToCity)
+            .ToListAsync();
+
+        return View(travelInformations);
     }
 
-    // GET: TRAVELINFORMATIONS/Details/5
+    // GET: TravelInformations/Details/5
     public async Task<IActionResult> Details(int? id)
     {
         if (id == null)
-        {
             return NotFound();
-        }
 
-        var travelinformation = await _context.TravelInformations
-            .FirstOrDefaultAsync(m => m.Id == id);
-        if (travelinformation == null)
-        {
+        var travelInformation = await _context.TravelInformations
+            .Include(t => t.FromCity)
+            .Include(t => t.ToCity)
+            .FirstOrDefaultAsync(t => t.Id == id);
+
+        if (travelInformation == null)
             return NotFound();
-        }
 
-        return View(travelinformation);
+        return View(travelInformation);
     }
 
-    // GET: TRAVELINFORMATIONS/Create
+    // GET: TravelInformations/Create
     public IActionResult Create()
     {
+        ViewBag.Cities = _context.Cities
+            .OrderBy(c => c.Name)
+            .ToList();
+
         return View();
     }
 
-    // POST: TRAVELINFORMATIONS/Create
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+    // POST: TravelInformations/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("Id,TransportName,FromCityId,ToCityId,FromCity,ToCity,Fare,Description")] TravelInformation travelinformation)
+    public async Task<IActionResult> Create(
+        [Bind("TransportName,FromCityId,ToCityId,Fare,Description")]
+        TravelInformation travelInformation)
     {
+        if (travelInformation.FromCityId == travelInformation.ToCityId)
+        {
+            ModelState.AddModelError(
+                "ToCityId",
+                "From City and To City cannot be the same.");
+        }
+
         if (ModelState.IsValid)
         {
-            _context.Add(travelinformation);
+            _context.TravelInformations.Add(travelInformation);
             await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
-        return View(travelinformation);
+
+        ViewBag.Cities = _context.Cities
+            .OrderBy(c => c.Name)
+            .ToList();
+
+        return View(travelInformation);
     }
 
-    // GET: TRAVELINFORMATIONS/Edit/5
+    // GET: TravelInformations/Edit/5
     public async Task<IActionResult> Edit(int? id)
     {
         if (id == null)
-        {
             return NotFound();
-        }
 
-        var travelinformation = await _context.TravelInformations.FindAsync(id);
-        if (travelinformation == null)
-        {
+        var travelInformation = await _context.TravelInformations
+            .FindAsync(id);
+
+        if (travelInformation == null)
             return NotFound();
-        }
-        return View(travelinformation);
+
+        ViewBag.Cities = _context.Cities
+            .OrderBy(c => c.Name)
+            .ToList();
+
+        return View(travelInformation);
     }
 
-    // POST: TRAVELINFORMATIONS/Edit/5
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+    // POST: TravelInformations/Edit/5
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int? id, [Bind("Id,TransportName,FromCityId,ToCityId,FromCity,ToCity,Fare,Description")] TravelInformation travelinformation)
+    public async Task<IActionResult> Edit(
+        int id,
+        [Bind("Id,TransportName,FromCityId,ToCityId,Fare,Description")]
+        TravelInformation travelInformation)
     {
-        if (id != travelinformation.Id)
-        {
+        if (id != travelInformation.Id)
             return NotFound();
+
+        if (travelInformation.FromCityId == travelInformation.ToCityId)
+        {
+            ModelState.AddModelError(
+                "ToCityId",
+                "From City and To City cannot be the same.");
         }
 
         if (ModelState.IsValid)
         {
             try
             {
-                _context.Update(travelinformation);
+                _context.Update(travelInformation);
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!TravelInformationExists(travelinformation.Id))
-                {
+                if (!TravelInformationExists(travelInformation.Id))
                     return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+
+                throw;
             }
+
             return RedirectToAction(nameof(Index));
         }
-        return View(travelinformation);
+
+        ViewBag.Cities = _context.Cities
+            .OrderBy(c => c.Name)
+            .ToList();
+
+        return View(travelInformation);
     }
 
-    // GET: TRAVELINFORMATIONS/Delete/5
+    // GET: TravelInformations/Delete/5
     public async Task<IActionResult> Delete(int? id)
     {
         if (id == null)
-        {
             return NotFound();
-        }
 
-        var travelinformation = await _context.TravelInformations
-            .FirstOrDefaultAsync(m => m.Id == id);
-        if (travelinformation == null)
-        {
+        var travelInformation = await _context.TravelInformations
+            .Include(t => t.FromCity)
+            .Include(t => t.ToCity)
+            .FirstOrDefaultAsync(t => t.Id == id);
+
+        if (travelInformation == null)
             return NotFound();
-        }
 
-        return View(travelinformation);
+        return View(travelInformation);
     }
 
-    // POST: TRAVELINFORMATIONS/Delete/5
+    // POST: TravelInformations/Delete/5
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> DeleteConfirmed(int? id)
+    public async Task<IActionResult> DeleteConfirmed(int id)
     {
-        var travelinformation = await _context.TravelInformations.FindAsync(id);
-        if (travelinformation != null)
+        var travelInformation =
+            await _context.TravelInformations.FindAsync(id);
+
+        if (travelInformation != null)
         {
-            _context.TravelInformations.Remove(travelinformation);
+            _context.TravelInformations.Remove(travelInformation);
+            await _context.SaveChangesAsync();
         }
 
-        await _context.SaveChangesAsync();
         return RedirectToAction(nameof(Index));
     }
 
-    private bool TravelInformationExists(int? id)
+    private bool TravelInformationExists(int id)
     {
-        return _context.TravelInformations.Any(e => e.Id == id);
+        return _context.TravelInformations
+            .Any(e => e.Id == id);
     }
 }
