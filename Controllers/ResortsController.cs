@@ -1,5 +1,5 @@
-
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using KernalTravelGuide.Models;
 
@@ -12,13 +12,16 @@ public class ResortsController : Controller
         _context = context;
     }
 
-    // GET: RESORTS
-    public async Task<IActionResult> Index()    
+    // GET: Resorts
+    public async Task<IActionResult> Index()
     {
-        return View(await _context.Resorts.ToListAsync());
+        var resorts = _context.Resorts
+            .Include(r => r.City);
+
+        return View(await resorts.ToListAsync());
     }
 
-    // GET: RESORTS/Details/5
+    // GET: Resorts/Details/5
     public async Task<IActionResult> Details(int? id)
     {
         if (id == null)
@@ -27,7 +30,9 @@ public class ResortsController : Controller
         }
 
         var resort = await _context.Resorts
-            .FirstOrDefaultAsync(m => m.Id == id);
+            .Include(r => r.City)
+            .FirstOrDefaultAsync(r => r.Id == id);
+
         if (resort == null)
         {
             return NotFound();
@@ -36,29 +41,43 @@ public class ResortsController : Controller
         return View(resort);
     }
 
-    // GET: RESORTS/Create
+    // GET: Resorts/Create
     public IActionResult Create()
     {
+        ViewBag.CityId = new SelectList(
+            _context.Cities,
+            "Id",
+            "Name"
+        );
+
         return View();
     }
 
-    // POST: RESORTS/Create
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+    // POST: Resorts/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("Id,Name,CityId,City,Price,Rating,Availability,ImagePath")] Resort resort)
+    public async Task<IActionResult> Create(
+        [Bind("Id,Name,CityId,Price,Rating,Availability,ImagePath")] Resort resort)
     {
         if (ModelState.IsValid)
         {
-            _context.Add(resort);
+            _context.Resorts.Add(resort);
             await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
+
+        ViewBag.CityId = new SelectList(
+            _context.Cities,
+            "Id",
+            "Name",
+            resort.CityId
+        );
+
         return View(resort);
     }
 
-    // GET: RESORTS/Edit/5
+    // GET: Resorts/Edit/5
     public async Task<IActionResult> Edit(int? id)
     {
         if (id == null)
@@ -67,19 +86,28 @@ public class ResortsController : Controller
         }
 
         var resort = await _context.Resorts.FindAsync(id);
+
         if (resort == null)
         {
             return NotFound();
         }
+
+        ViewBag.CityId = new SelectList(
+            _context.Cities,
+            "Id",
+            "Name",
+            resort.CityId
+        );
+
         return View(resort);
     }
 
-    // POST: RESORTS/Edit/5
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+    // POST: Resorts/Edit/5
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int? id, [Bind("Id,Name,CityId,City,Price,Rating,Availability,ImagePath")] Resort resort)
+    public async Task<IActionResult> Edit(
+        int? id,
+        [Bind("Id,Name,CityId,Price,Rating,Availability,ImagePath")] Resort resort)
     {
         if (id != resort.Id)
         {
@@ -99,17 +127,24 @@ public class ResortsController : Controller
                 {
                     return NotFound();
                 }
-                else
-                {
-                    throw;
-                }
+
+                throw;
             }
+
             return RedirectToAction(nameof(Index));
         }
+
+        ViewBag.CityId = new SelectList(
+            _context.Cities,
+            "Id",
+            "Name",
+            resort.CityId
+        );
+
         return View(resort);
     }
 
-    // GET: RESORTS/Delete/5
+    // GET: Resorts/Delete/5
     public async Task<IActionResult> Delete(int? id)
     {
         if (id == null)
@@ -118,7 +153,9 @@ public class ResortsController : Controller
         }
 
         var resort = await _context.Resorts
-            .FirstOrDefaultAsync(m => m.Id == id);
+            .Include(r => r.City)
+            .FirstOrDefaultAsync(r => r.Id == id);
+
         if (resort == null)
         {
             return NotFound();
@@ -127,22 +164,24 @@ public class ResortsController : Controller
         return View(resort);
     }
 
-    // POST: RESORTS/Delete/5
+    // POST: Resorts/Delete/5
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int? id)
     {
         var resort = await _context.Resorts.FindAsync(id);
+
         if (resort != null)
         {
             _context.Resorts.Remove(resort);
+            await _context.SaveChangesAsync();
         }
 
-        await _context.SaveChangesAsync();
         return RedirectToAction(nameof(Index));
+        //return RedirectToAction(nameof)
     }
 
-    private bool ResortExists(int? id)
+    private bool ResortExists(int id)
     {
         return _context.Resorts.Any(e => e.Id == id);
     }

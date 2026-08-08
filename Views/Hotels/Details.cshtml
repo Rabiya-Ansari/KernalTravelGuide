@@ -1,0 +1,77 @@
+@model KernalTravelGuide.Models.Hotel
+
+@{
+    ViewData["Title"] = "Hotel Details";
+}
+
+<h1>Hotel Details</h1>
+
+<hr />
+
+<dl class="row">
+
+    <dt class="col-sm-3">Name</dt>
+    <dd class="col-sm-9">@Model.Name</dd>
+
+    <dt class="col-sm-3">City</dt>
+    <dd class="col-sm-9">@Model.City?.Name</dd>
+
+    <dt class="col-sm-3">Price Per Night</dt>
+    <dd class="col-sm-9">@Model.PricePerNight</dd>
+
+    <dt class="col-sm-3">Star Rating</dt>
+    <dd class="col-sm-9">@Model.StarRating ⭐</dd>
+
+    <dt class="col-sm-3">Contact No</dt>
+    <dd class="col-sm-9">@Model.ContactNo</dd>
+
+    <dt class="col-sm-3">Email</dt>
+    <dd class="col-sm-9">@Model.Email</dd>
+
+    <dt class="col-sm-3">Website</dt>
+    <dd class="col-sm-9">
+        @if (!string.IsNullOrEmpty(Model.Website))
+        {
+            <a href="@Model.Website"
+               target="_blank">
+                @Model.Website
+            </a>
+        }
+    </dd>
+
+    <dt class="col-sm-3">Image</dt>
+    <dd class="col-sm-9">
+        @if (!string.IsNullOrEmpty(Model.ImagePath))
+        {
+            <img src="@Model.ImagePath"
+                 alt="@Model.Name"
+                 style="max-width:200px;" />
+        }
+    </dd>
+
+    <dt class="col-sm-3">Availability</dt>
+    <dd class="col-sm-9">
+        @if (Model.Availability)
+        {
+            <span class="badge bg-success">Available</span>
+        }
+        else
+        {
+            <span class="badge bg-danger">Not Available</span>
+        }
+    </dd>
+
+</dl>
+
+<div>
+    <a asp-action="Edit"
+       asp-route-id="@Model.Id"
+       class="btn btn-warning">
+        Edit
+    </a>
+
+    <a asp-action="Index"
+       class="btn btn-secondary">
+        Back
+    </a>
+</div>

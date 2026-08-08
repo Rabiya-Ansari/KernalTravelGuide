@@ -1,0 +1,111 @@
+@model IEnumerable<KernalTravelGuide.Models.Hotel>
+
+@{
+    ViewData["Title"] = "Hotels";
+}
+
+<h1>Hotels</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">
+        Add New Hotel
+    </a>
+</p>
+
+<table class="table table-bordered table-striped">
+
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>City</th>
+            <th>Price / Night</th>
+            <th>Stars</th>
+            <th>Contact</th>
+            <th>Email</th>
+            <th>Website</th>
+            <th>Availability</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+
+                <td>
+                    @item.Name
+                </td>
+
+                <td>
+                    @item.City?.Name
+                </td>
+
+                <td>
+                    @item.PricePerNight
+                </td>
+
+                <td>
+                    @item.StarRating ⭐
+                </td>
+
+                <td>
+                    @item.ContactNo
+                </td>
+
+                <td>
+                    @item.Email
+                </td>
+
+                <td>
+                    @if (!string.IsNullOrEmpty(item.Website))
+                    {
+                        <a href="@item.Website"
+                           target="_blank">
+                            Website
+                        </a>
+                    }
+                </td>
+
+                <td>
+                    @if (item.Availability)
+                    {
+                        <span class="badge bg-success">
+                            Available
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger">
+                            Not Available
+                        </span>
+                    }
+                </td>
+
+                <td>
+                    <a asp-action="Edit"
+                       asp-route-id="@item.Id"
+                       class="btn btn-sm btn-warning">
+                        Edit
+                    </a>
+
+                    <a asp-action="Details"
+                       asp-route-id="@item.Id"
+                       class="btn btn-sm btn-info">
+                        Details
+                    </a>
+
+                    <a asp-action="Delete"
+                       asp-route-id="@item.Id"
+                       class="btn btn-sm btn-danger">
+                        Delete
+                    </a>
+                </td>
+
+            </tr>
+        }
+
+    </tbody>
+
+</table>

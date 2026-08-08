@@ -1,0 +1,104 @@
+@model IEnumerable<KernalTravelGuide.Models.Resort>
+
+@{
+    ViewData["Title"] = "Resorts";
+}
+
+<h1>Resorts</h1>
+
+<p>
+    <a asp-action="Create"
+       class="btn btn-primary">
+        Create New Resort
+    </a>
+</p>
+
+<table class="table table-bordered table-striped">
+
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>City</th>
+            <th>Price</th>
+            <th>Rating</th>
+            <th>Availability</th>
+            <th>Image</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+
+                <td>
+                    @item.Name
+                </td>
+
+                <td>
+                    @item.City?.Name
+                </td>
+
+                <td>
+                    @item.Price
+                </td>
+
+                <td>
+                    @item.Rating / 5
+                </td>
+
+                <td>
+                    @if (item.Availability)
+                    {
+                        <span class="badge bg-success">
+                            Available
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger">
+                            Not Available
+                        </span>
+                    }
+                </td>
+
+                <td>
+                    @if (!string.IsNullOrEmpty(item.ImagePath))
+                    {
+                        <img src="@item.ImagePath"
+                             alt="@item.Name"
+                             width="80"
+                             height="60"
+                             style="object-fit:cover;" />
+                    }
+                    else
+                    {
+                        <span>No Image</span>
+                    }
+                </td>
+
+                <td>
+                    <a asp-action="Edit"
+                       asp-route-id="@item.Id">
+                        Edit
+                    </a>
+                    |
+                    <a asp-action="Details"
+                       asp-route-id="@item.Id">
+                        Details
+                    </a>
+                    |
+                    <a asp-action="Delete"
+                       asp-route-id="@item.Id">
+                        Delete
+                    </a>
+                </td>
+
+            </tr>
+        }
+
+    </tbody>
+
+</table>
