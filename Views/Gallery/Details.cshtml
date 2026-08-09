@@ -1,101 +1,89 @@
 @model KernalTravelGuide.Models.Gallery
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Gallery Details";
 }
 
-<h1>Details</h1>
+<h1>Gallery Details</h1>
 
 <div>
-    <h4>Gallery</h4>
+
+    <h4>Gallery Image</h4>
     <hr />
+
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ImagePath)
+
+        <dt class="col-sm-3">
+            Image Path
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ImagePath)
+
+        <dd class="col-sm-9">
+            @Model.ImagePath
         </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Caption)
+
+        <dt class="col-sm-3">
+            Caption
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Caption)
+
+        <dd class="col-sm-9">
+            @(Model.Caption ?? "-")
         </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TouristSpotId)
+
+        <dt class="col-sm-3">
+            Tourist Spot
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TouristSpotId)
+
+        <dd class="col-sm-9">
+            @(Model.TouristSpot?.Name ?? "-")
         </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TouristSpot)
+
+        <dt class="col-sm-3">
+            Hotel
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TouristSpot)
+
+        <dd class="col-sm-9">
+            @(Model.Hotel?.Name ?? "-")
         </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.HotelId)
+
+        <dt class="col-sm-3">
+            Restaurant
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.HotelId)
+
+        <dd class="col-sm-9">
+            @(Model.Restaurant?.Name ?? "-")
         </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Hotel)
+
+        <dt class="col-sm-3">
+            Resort
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Hotel)
+
+        <dd class="col-sm-9">
+            @(Model.Resort?.Name ?? "-")
         </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.RestaurantId)
+
+        <dt class="col-sm-3">
+            Tour Package
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.RestaurantId)
+
+        <dd class="col-sm-9">
+            @(Model.TourPackage?.PackageName ?? "-")
         </dd>
+
     </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Restaurant)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Restaurant)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ResortId)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ResortId)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Resort)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Resort)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TourPackageId)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TourPackageId)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TourPackage)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TourPackage)
-        </dd>
-    </dl>
+
 </div>
+
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+
+    <a asp-action="Edit"
+       asp-route-id="@Model.Id"
+       class="btn btn-warning">
+        Edit
+    </a>
+
+    <a asp-action="Index"
+       class="btn btn-secondary">
+        Back to Gallery
+    </a>
+
 </div>

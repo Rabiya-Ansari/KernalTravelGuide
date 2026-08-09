@@ -1,27 +1,27 @@
-using KernalTravelGuide.Models;
+﻿using KernalTravelGuide.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-public class ContactMessagesController : Controller
+public class FeedbacksController : Controller
 {
     private readonly AppDbContext _context;
 
-    public ContactMessagesController(AppDbContext context)
+    public FeedbacksController(AppDbContext context)
     {
         _context = context;
     }
 
-    // GET: ContactMessages
+    // GET: Feedbacks
     public async Task<IActionResult> Index()
     {
-        var messages = await _context.ContactMessages
-            .OrderByDescending(x => x.SentOn)
+        var feedbacks = await _context.Feedbacks
+            .OrderByDescending(x => x.FeedbackDate)
             .ToListAsync();
 
-        return View(messages);
+        return View(feedbacks);
     }
 
-    // GET: ContactMessages/Details/5
+    // GET: Feedbacks/Details/5
     public async Task<IActionResult> Details(int? id)
     {
         if (id == null)
@@ -29,18 +29,18 @@ public class ContactMessagesController : Controller
             return NotFound();
         }
 
-        var message = await _context.ContactMessages
+        var feedback = await _context.Feedbacks
             .FirstOrDefaultAsync(x => x.Id == id);
 
-        if (message == null)
+        if (feedback == null)
         {
             return NotFound();
         }
 
-        return View(message);
+        return View(feedback);
     }
 
-    // GET: ContactMessages/Delete/5
+    // GET: Feedbacks/Delete/5
     public async Task<IActionResult> Delete(int? id)
     {
         if (id == null)
@@ -48,28 +48,28 @@ public class ContactMessagesController : Controller
             return NotFound();
         }
 
-        var message = await _context.ContactMessages
+        var feedback = await _context.Feedbacks
             .FirstOrDefaultAsync(x => x.Id == id);
 
-        if (message == null)
+        if (feedback == null)
         {
             return NotFound();
         }
 
-        return View(message);
+        return View(feedback);
     }
 
-    // POST: ContactMessages/Delete/5
+    // POST: Feedbacks/Delete/5
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
-        var message = await _context.ContactMessages
+        var feedback = await _context.Feedbacks
             .FindAsync(id);
 
-        if (message != null)
+        if (feedback != null)
         {
-            _context.ContactMessages.Remove(message);
+            _context.Feedbacks.Remove(feedback);
             await _context.SaveChangesAsync();
         }
 

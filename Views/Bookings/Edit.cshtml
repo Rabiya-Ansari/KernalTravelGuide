@@ -1,0 +1,81 @@
+@model KernalTravelGuide.Models.Booking
+@using KernalTravelGuide.Models.Enums
+
+@{
+    ViewData["Title"] = "Update Booking Status";
+}
+
+<h1>Update Booking Status</h1>
+
+<div class="row">
+    <div class="col-md-6">
+
+        <form asp-action="Edit" method="post">
+
+            <input type="hidden" asp-for="Id" />
+
+            <div class="mb-3">
+                <label class="form-label">
+                    Tour Package
+                </label>
+
+                <input class="form-control"
+                       value="@(Model.TourPackage?.PackageName ?? "N/A")"
+                       readonly />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">
+                    Travel Date
+                </label>
+
+                <input class="form-control"
+                       value="@Model.TravelDate.ToString("dd-MM-yyyy")"
+                       readonly />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">
+                    Number of Persons
+                </label>
+
+                <input class="form-control"
+                       value="@Model.NumberOfPersons"
+                       readonly />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">
+                    Total Amount
+                </label>
+
+                <input class="form-control"
+                       value="@Model.TotalAmount"
+                       readonly />
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Status" class="form-label">
+                    Booking Status
+                </label>
+
+                <select asp-for="Status"
+                        class="form-select"
+                        asp-items="Html.GetEnumSelectList<BookingStatus>()">
+                </select>
+            </div>
+
+            <button type="submit"
+                    class="btn btn-primary">
+                Update Status
+            </button>
+
+            <a asp-action="Index"
+               class="btn btn-secondary">
+                Cancel
+            </a>
+
+        </form>
+
+    </div>
+</div>

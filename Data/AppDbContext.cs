@@ -3,8 +3,7 @@ using KernalTravelGuide.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-public class AppDbContext
-    : IdentityDbContext<ApplicationUser>
+public class AppDbContext : IdentityDbContext<ApplicationUser>
 {
     public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options)
@@ -29,12 +28,14 @@ public class AppDbContext
     {
         base.OnModelCreating(builder);
 
+        // TravelInformation: FromCity
         builder.Entity<TravelInformation>()
             .HasOne(t => t.FromCity)
             .WithMany()
             .HasForeignKey(t => t.FromCityId)
             .OnDelete(DeleteBehavior.Restrict);
 
+        // TravelInformation: ToCity
         builder.Entity<TravelInformation>()
             .HasOne(t => t.ToCity)
             .WithMany()

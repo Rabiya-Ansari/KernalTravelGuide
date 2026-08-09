@@ -1,0 +1,77 @@
+@model IEnumerable<KernalTravelGuide.Models.Booking>
+
+@{
+    ViewData["Title"] = "Bookings";
+}
+
+<h1>Bookings</h1>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>User</th>
+            <th>Package</th>
+            <th>Travel Date</th>
+            <th>Persons</th>
+            <th>Total Amount</th>
+            <th>Status</th>
+            <th>Booking Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @(item.User?.UserName ?? item.UserId)
+                </td>
+
+                <td>
+                    @(item.TourPackage?.PackageName ?? "N/A")
+                </td>
+
+                <td>
+                    @item.TravelDate.ToString("dd-MM-yyyy")
+                </td>
+
+                <td>
+                    @item.NumberOfPersons
+                </td>
+
+                <td>
+                    @item.TotalAmount
+                </td>
+
+                <td>
+                    @item.Status
+                </td>
+
+                <td>
+                    @item.BookingDate.ToString("dd-MM-yyyy")
+                </td>
+
+                <td>
+                    <a asp-action="Details"
+                       asp-route-id="@item.Id"
+                       class="btn btn-info btn-sm">
+                        Details
+                    </a>
+
+                    <a asp-action="Edit"
+                       asp-route-id="@item.Id"
+                       class="btn btn-warning btn-sm">
+                        Status
+                    </a>
+
+                    <a asp-action="Delete"
+                       asp-route-id="@item.Id"
+                       class="btn btn-danger btn-sm">
+                        Delete
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

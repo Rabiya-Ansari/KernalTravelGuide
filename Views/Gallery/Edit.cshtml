@@ -1,89 +1,188 @@
 @model KernalTravelGuide.Models.Gallery
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Gallery Image";
 }
 
-<h1>Edit</h1>
+<h1>Edit Gallery Image</h1>
 
-<h4>Gallery</h4>
-<hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="ImagePath" class="control-label"></label>
-                <input asp-for="ImagePath" class="form-control" />
-                <span asp-validation-for="ImagePath" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Caption" class="control-label"></label>
-                <input asp-for="Caption" class="form-control" />
-                <span asp-validation-for="Caption" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TouristSpotId" class="control-label"></label>
-                <input asp-for="TouristSpotId" class="form-control" />
-                <span asp-validation-for="TouristSpotId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TouristSpot" class="control-label"></label>
-                <input asp-for="TouristSpot" class="form-control" />
-                <span asp-validation-for="TouristSpot" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="HotelId" class="control-label"></label>
-                <input asp-for="HotelId" class="form-control" />
-                <span asp-validation-for="HotelId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Hotel" class="control-label"></label>
-                <input asp-for="Hotel" class="form-control" />
-                <span asp-validation-for="Hotel" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="RestaurantId" class="control-label"></label>
-                <input asp-for="RestaurantId" class="form-control" />
-                <span asp-validation-for="RestaurantId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Restaurant" class="control-label"></label>
-                <input asp-for="Restaurant" class="form-control" />
-                <span asp-validation-for="Restaurant" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ResortId" class="control-label"></label>
-                <input asp-for="ResortId" class="form-control" />
-                <span asp-validation-for="ResortId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Resort" class="control-label"></label>
-                <input asp-for="Resort" class="form-control" />
-                <span asp-validation-for="Resort" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TourPackageId" class="control-label"></label>
-                <input asp-for="TourPackageId" class="form-control" />
-                <span asp-validation-for="TourPackageId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TourPackage" class="control-label"></label>
-                <input asp-for="TourPackage" class="form-control" />
-                <span asp-validation-for="TourPackage" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+    <div class="col-md-6">
+
+        <form asp-action="Edit" method="post">
+
+            <div asp-validation-summary="ModelOnly"
+                 class="text-danger"></div>
+
+            <input type="hidden" asp-for="Id" />
+
+            <div class="form-group mb-3">
+
+                <label asp-for="ImagePath">
+                    Image Path
+                </label>
+
+                <input asp-for="ImagePath"
+                       class="form-control" />
+
+                <span asp-validation-for="ImagePath"
+                      class="text-danger"></span>
+
+            </div>
+
+            <div class="form-group mb-3">
+
+                <label asp-for="Caption">
+                    Caption
+                </label>
+
+                <input asp-for="Caption"
+                       class="form-control" />
+
+                <span asp-validation-for="Caption"
+                      class="text-danger"></span>
+
+            </div>
+
+            <div class="form-group mb-3">
+
+                <label asp-for="TouristSpotId">
+                    Tourist Spot
+                </label>
+
+                <select asp-for="TouristSpotId"
+                        class="form-control">
+
+                    <option value="">
+                        -- Select Tourist Spot --
+                    </option>
+
+                    @foreach (var item in ViewBag.TouristSpots)
+                    {
+                        <option value="@item.Id">
+                            @item.Name
+                        </option>
+                    }
+
+                </select>
+
+            </div>
+
+            <div class="form-group mb-3">
+
+                <label asp-for="HotelId">
+                    Hotel
+                </label>
+
+                <select asp-for="HotelId"
+                        class="form-control">
+
+                    <option value="">
+                        -- Select Hotel --
+                    </option>
+
+                    @foreach (var item in ViewBag.Hotels)
+                    {
+                        <option value="@item.Id">
+                            @item.Name
+                        </option>
+                    }
+
+                </select>
+
+            </div>
+
+            <div class="form-group mb-3">
+
+                <label asp-for="RestaurantId">
+                    Restaurant
+                </label>
+
+                <select asp-for="RestaurantId"
+                        class="form-control">
+
+                    <option value="">
+                        -- Select Restaurant --
+                    </option>
+
+                    @foreach (var item in ViewBag.Restaurants)
+                    {
+                        <option value="@item.Id">
+                            @item.Name
+                        </option>
+                    }
+
+                </select>
+
+            </div>
+
+            <div class="form-group mb-3">
+
+                <label asp-for="ResortId">
+                    Resort
+                </label>
+
+                <select asp-for="ResortId"
+                        class="form-control">
+
+                    <option value="">
+                        -- Select Resort --
+                    </option>
+
+                    @foreach (var item in ViewBag.Resorts)
+                    {
+                        <option value="@item.Id">
+                            @item.Name
+                        </option>
+                    }
+
+                </select>
+
+            </div>
+
+            <div class="form-group mb-3">
+
+                <label asp-for="TourPackageId">
+                    Tour Package
+                </label>
+
+                <select asp-for="TourPackageId"
+                        class="form-control">
+
+                    <option value="">
+                        -- Select Tour Package --
+                    </option>
+
+                    @foreach (var item in ViewBag.TourPackages)
+                    {
+                        <option value="@item.Id">
+                            @item.PackageName
+                        </option>
+                    }
+
+                </select>
+
+            </div>
+
+            <button type="submit"
+                    class="btn btn-primary">
+                Save Changes
+            </button>
+
+            <a asp-action="Index"
+               class="btn btn-secondary">
+                Back
+            </a>
+
+        </form>
+
+    </div>
+
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

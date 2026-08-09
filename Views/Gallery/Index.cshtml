@@ -1,101 +1,88 @@
 @model IEnumerable<KernalTravelGuide.Models.Gallery>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Gallery";
 }
 
-<h1>Index</h1>
+<h1>Gallery</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-primary">
+        Add New Image
+    </a>
 </p>
-<table class="table">
+
+<table class="table table-bordered table-striped">
+
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.ImagePath)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Caption)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TouristSpotId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TouristSpot)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.HotelId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Hotel)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.RestaurantId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Restaurant)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ResortId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Resort)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TourPackageId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TourPackage)
-            </th>
-            <th></th>
+            <th>Image</th>
+            <th>Caption</th>
+            <th>Tourist Spot</th>
+            <th>Hotel</th>
+            <th>Restaurant</th>
+            <th>Resort</th>
+            <th>Tour Package</th>
+            <th>Actions</th>
         </tr>
     </thead>
+
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(model => item.ImagePath)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Caption)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.TouristSpotId)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.TouristSpot)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.HotelId)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Hotel)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.RestaurantId)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Restaurant)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.ResortId)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Resort)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.TourPackageId)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.TourPackage)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+
+        @foreach (var item in Model)
+        {
+            <tr>
+
+                <td>
+                    @item.ImagePath
+                </td>
+
+                <td>
+                    @item.Caption
+                </td>
+
+                <td>
+                    @(item.TouristSpot?.Name ?? "-")
+                </td>
+
+                <td>
+                    @(item.Hotel?.Name ?? "-")
+                </td>
+
+                <td>
+                    @(item.Restaurant?.Name ?? "-")
+                </td>
+
+                <td>
+                    @(item.Resort?.Name ?? "-")
+                </td>
+
+                <td>
+                    @(item.TourPackage?.PackageName ?? "-")
+                </td>
+
+                <td>
+                    <a asp-action="Edit"
+                       asp-route-id="@item.Id"
+                       class="btn btn-sm btn-warning">
+                        Edit
+                    </a>
+
+                    <a asp-action="Details"
+                       asp-route-id="@item.Id"
+                       class="btn btn-sm btn-info">
+                        Details
+                    </a>
+
+                    <a asp-action="Delete"
+                       asp-route-id="@item.Id"
+                       class="btn btn-sm btn-danger">
+                        Delete
+                    </a>
+                </td>
+
+            </tr>
+        }
+
     </tbody>
 </table>

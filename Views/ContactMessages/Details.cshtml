@@ -1,0 +1,85 @@
+@model KernalTravelGuide.Models.ContactMessage
+
+@{
+    ViewData["Title"] = "Message Details";
+}
+
+<h1>Message Details</h1>
+
+<div class="card">
+
+    <div class="card-body">
+
+        <dl class="row">
+
+            <dt class="col-sm-3">
+                Name
+            </dt>
+
+            <dd class="col-sm-9">
+                @Model.Name
+            </dd>
+
+
+            <dt class="col-sm-3">
+                Email
+            </dt>
+
+            <dd class="col-sm-9">
+                @Model.Email
+            </dd>
+
+
+            <dt class="col-sm-3">
+                Phone
+            </dt>
+
+            <dd class="col-sm-9">
+                @Model.Phone
+            </dd>
+
+
+            <dt class="col-sm-3">
+                Subject
+            </dt>
+
+            <dd class="col-sm-9">
+                @Model.Subject
+            </dd>
+
+
+            <dt class="col-sm-3">
+                Message
+            </dt>
+
+            <dd class="col-sm-9">
+                @Model.Message
+            </dd>
+
+
+            <dt class="col-sm-3">
+                Sent On
+            </dt>
+
+            <dd class="col-sm-9">
+                @Model.SentOn.ToString("dd MMM yyyy hh:mm tt")
+            </dd>
+
+        </dl>
+
+    </div>
+
+</div>
+
+<br />
+
+<a asp-action="Delete"
+   asp-route-id="@Model.Id"
+   class="btn btn-danger">
+    Delete
+</a>
+
+<a asp-action="Index"
+   class="btn btn-secondary">
+    Back to Messages
+</a>

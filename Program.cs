@@ -7,44 +7,52 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Connection String
 var connectionString = builder.Configuration.GetConnectionString("AppDbContext")
-    ?? throw new InvalidOperationException("Connection string 'AppDbContext' not found.");
+    ?? throw new InvalidOperationException(
+        "Connection string 'AppDbContext' not found.");
 
-// Register DbContext
+// DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(connectionString));
 
-// Register Identity + Roles
-builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
-{
-    options.SignIn.RequireConfirmedAccount = true;
-})
-.AddRoles<IdentityRole>()
-.AddEntityFrameworkStores<AppDbContext>();
+// Identity + Roles
+builder.Services
+    .AddDefaultIdentity<ApplicationUser>(options =>
+    {
+        options.SignIn.RequireConfirmedAccount = true;
+    })
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<AppDbContext>();
 
-// Add MVC
+// MVC
 builder.Services.AddControllersWithViews();
 
-// Add Razor Pages (Required for Identity)
+// Razor Pages - required for Identity
 builder.Services.AddRazorPages();
 
-// Build App
 var app = builder.Build();
 
-// =======================
-// Seed Roles & Admin User
-// =======================
+// ============================
+// Seed Roles & Admin
+// ============================
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
 
-    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+    var roleManager =
+        services.GetRequiredService<RoleManager<IdentityRole>>();
+
     await SeedRoles.SeedAsync(roleManager);
 
-    var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+    var userManager =
+        services.GetRequiredService<UserManager<ApplicationUser>>();
+
     await SeedAdmin.SeedAdminAsync(userManager);
 }
 
-// Configure HTTP Request Pipeline
+// ============================
+// HTTP Pipeline
+// ============================
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -58,12 +66,15 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthentication();
+
 app.UseAuthorization();
 
+// MVC Route
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+// Identity pages
 app.MapRazorPages();
 
 app.Run();
