@@ -1,7 +1,10 @@
 using KernalTravelGuide.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
+
+[Authorize(Roles = "Admin")]
 public class ContactMessagesController : Controller
 {
     private readonly AppDbContext _context;

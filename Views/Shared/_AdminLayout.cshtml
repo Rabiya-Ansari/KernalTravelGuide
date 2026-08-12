@@ -1,5 +1,16 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using KernalTravelGuide.Data
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    var currentUser = await UserManager.GetUserAsync(User);
+
+    var adminName = currentUser != null
+        ? $"{currentUser.FirstName} {currentUser.LastName}"
+        : "Admin";
+
+    var adminAvatar = Url.Content("~/dashboard/assets/images/avatar/avatar.jpg");
+}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -8,6 +19,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>@ViewData["Title"] - Kernal Travel Guide Admin</title>
+    <script>
+            window.adminHMDUser = {
+                name: "@adminName",
+                workspace: "Active Workspace",
+                avatar: "@adminAvatar"
+            };
+    </script>
 
     <link rel="stylesheet"
           href="@Url.Content("~/dashboard/assets/css/bootstrap.min.css")" />
@@ -66,271 +84,150 @@
                 <a class="nav-link"
                    asp-controller="Admin"
                    asp-action="Index">
-
                     <span class="nav-icon">
-                        <i class="bi bi-speedometer2"
-                           aria-hidden="true"></i>
+                        <i class="bi bi-speedometer2"></i>
                     </span>
-
-                    <span class="nav-text">
-                        Dashboard
-                    </span>
-
+                    <span class="nav-text">Dashboard</span>
                 </a>
-
 
                 <!-- Users -->
                 <a class="nav-link"
                    asp-controller="Users"
                    asp-action="Index">
-
                     <span class="nav-icon">
-                        <i class="bi bi-people"
-                           aria-hidden="true"></i>
+                        <i class="bi bi-people"></i>
                     </span>
-
-                    <span class="nav-text">
-                        Users
-                    </span>
-
+                    <span class="nav-text">Users</span>
                 </a>
-
 
                 <!-- Countries -->
                 <a class="nav-link"
                    asp-controller="Countries"
                    asp-action="Index">
-
                     <span class="nav-icon">
-                        <i class="bi bi-globe"
-                           aria-hidden="true"></i>
+                        <i class="bi bi-globe"></i>
                     </span>
-
-                    <span class="nav-text">
-                        Countries
-                    </span>
-
+                    <span class="nav-text">Countries</span>
                 </a>
-
 
                 <!-- Cities -->
                 <a class="nav-link"
                    asp-controller="Cities"
                    asp-action="Index">
-
                     <span class="nav-icon">
-                        <i class="bi bi-buildings"
-                           aria-hidden="true"></i>
+                        <i class="bi bi-buildings"></i>
                     </span>
-
-                    <span class="nav-text">
-                        Cities
-                    </span>
-
+                    <span class="nav-text">Cities</span>
                 </a>
-
 
                 <!-- Tourist Spots -->
                 <a class="nav-link"
                    asp-controller="TouristSpots"
                    asp-action="Index">
-
                     <span class="nav-icon">
-                        <i class="bi bi-geo-alt"
-                           aria-hidden="true"></i>
+                        <i class="bi bi-geo-alt"></i>
                     </span>
-
-                    <span class="nav-text">
-                        Tourist Spots
-                    </span>
-
+                    <span class="nav-text">Tourist Spots</span>
                 </a>
-
 
                 <!-- Hotels -->
                 <a class="nav-link"
                    asp-controller="Hotels"
                    asp-action="Index">
-
                     <span class="nav-icon">
-                        <i class="bi bi-building"
-                           aria-hidden="true"></i>
+                        <i class="bi bi-building"></i>
                     </span>
-
-                    <span class="nav-text">
-                        Hotels
-                    </span>
-
+                    <span class="nav-text">Hotels</span>
                 </a>
-
 
                 <!-- Restaurants -->
                 <a class="nav-link"
                    asp-controller="Restaurants"
                    asp-action="Index">
-
                     <span class="nav-icon">
-                        <i class="bi bi-cup-hot"
-                           aria-hidden="true"></i>
+                        <i class="bi bi-cup-hot"></i>
                     </span>
-
-                    <span class="nav-text">
-                        Restaurants
-                    </span>
-
+                    <span class="nav-text">Restaurants</span>
                 </a>
-
 
                 <!-- Resorts -->
                 <a class="nav-link"
                    asp-controller="Resorts"
                    asp-action="Index">
-
                     <span class="nav-icon">
-                        <i class="bi bi-house-heart"
-                           aria-hidden="true"></i>
+                        <i class="bi bi-house-heart"></i>
                     </span>
-
-                    <span class="nav-text">
-                        Resorts
-                    </span>
-
+                    <span class="nav-text">Resorts</span>
                 </a>
-
 
                 <!-- Tour Packages -->
                 <a class="nav-link"
                    asp-controller="TourPackages"
                    asp-action="Index">
-
                     <span class="nav-icon">
-                        <i class="bi bi-map"
-                           aria-hidden="true"></i>
+                        <i class="bi bi-map"></i>
                     </span>
-
-                    <span class="nav-text">
-                        Tour Packages
-                    </span>
-
+                    <span class="nav-text">Tour Packages</span>
                 </a>
-
 
                 <!-- Travel Information -->
                 <a class="nav-link"
                    asp-controller="TravelInformations"
                    asp-action="Index">
-
                     <span class="nav-icon">
-                        <i class="bi bi-info-circle"
-                           aria-hidden="true"></i>
+                        <i class="bi bi-info-circle"></i>
                     </span>
-
-                    <span class="nav-text">
-                        Travel Information
-                    </span>
-
+                    <span class="nav-text">Travel Information</span>
                 </a>
-
 
                 <!-- Gallery -->
                 <a class="nav-link"
                    asp-controller="Gallery"
                    asp-action="Index">
-
                     <span class="nav-icon">
-                        <i class="bi bi-images"
-                           aria-hidden="true"></i>
+                        <i class="bi bi-images"></i>
                     </span>
-
-                    <span class="nav-text">
-                        Gallery
-                    </span>
-
+                    <span class="nav-text">Gallery</span>
                 </a>
-
 
                 <!-- Bookings -->
                 <a class="nav-link"
                    asp-controller="Bookings"
                    asp-action="Index">
-
                     <span class="nav-icon">
-                        <i class="bi bi-calendar-check"
-                           aria-hidden="true"></i>
+                        <i class="bi bi-calendar-check"></i>
                     </span>
-
-                    <span class="nav-text">
-                        Bookings
-                    </span>
-
+                    <span class="nav-text">Bookings</span>
                 </a>
-
 
                 <!-- Reviews -->
                 <a class="nav-link"
-                   asp-controller="Review"
+                   asp-controller="Reviews"
                    asp-action="Index">
-
                     <span class="nav-icon">
-                        <i class="bi bi-star"
-                           aria-hidden="true"></i>
+                        <i class="bi bi-star"></i>
                     </span>
-
-                    <span class="nav-text">
-                        Reviews
-                    </span>
-
+                    <span class="nav-text">Reviews</span>
                 </a>
-
 
                 <!-- Feedbacks -->
                 <a class="nav-link"
                    asp-controller="Feedbacks"
                    asp-action="Index">
-
                     <span class="nav-icon">
-                        <i class="bi bi-chat-square-text"
-                           aria-hidden="true"></i>
+                        <i class="bi bi-chat-square-text"></i>
                     </span>
-
-                    <span class="nav-text">
-                        Feedbacks
-                    </span>
-
+                    <span class="nav-text">Feedbacks</span>
                 </a>
-
 
                 <!-- Contact Messages -->
                 <a class="nav-link"
                    asp-controller="ContactMessages"
                    asp-action="Index">
-
                     <span class="nav-icon">
-                        <i class="bi bi-envelope"
-                           aria-hidden="true"></i>
+                        <i class="bi bi-envelope"></i>
                     </span>
-
-                    <span class="nav-text">
-                        Contact Messages
-                    </span>
-
-                </a>
-
-
-                <!-- Admin Bookings -->
-                <a class="nav-link"
-                   asp-controller="AdminBookings"
-                   asp-action="Index">
-
-                    <span class="nav-icon">
-                        <i class="bi bi-journal-check"
-                           aria-hidden="true"></i>
-                    </span>
-
-                    <span class="nav-text">
-                        Manage Bookings
-                    </span>
-
+                    <span class="nav-text">Contact Messages</span>
                 </a>
 
             </nav>
@@ -505,11 +402,13 @@
                                     aria-expanded="false">
 
                                 <img class="avatar-img avatar-sm"
-                                     src="@Url.Content("~/dashboard/assets/images/avatar/avatar.jpg")"
+                                     src="~/dashboard/assets/images/avatar/avatar.jpg"
                                      alt="Admin" />
 
                                 <span class="profile-name d-none d-sm-inline">
-                                    Admin
+                                    <span class="profile-name d-none d-sm-inline">
+                                        @User.Identity?.Name
+                                    </span>
                                 </span>
 
                             </button>
@@ -541,11 +440,17 @@
 
 
                                 <li>
-                                    <a class="dropdown-item"
+                                    @if (User.Identity?.IsAuthenticated ?? false)
+                                    {
+                                        <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
+                                            <button type="submit" class="dropdown-item">Logout</button>
+                                        </form>
+                                    }
+                                    @* <a class="dropdown-item"
                                        asp-area="Identity"
                                        asp-page="/Account/Logout">
                                         Sign out
-                                    </a>
+                                    </a> *@
                                 </li>
 
                             </ul>
@@ -561,7 +466,7 @@
 
             <!-- ================= PAGE CONTENT ================= -->
 
-            <main class="admin-content">
+            <main class="admin-content p-5">
 
                 @RenderBody()
 

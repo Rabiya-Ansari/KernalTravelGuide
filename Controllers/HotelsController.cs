@@ -1,8 +1,11 @@
+using KernalTravelGuide.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using KernalTravelGuide.Models;
 
+
+[Authorize(Roles = "Admin")]
 public class HotelsController : Controller
 {
     private readonly AppDbContext _context;
