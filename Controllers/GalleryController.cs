@@ -3,18 +3,22 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-
 [Authorize(Roles = "Admin")]
 public class GalleryController : Controller
 {
     private readonly AppDbContext _context;
+    private readonly IWebHostEnvironment _environment;
 
-    public GalleryController(AppDbContext context)
+    public GalleryController(
+        AppDbContext context,
+        IWebHostEnvironment environment)
     {
         _context = context;
+        _environment = environment;
     }
 
-    // GET: Gallery
+    // ================= INDEX =================
+
     public async Task<IActionResult> Index()
     {
         var galleries = await _context.Galleries
@@ -28,7 +32,9 @@ public class GalleryController : Controller
         return View(galleries);
     }
 
-    // GET: Gallery/Details/5
+
+    // ================= DETAILS =================
+
     public async Task<IActionResult> Details(int? id)
     {
         if (id == null)
@@ -48,76 +54,190 @@ public class GalleryController : Controller
         return View(gallery);
     }
 
-    // GET: Gallery/Create
+
+    // ================= CREATE GET =================
+
     public async Task<IActionResult> Create()
     {
         await LoadDropdowns();
+
         return View();
     }
 
-    // POST: Gallery/Create
+
+    // ================= CREATE POST =================
+
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(Gallery gallery)
+    public async Task<IActionResult> Create(
+        Gallery gallery,
+        IFormFile ImageFile)
     {
-        if (!ModelState.IsValid)
+        // Image required
+        if (ImageFile == null || ImageFile.Length == 0)
         {
-            await LoadDropdowns();
-            return View(gallery);
+            ModelState.AddModelError(
+                "ImageFile",
+                "Please select an image.");
         }
 
-        _context.Galleries.Add(gallery);
-        await _context.SaveChangesAsync();
+        if (ModelState.IsValid)
+        {
+            // Upload folder
+            string uploadsFolder = Path.Combine(
+                _environment.WebRootPath,
+                "uploads",
+                "gallery"
+            );
 
-        return RedirectToAction(nameof(Index));
+            if (!Directory.Exists(uploadsFolder))
+            {
+                Directory.CreateDirectory(uploadsFolder);
+            }
+
+            // Unique file name
+            string extension =
+                Path.GetExtension(ImageFile.FileName);
+
+            string fileName =
+                Guid.NewGuid().ToString() + extension;
+
+            string filePath =
+                Path.Combine(uploadsFolder, fileName);
+
+            // Save image
+            using (var stream = new FileStream(
+                filePath,
+                FileMode.Create))
+            {
+                await ImageFile.CopyToAsync(stream);
+            }
+
+            // Database path
+            gallery.ImagePath =
+                "/uploads/gallery/" + fileName;
+
+            _context.Galleries.Add(gallery);
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        await LoadDropdowns();
+
+        return View(gallery);
     }
 
-    // GET: Gallery/Edit/5
+
+    // ================= EDIT GET =================
+
     public async Task<IActionResult> Edit(int? id)
     {
         if (id == null)
             return NotFound();
 
-        var gallery = await _context.Galleries.FindAsync(id);
+        var gallery =
+            await _context.Galleries.FindAsync(id);
 
         if (gallery == null)
             return NotFound();
 
         await LoadDropdowns();
+
         return View(gallery);
     }
 
-    // POST: Gallery/Edit/5
+
+    // ================= EDIT POST =================
+
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int id, Gallery gallery)
+    public async Task<IActionResult> Edit(
+        int id,
+        Gallery gallery,
+        IFormFile? ImageFile)
     {
         if (id != gallery.Id)
             return NotFound();
 
-        if (!ModelState.IsValid)
+        var existingGallery =
+            await _context.Galleries
+                .AsNoTracking()
+                .FirstOrDefaultAsync(g => g.Id == id);
+
+        if (existingGallery == null)
+            return NotFound();
+
+        // Keep old image
+        gallery.ImagePath = existingGallery.ImagePath;
+
+        // If new image selected
+        if (ImageFile != null && ImageFile.Length > 0)
         {
-            await LoadDropdowns();
-            return View(gallery);
+            string uploadsFolder = Path.Combine(
+                _environment.WebRootPath,
+                "uploads",
+                "gallery"
+            );
+
+            if (!Directory.Exists(uploadsFolder))
+            {
+                Directory.CreateDirectory(uploadsFolder);
+            }
+
+            string extension =
+                Path.GetExtension(ImageFile.FileName);
+
+            string fileName =
+                Guid.NewGuid().ToString() + extension;
+
+            string filePath =
+                Path.Combine(uploadsFolder, fileName);
+
+            using (var stream = new FileStream(
+                filePath,
+                FileMode.Create))
+            {
+                await ImageFile.CopyToAsync(stream);
+            }
+
+            // Delete old image
+            if (!string.IsNullOrEmpty(existingGallery.ImagePath))
+            {
+                string oldImagePath =
+                    Path.Combine(
+                        _environment.WebRootPath,
+                        existingGallery.ImagePath.TrimStart('/')
+                    );
+
+                if (System.IO.File.Exists(oldImagePath))
+                {
+                    System.IO.File.Delete(oldImagePath);
+                }
+            }
+
+            gallery.ImagePath =
+                "/uploads/gallery/" + fileName;
         }
 
-        try
+        if (ModelState.IsValid)
         {
             _context.Update(gallery);
+
             await _context.SaveChangesAsync();
-        }
-        catch (DbUpdateConcurrencyException)
-        {
-            if (!GalleryExists(gallery.Id))
-                return NotFound();
 
-            throw;
+            return RedirectToAction(nameof(Index));
         }
 
-        return RedirectToAction(nameof(Index));
+        await LoadDropdowns();
+
+        return View(gallery);
     }
 
-    // GET: Gallery/Delete/5
+
+    // ================= DELETE GET =================
+
     public async Task<IActionResult> Delete(int? id)
     {
         if (id == null)
@@ -137,48 +257,69 @@ public class GalleryController : Controller
         return View(gallery);
     }
 
-    // POST: Gallery/Delete/5
+
+    // ================= DELETE POST =================
+
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
-        var gallery = await _context.Galleries.FindAsync(id);
+        var gallery =
+            await _context.Galleries.FindAsync(id);
 
         if (gallery == null)
             return NotFound();
 
+        // Delete physical image
+        if (!string.IsNullOrEmpty(gallery.ImagePath))
+        {
+            string imagePath =
+                Path.Combine(
+                    _environment.WebRootPath,
+                    gallery.ImagePath.TrimStart('/')
+                );
+
+            if (System.IO.File.Exists(imagePath))
+            {
+                System.IO.File.Delete(imagePath);
+            }
+        }
+
         _context.Galleries.Remove(gallery);
+
         await _context.SaveChangesAsync();
 
         return RedirectToAction(nameof(Index));
     }
 
-    // Dropdown data
+
+    // ================= DROPDOWNS =================
+
     private async Task LoadDropdowns()
     {
-        ViewBag.TouristSpots = await _context.TouristSpots
-            .OrderBy(x => x.Name)
-            .ToListAsync();
+        ViewBag.TouristSpots =
+            await _context.TouristSpots
+                .OrderBy(x => x.Name)
+                .ToListAsync();
 
-        ViewBag.Hotels = await _context.Hotels
-            .OrderBy(x => x.Name)
-            .ToListAsync();
+        ViewBag.Hotels =
+            await _context.Hotels
+                .OrderBy(x => x.Name)
+                .ToListAsync();
 
-        ViewBag.Restaurants = await _context.Restaurants
-            .OrderBy(x => x.Name)
-            .ToListAsync();
+        ViewBag.Restaurants =
+            await _context.Restaurants
+                .OrderBy(x => x.Name)
+                .ToListAsync();
 
-        ViewBag.Resorts = await _context.Resorts
-            .OrderBy(x => x.Name)
-            .ToListAsync();
+        ViewBag.Resorts =
+            await _context.Resorts
+                .OrderBy(x => x.Name)
+                .ToListAsync();
 
-        ViewBag.TourPackages = await _context.TourPackages
-            .OrderBy(x => x.PackageName)
-            .ToListAsync();
-    }
-
-    private bool GalleryExists(int id)
-    {
-        return _context.Galleries.Any(e => e.Id == id);
+        ViewBag.TourPackages =
+            await _context.TourPackages
+                .OrderBy(x => x.PackageName)
+                .ToListAsync();
     }
 }

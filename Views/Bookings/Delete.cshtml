@@ -2,64 +2,225 @@
 
 @{
     ViewData["Title"] = "Delete Booking";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h1>Delete Booking</h1>
+<div class="d-flex justify-content-between align-items-center mb-4">
 
-<div class="alert alert-danger">
-    Are you sure you want to delete this booking?
-</div>
+    <div>
+        <h1 class="mb-1 text-danger">
+            Delete Booking
+        </h1>
 
-<div class="card">
-    <div class="card-body">
-
-        <p>
-            <strong>User:</strong>
-            @(Model.User?.UserName ?? Model.UserId)
+        <p class="text-muted mb-0">
+            Remove this booking permanently
         </p>
-
-        <p>
-            <strong>Package:</strong>
-            @(Model.TourPackage?.PackageName ?? "N/A")
-        </p>
-
-        <p>
-            <strong>Travel Date:</strong>
-            @Model.TravelDate.ToString("dd-MM-yyyy")
-        </p>
-
-        <p>
-            <strong>Persons:</strong>
-            @Model.NumberOfPersons
-        </p>
-
-        <p>
-            <strong>Total Amount:</strong>
-            @Model.TotalAmount
-        </p>
-
-        <p>
-            <strong>Status:</strong>
-            @Model.Status
-        </p>
-
     </div>
-</div>
-
-<br />
-
-<form asp-action="Delete" method="post">
-
-    <input type="hidden" asp-for="Id" />
-
-    <button type="submit"
-            class="btn btn-danger">
-        Delete
-    </button>
 
     <a asp-action="Index"
        class="btn btn-secondary">
-        Cancel
+
+        <i class="bi bi-arrow-left"></i>
+        Back
+
     </a>
 
-</form>
+</div>
+
+
+<div class="row">
+
+    <div class="col-lg-8">
+
+        <div class="card shadow-sm border-0">
+
+            <div class="card-body">
+
+
+                <div class="alert alert-danger">
+
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+
+                    <strong>
+                        Are you sure?
+                    </strong>
+
+                    This booking will be permanently deleted.
+
+                </div>
+
+
+                <div class="border rounded p-4 mb-4">
+
+                    <h5 class="mb-4">
+                        Booking #@Model.Id
+                    </h5>
+
+
+                    <div class="row g-3">
+
+
+                        <!-- Customer -->
+
+                        <div class="col-md-6">
+
+                            <strong>
+                                Customer
+                            </strong>
+
+                            <p class="text-muted mb-0">
+
+                                @if (Model.User != null)
+                                {
+                                    @Model.User.FirstName @Model.User.LastName
+                                }
+                                else
+                                {
+                                    @:Unknown User
+                                }
+
+                            </p>
+
+                        </div>
+
+
+                        <!-- Package -->
+
+                        <div class="col-md-6">
+
+                            <strong>
+                                Tour Package
+                            </strong>
+
+                            <p class="text-muted mb-0">
+                                @Model.TourPackage?.PackageName
+                            </p>
+
+                        </div>
+
+
+                        <!-- Travel Date -->
+
+                        <div class="col-md-6">
+
+                            <strong>
+                                Travel Date
+                            </strong>
+
+                            <p class="text-muted mb-0">
+                                @Model.TravelDate.ToString("dd MMMM yyyy")
+                            </p>
+
+                        </div>
+
+
+                        <!-- Persons -->
+
+                        <div class="col-md-6">
+
+                            <strong>
+                                Persons
+                            </strong>
+
+                            <p class="text-muted mb-0">
+                                @Model.NumberOfPersons
+                            </p>
+
+                        </div>
+
+
+                        <!-- Amount -->
+
+                        <div class="col-md-6">
+
+                            <strong>
+                                Total Amount
+                            </strong>
+
+                            <p class="text-muted mb-0">
+                                Rs. @Model.TotalAmount.ToString("N0")
+                            </p>
+
+                        </div>
+
+
+                        <!-- Status -->
+
+                        <div class="col-md-6">
+
+                            <strong>
+                                Status
+                            </strong>
+
+                            <p class="mb-0">
+
+                                @if (Model.Status.ToString() == "Pending")
+                                {
+                                    <span class="badge bg-warning text-dark">
+                                        Pending
+                                    </span>
+                                }
+                                else if (Model.Status.ToString() == "Confirmed")
+                                {
+                                    <span class="badge bg-success">
+                                        Confirmed
+                                    </span>
+                                }
+                                else if (Model.Status.ToString() == "Cancelled")
+                                {
+                                    <span class="badge bg-danger">
+                                        Cancelled
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">
+                                        @Model.Status
+                                    </span>
+                                }
+
+                            </p>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+                <!-- Delete Form -->
+
+                <form asp-action="Delete"
+                      method="post">
+
+                    <input type="hidden"
+                           asp-for="Id" />
+
+
+                    <button type="submit"
+                            class="btn btn-danger">
+
+                        <i class="bi bi-trash"></i>
+                        Yes, Delete Booking
+
+                    </button>
+
+
+                    <a asp-action="Index"
+                       class="btn btn-secondary">
+
+                        Cancel
+
+                    </a>
+
+                </form>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

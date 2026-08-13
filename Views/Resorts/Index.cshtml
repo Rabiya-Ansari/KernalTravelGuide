@@ -2,103 +2,155 @@
 
 @{
     ViewData["Title"] = "Resorts";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h1>Resorts</h1>
+<div class="container-fluid">
 
-<p>
-    <a asp-action="Create"
-       class="btn btn-primary">
-        Create New Resort
-    </a>
-</p>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-1">Resorts</h2>
+            <p class="text-muted mb-0">
+                Manage resorts and accommodation options.
+            </p>
+        </div>
 
-<table class="table table-bordered table-striped">
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="bi bi-plus-circle me-1"></i>
+            Add Resort
+        </a>
+    </div>
 
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>City</th>
-            <th>Price</th>
-            <th>Rating</th>
-            <th>Availability</th>
-            <th>Image</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
+    <div class="card border-0 shadow-sm">
+        <div class="card-body">
 
-    <tbody>
+            <div class="table-responsive">
 
-        @foreach (var item in Model)
-        {
-            <tr>
+                <table class="table table-hover align-middle">
 
-                <td>
-                    @item.Name
-                </td>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>City</th>
+                            <th>Price</th>
+                            <th>Rating</th>
+                            <th>Availability</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
 
-                <td>
-                    @item.City?.Name
-                </td>
+                    <tbody>
 
-                <td>
-                    @item.Price
-                </td>
+                        @if (Model != null && Model.Any())
+                        {
+                            int count = 1;
 
-                <td>
-                    @item.Rating / 5
-                </td>
+                            foreach (var item in Model)
+                            {
+                                <tr>
 
-                <td>
-                    @if (item.Availability)
-                    {
-                        <span class="badge bg-success">
-                            Available
-                        </span>
-                    }
-                    else
-                    {
-                        <span class="badge bg-danger">
-                            Not Available
-                        </span>
-                    }
-                </td>
+                                    <td>@count</td>
 
-                <td>
-                    @if (!string.IsNullOrEmpty(item.ImagePath))
-                    {
-                        <img src="@item.ImagePath"
-                             alt="@item.Name"
-                             width="80"
-                             height="60"
-                             style="object-fit:cover;" />
-                    }
-                    else
-                    {
-                        <span>No Image</span>
-                    }
-                </td>
+                                    <td>
+                                        <strong>@item.Name</strong>
+                                    </td>
 
-                <td>
-                    <a asp-action="Edit"
-                       asp-route-id="@item.Id">
-                        Edit
-                    </a>
-                    |
-                    <a asp-action="Details"
-                       asp-route-id="@item.Id">
-                        Details
-                    </a>
-                    |
-                    <a asp-action="Delete"
-                       asp-route-id="@item.Id">
-                        Delete
-                    </a>
-                </td>
+                                    <td>
+                                        <i class="bi bi-geo-alt me-1"></i>
+                                        @(item.City?.Name ?? "N/A")
+                                    </td>
 
-            </tr>
-        }
+                                    <td>
+                                        Rs. @item.Price.ToString("N0")
+                                    </td>
 
-    </tbody>
+                                    <td>
+                                        <span class="text-warning">
+                                            @for (int i = 1; i <= 5; i++)
+                                            {
+                                                if (i <= item.Rating)
+                                                {
+                                                    <i class="bi bi-star-fill"></i>
+                                                }
+                                                else
+                                                {
+                                                    <i class="bi bi-star"></i>
+                                                }
+                                            }
+                                        </span>
+                                    </td>
 
-</table>
+                                    <td>
+                                        @if (item.Availability)
+                                        {
+                                            <span class="badge bg-success">
+                                                Available
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">
+                                                Unavailable
+                                            </span>
+                                        }
+                                    </td>
+
+                                    <td class="text-end">
+
+                                        <a asp-action="Details"
+                                           asp-route-id="@item.Id"
+                                           class="btn btn-sm btn-outline-info">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+
+                                        <a asp-action="Edit"
+                                           asp-route-id="@item.Id"
+                                           class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+
+                                        <a asp-action="Delete"
+                                           asp-route-id="@item.Id"
+                                           class="btn btn-sm btn-outline-danger">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+
+                                    </td>
+
+                                </tr>
+
+                                count++;
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="7"
+                                    class="text-center text-muted py-5">
+
+                                    <i class="bi bi-house-heart fs-1 d-block mb-2"></i>
+
+                                    No resorts found.
+
+                                    <br />
+
+                                    <a asp-action="Create"
+                                       class="btn btn-primary btn-sm mt-3">
+                                        Add First Resort
+                                    </a>
+
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>

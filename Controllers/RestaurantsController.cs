@@ -1,8 +1,10 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using KernalTravelGuide.Models;
 
+[Authorize(Roles = "Admin")]
 public class RestaurantsController : Controller
 {
     private readonly AppDbContext _context;

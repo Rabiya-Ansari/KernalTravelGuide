@@ -2,88 +2,143 @@
 
 @{
     ViewData["Title"] = "Gallery Details";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h1>Gallery Details</h1>
+<div class="container-fluid">
 
-<div>
+    <div class="d-flex justify-content-between align-items-center mb-4">
 
-    <h4>Gallery Image</h4>
-    <hr />
+        <div>
+            <h2>Gallery Details</h2>
+        </div>
 
-    <dl class="row">
+        <a asp-action="Index"
+           class="btn btn-secondary">
 
-        <dt class="col-sm-3">
-            Image Path
-        </dt>
+            <i class="bi bi-arrow-left"></i>
+            Back
 
-        <dd class="col-sm-9">
-            @Model.ImagePath
-        </dd>
+        </a>
 
-        <dt class="col-sm-3">
-            Caption
-        </dt>
+    </div>
 
-        <dd class="col-sm-9">
-            @(Model.Caption ?? "-")
-        </dd>
 
-        <dt class="col-sm-3">
-            Tourist Spot
-        </dt>
+    <div class="card shadow-sm">
 
-        <dd class="col-sm-9">
-            @(Model.TouristSpot?.Name ?? "-")
-        </dd>
+        <div class="card-body">
 
-        <dt class="col-sm-3">
-            Hotel
-        </dt>
+            <div class="row">
 
-        <dd class="col-sm-9">
-            @(Model.Hotel?.Name ?? "-")
-        </dd>
 
-        <dt class="col-sm-3">
-            Restaurant
-        </dt>
+                <!-- IMAGE -->
 
-        <dd class="col-sm-9">
-            @(Model.Restaurant?.Name ?? "-")
-        </dd>
+                <div class="col-md-5 text-center">
 
-        <dt class="col-sm-3">
-            Resort
-        </dt>
+                    <img src="@Model.ImagePath"
+                         alt="@Model.Caption"
+                         class="img-fluid rounded shadow-sm"
+                         style="max-height:400px;
+                    object-fit:cover;" />
 
-        <dd class="col-sm-9">
-            @(Model.Resort?.Name ?? "-")
-        </dd>
+                </div>
 
-        <dt class="col-sm-3">
-            Tour Package
-        </dt>
 
-        <dd class="col-sm-9">
-            @(Model.TourPackage?.PackageName ?? "-")
-        </dd>
+                <!-- INFORMATION -->
 
-    </dl>
+                <div class="col-md-7">
 
-</div>
+                    <h4 class="mb-4">
+                        @Model.Caption
+                    </h4>
 
-<div>
 
-    <a asp-action="Edit"
-       asp-route-id="@Model.Id"
-       class="btn btn-warning">
-        Edit
-    </a>
+                    <dl class="row">
 
-    <a asp-action="Index"
-       class="btn btn-secondary">
-        Back to Gallery
-    </a>
+                        <dt class="col-sm-4">
+                            Image Path
+                        </dt>
+
+                        <dd class="col-sm-8">
+                            @Model.ImagePath
+                        </dd>
+
+
+                        <dt class="col-sm-4">
+                            Tourist Spot
+                        </dt>
+
+                        <dd class="col-sm-8">
+                            @(Model.TouristSpot?.Name ?? "Not assigned")
+                        </dd>
+
+
+                        <dt class="col-sm-4">
+                            Hotel
+                        </dt>
+
+                        <dd class="col-sm-8">
+                            @(Model.Hotel?.Name ?? "Not assigned")
+                        </dd>
+
+
+                        <dt class="col-sm-4">
+                            Restaurant
+                        </dt>
+
+                        <dd class="col-sm-8">
+                            @(Model.Restaurant?.Name ?? "Not assigned")
+                        </dd>
+
+
+                        <dt class="col-sm-4">
+                            Resort
+                        </dt>
+
+                        <dd class="col-sm-8">
+                            @(Model.Resort?.Name ?? "Not assigned")
+                        </dd>
+
+
+                        <dt class="col-sm-4">
+                            Tour Package
+                        </dt>
+
+                        <dd class="col-sm-8">
+                            @(Model.TourPackage?.PackageName ?? "Not assigned")
+                        </dd>
+
+                    </dl>
+
+
+                    <div class="mt-4">
+
+                        <a asp-action="Edit"
+                           asp-route-id="@Model.Id"
+                           class="btn btn-warning">
+
+                            <i class="bi bi-pencil"></i>
+                            Edit
+
+                        </a>
+
+                        <a asp-action="Delete"
+                           asp-route-id="@Model.Id"
+                           class="btn btn-danger">
+
+                            <i class="bi bi-trash"></i>
+                            Delete
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
 
 </div>

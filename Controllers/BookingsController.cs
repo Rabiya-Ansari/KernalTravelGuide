@@ -1,10 +1,12 @@
 ﻿using KernalTravelGuide.Data;
 using KernalTravelGuide.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace KernalTravelGuide.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class BookingsController : Controller
     {
         private readonly AppDbContext _context;
@@ -76,6 +78,7 @@ namespace KernalTravelGuide.Controllers
             if (existingBooking == null)
                 return NotFound();
 
+            // Admin only changes booking status
             existingBooking.Status = booking.Status;
 
             await _context.SaveChangesAsync();

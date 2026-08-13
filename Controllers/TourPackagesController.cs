@@ -1,8 +1,9 @@
-
+using KernalTravelGuide.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using KernalTravelGuide.Models;
 
+[Authorize(Roles = "Admin")]
 public class TourPackagesController : Controller
 {
     private readonly AppDbContext _context;
@@ -12,138 +13,130 @@ public class TourPackagesController : Controller
         _context = context;
     }
 
-    // GET: TOURPACKAGES
-    public async Task<IActionResult> Index()    
+    // GET: TourPackages
+    public async Task<IActionResult> Index()
     {
         return View(await _context.TourPackages.ToListAsync());
     }
 
-    // GET: TOURPACKAGES/Details/5
+    // GET: TourPackages/Details/5
     public async Task<IActionResult> Details(int? id)
     {
         if (id == null)
-        {
             return NotFound();
-        }
 
-        var tourpackage = await _context.TourPackages
-            .FirstOrDefaultAsync(m => m.Id == id);
-        if (tourpackage == null)
-        {
+        var tourPackage = await _context.TourPackages
+            .FirstOrDefaultAsync(x => x.Id == id);
+
+        if (tourPackage == null)
             return NotFound();
-        }
 
-        return View(tourpackage);
+        return View(tourPackage);
     }
 
-    // GET: TOURPACKAGES/Create
+    // GET: TourPackages/Create
     public IActionResult Create()
     {
         return View();
     }
 
-    // POST: TOURPACKAGES/Create
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+    // POST: TourPackages/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("Id,PackageName,DurationDays,Price,Description,ImagePath,IsAvailable")] TourPackage tourpackage)
+    public async Task<IActionResult> Create(
+        [Bind("Id,PackageName,DurationDays,Price,Description,ImagePath,IsAvailable")]
+        TourPackage tourPackage)
     {
         if (ModelState.IsValid)
         {
-            _context.Add(tourpackage);
+            _context.TourPackages.Add(tourPackage);
             await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
-        return View(tourpackage);
+
+        return View(tourPackage);
     }
 
-    // GET: TOURPACKAGES/Edit/5
+    // GET: TourPackages/Edit/5
     public async Task<IActionResult> Edit(int? id)
     {
         if (id == null)
-        {
             return NotFound();
-        }
 
-        var tourpackage = await _context.TourPackages.FindAsync(id);
-        if (tourpackage == null)
-        {
+        var tourPackage = await _context.TourPackages.FindAsync(id);
+
+        if (tourPackage == null)
             return NotFound();
-        }
-        return View(tourpackage);
+
+        return View(tourPackage);
     }
 
-    // POST: TOURPACKAGES/Edit/5
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+    // POST: TourPackages/Edit/5
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int? id, [Bind("Id,PackageName,DurationDays,Price,Description,ImagePath,IsAvailable")] TourPackage tourpackage)
+    public async Task<IActionResult> Edit(
+        int? id,
+        [Bind("Id,PackageName,DurationDays,Price,Description,ImagePath,IsAvailable")]
+        TourPackage tourPackage)
     {
-        if (id != tourpackage.Id)
-        {
+        if (id != tourPackage.Id)
             return NotFound();
-        }
 
         if (ModelState.IsValid)
         {
             try
             {
-                _context.Update(tourpackage);
+                _context.Update(tourPackage);
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!TourPackageExists(tourpackage.Id))
-                {
+                if (!TourPackageExists(tourPackage.Id))
                     return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+
+                throw;
             }
+
             return RedirectToAction(nameof(Index));
         }
-        return View(tourpackage);
+
+        return View(tourPackage);
     }
 
-    // GET: TOURPACKAGES/Delete/5
+    // GET: TourPackages/Delete/5
     public async Task<IActionResult> Delete(int? id)
     {
         if (id == null)
-        {
             return NotFound();
-        }
 
-        var tourpackage = await _context.TourPackages
-            .FirstOrDefaultAsync(m => m.Id == id);
-        if (tourpackage == null)
-        {
+        var tourPackage = await _context.TourPackages
+            .FirstOrDefaultAsync(x => x.Id == id);
+
+        if (tourPackage == null)
             return NotFound();
-        }
 
-        return View(tourpackage);
+        return View(tourPackage);
     }
 
-    // POST: TOURPACKAGES/Delete/5
+    // POST: TourPackages/Delete/5
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int? id)
     {
-        var tourpackage = await _context.TourPackages.FindAsync(id);
-        if (tourpackage != null)
+        var tourPackage = await _context.TourPackages.FindAsync(id);
+
+        if (tourPackage != null)
         {
-            _context.TourPackages.Remove(tourpackage);
+            _context.TourPackages.Remove(tourPackage);
+            await _context.SaveChangesAsync();
         }
 
-        await _context.SaveChangesAsync();
         return RedirectToAction(nameof(Index));
     }
 
-    private bool TourPackageExists(int? id)
+    private bool TourPackageExists(int id)
     {
-        return _context.TourPackages.Any(e => e.Id == id);
+        return _context.TourPackages.Any(x => x.Id == id);
     }
 }

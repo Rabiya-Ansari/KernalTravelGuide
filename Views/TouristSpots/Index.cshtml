@@ -2,129 +2,149 @@
 
 @{
     ViewData["Title"] = "Tourist Spots";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h2>Tourist Spots</h2>
+<div class="container-fluid">
 
-<p>
-    <a asp-action="Create"
-       class="btn btn-primary">
-        Create Tourist Spot
-    </a>
-</p>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-1">Tourist Spots</h2>
+            <p class="text-muted mb-0">
+                Manage tourist attractions and destinations.
+            </p>
+        </div>
 
-<table class="table table-bordered table-striped">
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="bi bi-plus-circle me-1"></i>
+            Add Tourist Spot
+        </a>
+    </div>
 
-    <thead>
-        <tr>
+    <div class="card border-0 shadow-sm">
 
-            <th>
-                Name
-            </th>
+        <div class="card-header bg-white border-0 py-3">
+            <h5 class="fw-bold mb-0">All Tourist Spots</h5>
+        </div>
 
-            <th>
-                Description
-            </th>
+        <div class="card-body">
 
-            <th>
-                City
-            </th>
+            <div class="table-responsive">
 
-            <th>
-                Entry Fee
-            </th>
+                <table class="table table-hover align-middle">
 
-            <th>
-                Map
-            </th>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>City</th>
+                            <th>Entry Fee</th>
+                            <th>Status</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
 
-            <th>
-                Status
-            </th>
+                    <tbody>
 
-            <th>
-                Actions
-            </th>
+                        @if (Model != null && Model.Any())
+                        {
+                            int count = 1;
 
-        </tr>
-    </thead>
+                            foreach (var item in Model)
+                            {
+                                <tr>
 
-    <tbody>
+                                    <td>@count</td>
 
-        @foreach (var item in Model)
-        {
-            <tr>
+                                    <td>
+                                        <strong>@item.Name</strong>
+                                    </td>
 
-                <td>
-                    @item.Name
-                </td>
+                                    <td>
+                                        <span class="badge bg-light text-dark">
+                                            <i class="bi bi-geo-alt me-1"></i>
+                                            @(item.City?.Name ?? "N/A")
+                                        </span>
+                                    </td>
 
-                <td>
-                    @item.Description
-                </td>
+                                    <td>
+                                        Rs. @item.EntryFee.ToString("N0")
+                                    </td>
 
-                <td>
-                    @item.City?.Name
-                </td>
+                                    <td>
+                                        @if (item.IsActive)
+                                        {
+                                            <span class="badge bg-success">
+                                                Active
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">
+                                                Inactive
+                                            </span>
+                                        }
+                                    </td>
 
-                <td>
-                    @item.EntryFee
-                </td>
+                                    <td class="text-end">
 
-                <td>
-                    @if (!string.IsNullOrEmpty(item.MapUrl))
-                    {
-                        <a href="@item.MapUrl"
-                           target="_blank">
-                            View Map
-                        </a>
-                    }
-                    else
-                    {
-                        <span>N/A</span>
-                    }
-                </td>
+                                        <a asp-action="Details"
+                                           asp-route-id="@item.Id"
+                                           class="btn btn-sm btn-outline-info me-1"
+                                           title="Details">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
 
-                <td>
-                    @if (item.IsActive)
-                    {
-                        <span class="badge bg-success">
-                            Active
-                        </span>
-                    }
-                    else
-                    {
-                        <span class="badge bg-danger">
-                            Inactive
-                        </span>
-                    }
-                </td>
+                                        <a asp-action="Edit"
+                                           asp-route-id="@item.Id"
+                                           class="btn btn-sm btn-outline-primary me-1"
+                                           title="Edit">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
 
-                <td>
+                                        <a asp-action="Delete"
+                                           asp-route-id="@item.Id"
+                                           class="btn btn-sm btn-outline-danger"
+                                           title="Delete">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
 
-                    <a asp-action="Edit"
-                       asp-route-id="@item.Id"
-                       class="btn btn-warning btn-sm">
-                        Edit
-                    </a>
+                                    </td>
 
-                    <a asp-action="Details"
-                       asp-route-id="@item.Id"
-                       class="btn btn-info btn-sm">
-                        Details
-                    </a>
+                                </tr>
 
-                    <a asp-action="Delete"
-                       asp-route-id="@item.Id"
-                       class="btn btn-danger btn-sm">
-                        Delete
-                    </a>
+                                count++;
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="6"
+                                    class="text-center text-muted py-5">
 
-                </td>
+                                    <i class="bi bi-geo-alt fs-1 d-block mb-2"></i>
 
-            </tr>
-        }
+                                    No tourist spots found.
 
-    </tbody>
+                                    <br />
 
-</table>
+                                    <a asp-action="Create"
+                                       class="btn btn-primary btn-sm mt-3">
+                                        Add First Tourist Spot
+                                    </a>
+
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

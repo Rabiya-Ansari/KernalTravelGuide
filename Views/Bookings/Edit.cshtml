@@ -1,81 +1,192 @@
 @model KernalTravelGuide.Models.Booking
-@using KernalTravelGuide.Models.Enums
 
 @{
-    ViewData["Title"] = "Update Booking Status";
+    ViewData["Title"] = "Edit Booking";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h1>Update Booking Status</h1>
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div>
+        <h1 class="mb-1">Edit Booking</h1>
+
+        <p class="text-muted mb-0">
+            Update booking status
+        </p>
+    </div>
+
+    <a asp-action="Index"
+       class="btn btn-secondary">
+        <i class="bi bi-arrow-left"></i>
+        Back
+    </a>
+
+</div>
+
 
 <div class="row">
-    <div class="col-md-6">
 
-        <form asp-action="Edit" method="post">
+    <div class="col-lg-8">
 
-            <input type="hidden" asp-for="Id" />
+        <div class="card shadow-sm border-0">
 
-            <div class="mb-3">
-                <label class="form-label">
-                    Tour Package
-                </label>
+            <div class="card-header bg-white">
 
-                <input class="form-control"
-                       value="@(Model.TourPackage?.PackageName ?? "N/A")"
-                       readonly />
+                <h5 class="mb-0">
+                    Booking #@Model.Id
+                </h5>
+
             </div>
 
-            <div class="mb-3">
-                <label class="form-label">
-                    Travel Date
-                </label>
 
-                <input class="form-control"
-                       value="@Model.TravelDate.ToString("dd-MM-yyyy")"
-                       readonly />
+            <div class="card-body">
+
+                <form asp-action="Edit" method="post">
+
+                    <input type="hidden"
+                           asp-for="Id" />
+
+
+                    <!-- Customer -->
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Customer
+                        </label>
+
+                        <input type="text"
+                               class="form-control"
+                               value="@(Model.User != null ? Model.User.FirstName + " " + Model.User.LastName : "Unknown User")"
+                               readonly />
+
+                    </div>
+
+
+                    <!-- Tour Package -->
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Tour Package
+                        </label>
+
+                        <input type="text"
+                               class="form-control"
+                               value="@Model.TourPackage?.PackageName"
+                               readonly />
+
+                    </div>
+
+
+                    <!-- Travel Date -->
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Travel Date
+                        </label>
+
+                        <input type="text"
+                               class="form-control"
+                               value="@Model.TravelDate.ToString("dd MMMM yyyy")"
+                               readonly />
+
+                    </div>
+
+
+                    <!-- Persons -->
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Number of Persons
+                        </label>
+
+                        <input type="text"
+                               class="form-control"
+                               value="@Model.NumberOfPersons"
+                               readonly />
+
+                    </div>
+
+
+                    <!-- Amount -->
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Total Amount
+                        </label>
+
+                        <input type="text"
+                               class="form-control"
+                               value="Rs. @Model.TotalAmount.ToString("N0")"
+                               readonly />
+
+                    </div>
+
+
+                    <!-- Status -->
+
+                    <div class="mb-4">
+
+                        <label asp-for="Status"
+                               class="form-label">
+                            Booking Status
+                        </label>
+
+                        <select asp-for="Status"
+                                class="form-select">
+
+                            @foreach (var status in Enum.GetValues<KernalTravelGuide.Models.Enums.BookingStatus>())
+                            {
+                                <option value="@status">
+                                    @status
+                                </option>
+                            }
+
+                        </select>
+
+                        <span asp-validation-for="Status"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <button type="submit"
+                            class="btn btn-primary">
+
+                        <i class="bi bi-check-lg"></i>
+                        Update Booking
+
+                    </button>
+
+
+                    <a asp-action="Details"
+                       asp-route-id="@Model.Id"
+                       class="btn btn-secondary">
+
+                        Cancel
+
+                    </a>
+
+                </form>
+
             </div>
 
-            <div class="mb-3">
-                <label class="form-label">
-                    Number of Persons
-                </label>
-
-                <input class="form-control"
-                       value="@Model.NumberOfPersons"
-                       readonly />
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">
-                    Total Amount
-                </label>
-
-                <input class="form-control"
-                       value="@Model.TotalAmount"
-                       readonly />
-            </div>
-
-            <div class="mb-3">
-                <label asp-for="Status" class="form-label">
-                    Booking Status
-                </label>
-
-                <select asp-for="Status"
-                        class="form-select"
-                        asp-items="Html.GetEnumSelectList<BookingStatus>()">
-                </select>
-            </div>
-
-            <button type="submit"
-                    class="btn btn-primary">
-                Update Status
-            </button>
-
-            <a asp-action="Index"
-               class="btn btn-secondary">
-                Cancel
-            </a>
-
-        </form>
+        </div>
 
     </div>
+
 </div>
+
+
+@section Scripts {
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+}

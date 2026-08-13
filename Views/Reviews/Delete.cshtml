@@ -1,0 +1,178 @@
+﻿@model KernalTravelGuide.Models.Review
+
+@{
+    ViewData["Title"] = "Delete Review";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div>
+
+        <h1 class="mb-1 text-danger">
+            Delete Review
+        </h1>
+
+        <p class="text-muted mb-0">
+            Remove this customer review
+        </p>
+
+    </div>
+
+    <a asp-action="Index"
+       class="btn btn-secondary">
+
+        <i class="bi bi-arrow-left"></i>
+        Back
+
+    </a>
+
+</div>
+
+
+<div class="row">
+
+    <div class="col-lg-8">
+
+        <div class="card shadow-sm border-0">
+
+            <div class="card-body">
+
+
+                <div class="alert alert-danger">
+
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+
+                    <strong>
+                        Are you sure?
+                    </strong>
+
+                    This review will be permanently deleted.
+
+                </div>
+
+
+                <div class="border rounded p-4 mb-4">
+
+                    <h5 class="mb-4">
+                        Review #@Model.Id
+                    </h5>
+
+
+                    <!-- User -->
+
+                    <div class="mb-3">
+
+                        <strong>
+                            Customer
+                        </strong>
+
+                        <p class="text-muted mb-0">
+
+                            @if (Model.User != null)
+                            {
+                                @Model.User.FirstName
+                                @Model.User.LastName
+                            }
+                            else
+                            {
+                                @:Unknown User
+                            }
+
+                        </p>
+
+                    </div>
+
+
+                    <!-- Rating -->
+
+                    <div class="mb-3">
+
+                        <strong>
+                            Rating
+                        </strong>
+
+                        <div class="text-warning">
+
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                if (i <= Model.Rating)
+                                {
+                                    <i class="bi bi-star-fill"></i>
+                                }
+                                else
+                                {
+                                    <i class="bi bi-star"></i>
+                                }
+                            }
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Comment -->
+
+                    <div class="mb-3">
+
+                        <strong>
+                            Comment
+                        </strong>
+
+                        <p class="text-muted mb-0">
+                            @Model.Comment
+                        </p>
+
+                    </div>
+
+
+                    <!-- Date -->
+
+                    <div>
+
+                        <strong>
+                            Review Date
+                        </strong>
+
+                        <p class="text-muted mb-0">
+                            @Model.ReviewDate.ToString("dd MMMM yyyy hh:mm tt")
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <form asp-action="Delete"
+                      method="post">
+
+                    <input type="hidden"
+                           asp-for="Id" />
+
+
+                    <button type="submit"
+                            class="btn btn-danger">
+
+                        <i class="bi bi-trash"></i>
+                        Yes, Delete Review
+
+                    </button>
+
+
+                    <a asp-action="Index"
+                       class="btn btn-secondary">
+
+                        Cancel
+
+                    </a>
+
+                </form>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

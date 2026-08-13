@@ -2,76 +2,176 @@
 
 @{
     ViewData["Title"] = "Hotel Details";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h1>Hotel Details</h1>
+<div class="container-fluid">
 
-<hr />
+    <div class="d-flex justify-content-between align-items-center mb-4">
 
-<dl class="row">
+        <div>
+            <h2 class="fw-bold mb-1">Hotel Details</h2>
+            <p class="text-muted mb-0">
+                View complete hotel information.
+            </p>
+        </div>
 
-    <dt class="col-sm-3">Name</dt>
-    <dd class="col-sm-9">@Model.Name</dd>
-
-    <dt class="col-sm-3">City</dt>
-    <dd class="col-sm-9">@Model.City?.Name</dd>
-
-    <dt class="col-sm-3">Price Per Night</dt>
-    <dd class="col-sm-9">@Model.PricePerNight</dd>
-
-    <dt class="col-sm-3">Star Rating</dt>
-    <dd class="col-sm-9">@Model.StarRating ⭐</dd>
-
-    <dt class="col-sm-3">Contact No</dt>
-    <dd class="col-sm-9">@Model.ContactNo</dd>
-
-    <dt class="col-sm-3">Email</dt>
-    <dd class="col-sm-9">@Model.Email</dd>
-
-    <dt class="col-sm-3">Website</dt>
-    <dd class="col-sm-9">
-        @if (!string.IsNullOrEmpty(Model.Website))
-        {
-            <a href="@Model.Website"
-               target="_blank">
-                @Model.Website
+        <div>
+            <a asp-action="Edit"
+               asp-route-id="@Model.Id"
+               class="btn btn-primary me-2">
+                <i class="bi bi-pencil me-1"></i>
+                Edit
             </a>
-        }
-    </dd>
 
-    <dt class="col-sm-3">Image</dt>
-    <dd class="col-sm-9">
-        @if (!string.IsNullOrEmpty(Model.ImagePath))
-        {
-            <img src="@Model.ImagePath"
-                 alt="@Model.Name"
-                 style="max-width:200px;" />
-        }
-    </dd>
+            <a asp-action="Index"
+               class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-1"></i>
+                Back
+            </a>
+        </div>
 
-    <dt class="col-sm-3">Availability</dt>
-    <dd class="col-sm-9">
-        @if (Model.Availability)
-        {
-            <span class="badge bg-success">Available</span>
-        }
-        else
-        {
-            <span class="badge bg-danger">Not Available</span>
-        }
-    </dd>
+    </div>
 
-</dl>
 
-<div>
-    <a asp-action="Edit"
-       asp-route-id="@Model.Id"
-       class="btn btn-warning">
-        Edit
-    </a>
+    <div class="card border-0 shadow-sm">
 
-    <a asp-action="Index"
-       class="btn btn-secondary">
-        Back
-    </a>
+        <div class="card-body p-4">
+
+            <div class="row">
+
+                <!-- Hotel Information -->
+
+                <div class="col-lg-8">
+
+                    <h3 class="fw-bold mb-4">
+                        @Model.Name
+                    </h3>
+
+                    <div class="row g-4">
+
+                        <div class="col-md-6">
+                            <small class="text-muted d-block">
+                                City
+                            </small>
+
+                            <strong>
+                                <i class="bi bi-geo-alt me-1"></i>
+                                @(Model.City?.Name ?? "N/A")
+                            </strong>
+                        </div>
+
+                        <div class="col-md-6">
+                            <small class="text-muted d-block">
+                                Price Per Night
+                            </small>
+
+                            <strong>
+                                Rs. @Model.PricePerNight.ToString("N0")
+                            </strong>
+                        </div>
+
+                        <div class="col-md-6">
+                            <small class="text-muted d-block">
+                                Star Rating
+                            </small>
+
+                            <span class="text-warning">
+
+                                @for (int i = 1; i <= 5; i++)
+                                {
+                                    if (i <= Model.StarRating)
+                                    {
+                                        <i class="bi bi-star-fill"></i>
+                                    }
+                                    else
+                                    {
+                                        <i class="bi bi-star"></i>
+                                    }
+                                }
+
+                            </span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <small class="text-muted d-block">
+                                Availability
+                            </small>
+
+                            @if (Model.Availability)
+                            {
+                                <span class="badge bg-success">
+                                    Available
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">
+                                    Unavailable
+                                </span>
+                            }
+                        </div>
+
+                        <div class="col-md-6">
+                            <small class="text-muted d-block">
+                                Contact Number
+                            </small>
+
+                            <strong>
+                                @Model.ContactNo
+                            </strong>
+                        </div>
+
+                        <div class="col-md-6">
+                            <small class="text-muted d-block">
+                                Email
+                            </small>
+
+                            <strong>
+                                @Model.Email
+                            </strong>
+                        </div>
+
+                        <div class="col-12">
+                            <small class="text-muted d-block">
+                                Website
+                            </small>
+
+                            @if (!string.IsNullOrEmpty(Model.Website))
+                            {
+                                <a href="@Model.Website"
+                                   target="_blank">
+                                    @Model.Website
+                                </a>
+                            }
+                            else
+                            {
+                                <span class="text-muted">
+                                    Not provided
+                                </span>
+                            }
+                        </div>
+
+                        <div class="col-12">
+                            <small class="text-muted d-block">
+                                Image Path
+                            </small>
+
+                            <span>
+                                @(string.IsNullOrEmpty(Model.ImagePath)
+                                    ? "Not provided"
+                                    : Model.ImagePath)
+                            </span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
 </div>

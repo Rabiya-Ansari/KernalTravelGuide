@@ -1,0 +1,235 @@
+﻿@model IEnumerable<KernalTravelGuide.Models.Review>
+
+@{
+    ViewData["Title"] = "Reviews";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div>
+        <h1 class="mb-1">Reviews</h1>
+
+        <p class="text-muted mb-0">
+            Manage customer reviews and ratings
+        </p>
+    </div>
+
+</div>
+
+
+<div class="card shadow-sm border-0">
+
+    <div class="card-body">
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle">
+
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>User</th>
+                        <th>Place</th>
+                        <th>Rating</th>
+                        <th>Comment</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @if (Model.Any())
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
+
+                                <td>
+                                    <strong>#@item.Id</strong>
+                                </td>
+
+
+                                <!-- User -->
+
+                                <td>
+
+                                    @if (item.User != null)
+                                    {
+                                        <strong>
+                                            @item.User.FirstName
+                                            @item.User.LastName
+                                        </strong>
+
+                                        <br />
+
+                                        <small class="text-muted">
+                                            @item.User.Email
+                                        </small>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">
+                                            Unknown User
+                                        </span>
+                                    }
+
+                                </td>
+
+
+                                <!-- Place -->
+
+                                <td>
+
+                                    @if (item.TouristSpot != null)
+                                    {
+                                        <span>
+                                            <i class="bi bi-geo-alt"></i>
+                                            @item.TouristSpot.Name
+                                        </span>
+                                    }
+                                    else if (item.Hotel != null)
+                                    {
+                                        <span>
+                                            <i class="bi bi-building"></i>
+                                            @item.Hotel.Name
+                                        </span>
+                                    }
+                                    else if (item.Restaurant != null)
+                                    {
+                                        <span>
+                                            <i class="bi bi-cup-hot"></i>
+                                            @item.Restaurant.Name
+                                        </span>
+                                    }
+                                    else if (item.Resort != null)
+                                    {
+                                        <span>
+                                            <i class="bi bi-house-heart"></i>
+                                            @item.Resort.Name
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">
+                                            No place
+                                        </span>
+                                    }
+
+                                </td>
+
+
+                                <!-- Rating -->
+
+                                <td>
+
+                                    <span class="text-warning">
+
+                                        @for (int i = 1; i <= 5; i++)
+                                        {
+                                            if (i <= item.Rating)
+                                            {
+                                                <i class="bi bi-star-fill"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="bi bi-star"></i>
+                                            }
+                                        }
+
+                                    </span>
+
+                                    <small class="text-muted">
+                                        (@item.Rating/5)
+                                    </small>
+
+                                </td>
+
+
+                                <!-- Comment -->
+
+                                <td>
+
+                                    @{
+                                        var comment = item.Comment ?? "";
+
+                                        if (comment.Length > 60)
+                                        {
+                                            comment = comment.Substring(0, 60) + "...";
+                                        }
+                                    }
+
+                                    @comment
+
+                                </td>
+
+
+                                <!-- Date -->
+
+                                <td>
+                                    @item.ReviewDate.ToString("dd MMM yyyy")
+                                </td>
+
+
+                                <!-- Actions -->
+
+                                <td>
+
+                                    <div class="btn-group">
+
+                                        <a asp-action="Details"
+                                           asp-route-id="@item.Id"
+                                           class="btn btn-sm btn-info">
+
+                                            <i class="bi bi-eye"></i>
+
+                                        </a>
+
+
+                                        <a asp-action="Delete"
+                                           asp-route-id="@item.Id"
+                                           class="btn btn-sm btn-danger">
+
+                                            <i class="bi bi-trash"></i>
+
+                                        </a>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+
+                            <td colspan="7"
+                                class="text-center py-5">
+
+                                <i class="bi bi-star fs-1 text-muted"></i>
+
+                                <h5 class="mt-3">
+                                    No reviews found
+                                </h5>
+
+                                <p class="text-muted">
+                                    There are currently no customer reviews.
+                                </p>
+
+                            </td>
+
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>

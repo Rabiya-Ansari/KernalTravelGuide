@@ -1,7 +1,9 @@
 ﻿using KernalTravelGuide.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
+[Authorize(Roles = "Admin")]
 public class FeedbacksController : Controller
 {
     private readonly AppDbContext _context;
@@ -25,17 +27,13 @@ public class FeedbacksController : Controller
     public async Task<IActionResult> Details(int? id)
     {
         if (id == null)
-        {
             return NotFound();
-        }
 
         var feedback = await _context.Feedbacks
             .FirstOrDefaultAsync(x => x.Id == id);
 
         if (feedback == null)
-        {
             return NotFound();
-        }
 
         return View(feedback);
     }
@@ -44,17 +42,13 @@ public class FeedbacksController : Controller
     public async Task<IActionResult> Delete(int? id)
     {
         if (id == null)
-        {
             return NotFound();
-        }
 
         var feedback = await _context.Feedbacks
             .FirstOrDefaultAsync(x => x.Id == id);
 
         if (feedback == null)
-        {
             return NotFound();
-        }
 
         return View(feedback);
     }
@@ -64,14 +58,13 @@ public class FeedbacksController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
-        var feedback = await _context.Feedbacks
-            .FindAsync(id);
+        var feedback = await _context.Feedbacks.FindAsync(id);
 
-        if (feedback != null)
-        {
-            _context.Feedbacks.Remove(feedback);
-            await _context.SaveChangesAsync();
-        }
+        if (feedback == null)
+            return NotFound();
+
+        _context.Feedbacks.Remove(feedback);
+        await _context.SaveChangesAsync();
 
         return RedirectToAction(nameof(Index));
     }

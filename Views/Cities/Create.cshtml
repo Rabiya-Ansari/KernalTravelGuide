@@ -1,39 +1,113 @@
 @model KernalTravelGuide.Models.City
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Add City";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h1>Create</h1>
+<div class="container-fluid">
 
-<h4>City</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="d-flex justify-content-between align-items-center mb-4">
 
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
+        <div>
+            <h2 class="fw-bold mb-1">Add City</h2>
+            <p class="text-muted mb-0">
+                Add a new city to your travel guide.
+            </p>
+        </div>
 
-            <div class="form-group">
-                <label asp-for="CountryId" class="control-label">Country</label>
-                <select asp-for="CountryId" class="form-control" asp-items="ViewBag.CountryId">
-                    <option value="">-- Select Country --</option>
-                </select>
-                <span asp-validation-for="CountryId" class="text-danger"></span>
-            </div>
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i>
+            Back
+        </a>
 
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
     </div>
+
+
+    <div class="card border-0 shadow-sm">
+
+        <div class="card-body p-4">
+
+            <form asp-action="Create" method="post">
+
+                <div asp-validation-summary="ModelOnly"
+                     class="text-danger mb-3">
+                </div>
+
+
+                <!-- City Name -->
+
+                <div class="mb-3">
+
+                    <label asp-for="Name"
+                           class="form-label fw-semibold">
+                        City Name
+                    </label>
+
+                    <input asp-for="Name"
+                           class="form-control"
+                           placeholder="Enter city name" />
+
+                    <span asp-validation-for="Name"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+
+                <!-- Country -->
+
+                <div class="mb-3">
+
+                    <label asp-for="CountryId"
+                           class="form-label fw-semibold">
+                        Country
+                    </label>
+
+                    <select asp-for="CountryId"
+                            class="form-select"
+                            asp-items="ViewBag.CountryId">
+
+                        <option value="">
+                            -- Select Country --
+                        </option>
+
+                    </select>
+
+                    <span asp-validation-for="CountryId"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+
+                <!-- Buttons -->
+
+                <div class="mt-4">
+
+                    <button type="submit"
+                            class="btn btn-primary">
+                        <i class="bi bi-check-circle me-1"></i>
+                        Save City
+                    </button>
+
+                    <a asp-action="Index"
+                       class="btn btn-secondary ms-2">
+                        Cancel
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

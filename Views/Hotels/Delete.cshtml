@@ -2,54 +2,125 @@
 
 @{
     ViewData["Title"] = "Delete Hotel";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h1>Delete Hotel</h1>
+<div class="container-fluid">
 
-<h3>Are you sure you want to delete this hotel?</h3>
+    <div class="mb-4">
 
-<hr />
+        <h2 class="fw-bold mb-1 text-danger">
+            Delete Hotel
+        </h2>
 
-<dl class="row">
+        <p class="text-muted mb-0">
+            Are you sure you want to delete this hotel?
+        </p>
 
-    <dt class="col-sm-3">Name</dt>
-    <dd class="col-sm-9">@Model.Name</dd>
+    </div>
 
-    <dt class="col-sm-3">City</dt>
-    <dd class="col-sm-9">@Model.City?.Name</dd>
 
-    <dt class="col-sm-3">Price Per Night</dt>
-    <dd class="col-sm-9">@Model.PricePerNight</dd>
+    <div class="card border-0 shadow-sm">
 
-    <dt class="col-sm-3">Star Rating</dt>
-    <dd class="col-sm-9">@Model.StarRating ⭐</dd>
+        <div class="card-body p-4">
 
-    <dt class="col-sm-3">Contact</dt>
-    <dd class="col-sm-9">@Model.ContactNo</dd>
+            <div class="alert alert-danger">
 
-    <dt class="col-sm-3">Email</dt>
-    <dd class="col-sm-9">@Model.Email</dd>
+                <i class="bi bi-exclamation-triangle me-2"></i>
 
-    <dt class="col-sm-3">Availability</dt>
-    <dd class="col-sm-9">
-        @(Model.Availability ? "Available" : "Not Available")
-    </dd>
+                This action cannot be undone.
 
-</dl>
+            </div>
 
-<form asp-action="Delete">
 
-    <input type="hidden"
-           asp-for="Id" />
+            <div class="row g-4 mb-4">
 
-    <button type="submit"
-            class="btn btn-danger">
-        Delete
-    </button>
+                <div class="col-md-6">
 
-    <a asp-action="Index"
-       class="btn btn-secondary">
-        Cancel
-    </a>
+                    <small class="text-muted d-block">
+                        Hotel Name
+                    </small>
 
-</form>
+                    <h5 class="fw-bold">
+                        @Model.Name
+                    </h5>
+
+                </div>
+
+
+                <div class="col-md-6">
+
+                    <small class="text-muted d-block">
+                        City
+                    </small>
+
+                    <h5>
+                        @(Model.City?.Name ?? "N/A")
+                    </h5>
+
+                </div>
+
+
+                <div class="col-md-6">
+
+                    <small class="text-muted d-block">
+                        Price Per Night
+                    </small>
+
+                    <h5>
+                        Rs. @Model.PricePerNight.ToString("N0")
+                    </h5>
+
+                </div>
+
+
+                <div class="col-md-6">
+
+                    <small class="text-muted d-block">
+                        Availability
+                    </small>
+
+                    @if (Model.Availability)
+                    {
+                        <span class="badge bg-success">
+                            Available
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">
+                            Unavailable
+                        </span>
+                    }
+
+                </div>
+
+            </div>
+
+
+            <form asp-action="Delete" method="post">
+
+                <input type="hidden" asp-for="Id" />
+
+                <button type="submit"
+                        class="btn btn-danger">
+
+                    <i class="bi bi-trash me-1"></i>
+                    Yes, Delete Hotel
+
+                </button>
+
+                <a asp-action="Index"
+                   class="btn btn-secondary ms-2">
+
+                    Cancel
+
+                </a>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>

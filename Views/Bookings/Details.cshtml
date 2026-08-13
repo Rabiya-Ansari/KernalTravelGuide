@@ -2,78 +2,210 @@
 
 @{
     ViewData["Title"] = "Booking Details";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h1>Booking Details</h1>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="mb-1">Booking Details</h1>
+        <p class="text-muted mb-0">
+            View complete booking information
+        </p>
+    </div>
 
-<div class="card">
-    <div class="card-body">
+    <div>
+        <a asp-action="Edit"
+           asp-route-id="@Model.Id"
+           class="btn btn-warning">
+            <i class="bi bi-pencil"></i>
+            Edit Status
+        </a>
 
-        <dl class="row">
-
-            <dt class="col-sm-3">
-                User
-            </dt>
-            <dd class="col-sm-9">
-                @(Model.User?.UserName ?? Model.UserId)
-            </dd>
-
-            <dt class="col-sm-3">
-                Tour Package
-            </dt>
-            <dd class="col-sm-9">
-                @(Model.TourPackage?.PackageName ?? "N/A")
-            </dd>
-
-            <dt class="col-sm-3">
-                Travel Date
-            </dt>
-            <dd class="col-sm-9">
-                @Model.TravelDate.ToString("dd-MM-yyyy")
-            </dd>
-
-            <dt class="col-sm-3">
-                Number of Persons
-            </dt>
-            <dd class="col-sm-9">
-                @Model.NumberOfPersons
-            </dd>
-
-            <dt class="col-sm-3">
-                Total Amount
-            </dt>
-            <dd class="col-sm-9">
-                @Model.TotalAmount
-            </dd>
-
-            <dt class="col-sm-3">
-                Status
-            </dt>
-            <dd class="col-sm-9">
-                @Model.Status
-            </dd>
-
-            <dt class="col-sm-3">
-                Booking Date
-            </dt>
-            <dd class="col-sm-9">
-                @Model.BookingDate.ToString("dd-MM-yyyy")
-            </dd>
-
-        </dl>
-
+        <a asp-action="Index"
+           class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i>
+            Back
+        </a>
     </div>
 </div>
 
-<br />
 
-<a asp-action="Edit"
-   asp-route-id="@Model.Id"
-   class="btn btn-warning">
-    Change Status
-</a>
+<div class="card shadow-sm border-0">
 
-<a asp-action="Index"
-   class="btn btn-secondary">
-    Back to List
-</a>
+    <div class="card-header bg-white">
+        <h5 class="mb-0">
+            Booking #@Model.Id
+        </h5>
+    </div>
+
+    <div class="card-body">
+
+        <div class="row g-4">
+
+            <!-- Customer -->
+            <div class="col-md-6">
+
+                <div class="border rounded p-3 h-100">
+
+                    <h6 class="text-muted mb-3">
+                        <i class="bi bi-person"></i>
+                        Customer Information
+                    </h6>
+
+                    @if (Model.User != null)
+                    {
+                        <p class="mb-2">
+                            <strong>Name:</strong>
+                            @Model.User.FirstName @Model.User.LastName
+                        </p>
+
+                        <p class="mb-0">
+                            <strong>Email:</strong>
+                            @Model.User.Email
+                        </p>
+                    }
+                    else
+                    {
+                        <p class="text-muted mb-0">
+                            User information unavailable.
+                        </p>
+                    }
+
+                </div>
+
+            </div>
+
+
+            <!-- Package -->
+            <div class="col-md-6">
+
+                <div class="border rounded p-3 h-100">
+
+                    <h6 class="text-muted mb-3">
+                        <i class="bi bi-map"></i>
+                        Tour Package
+                    </h6>
+
+                    <p class="mb-0">
+                        <strong>Package:</strong>
+                        @Model.TourPackage?.PackageName
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- Travel Information -->
+            <div class="col-md-6">
+
+                <div class="border rounded p-3 h-100">
+
+                    <h6 class="text-muted mb-3">
+                        <i class="bi bi-calendar-event"></i>
+                        Travel Information
+                    </h6>
+
+                    <p class="mb-2">
+                        <strong>Travel Date:</strong>
+                        @Model.TravelDate.ToString("dd MMMM yyyy")
+                    </p>
+
+                    <p class="mb-0">
+                        <strong>Number of Persons:</strong>
+                        @Model.NumberOfPersons
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- Payment -->
+            <div class="col-md-6">
+
+                <div class="border rounded p-3 h-100">
+
+                    <h6 class="text-muted mb-3">
+                        <i class="bi bi-cash-stack"></i>
+                        Payment Information
+                    </h6>
+
+                    <p class="mb-0">
+                        <strong>Total Amount:</strong>
+                        Rs. @Model.TotalAmount.ToString("N0")
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- Status -->
+            <div class="col-md-6">
+
+                <div class="border rounded p-3 h-100">
+
+                    <h6 class="text-muted mb-3">
+                        <i class="bi bi-check-circle"></i>
+                        Booking Status
+                    </h6>
+
+                    <p class="mb-0">
+
+                        @if (Model.Status.ToString() == "Pending")
+                        {
+                            <span class="badge bg-warning text-dark">
+                                Pending
+                            </span>
+                        }
+                        else if (Model.Status.ToString() == "Confirmed")
+                        {
+                            <span class="badge bg-success">
+                                Confirmed
+                            </span>
+                        }
+                        else if (Model.Status.ToString() == "Cancelled")
+                        {
+                            <span class="badge bg-danger">
+                                Cancelled
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">
+                                @Model.Status
+                            </span>
+                        }
+
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- Booking Date -->
+            <div class="col-md-6">
+
+                <div class="border rounded p-3 h-100">
+
+                    <h6 class="text-muted mb-3">
+                        <i class="bi bi-clock"></i>
+                        Booking Information
+                    </h6>
+
+                    <p class="mb-0">
+                        <strong>Booked On:</strong>
+                        @Model.BookingDate.ToString("dd MMMM yyyy hh:mm tt")
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
