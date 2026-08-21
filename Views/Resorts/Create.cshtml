@@ -1,166 +1,129 @@
 @model KernalTravelGuide.Models.Resort
 
 @{
-    ViewData["Title"] = "Add Resort";
+    ViewData["Title"] = "Create Resort";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<div class="container-fluid">
+<h1>Create Resort</h1>
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
+<div class="row">
+    <div class="col-md-6">
 
-        <div>
-            <h2 class="fw-bold mb-1">Add Resort</h2>
-            <p class="text-muted mb-0">
-                Add a new resort.
-            </p>
-        </div>
+        <form asp-action="Create"
+              method="post"
+              enctype="multipart/form-data">
 
-        <a asp-action="Index" class="btn btn-outline-secondary">
-            <i class="bi bi-arrow-left me-1"></i>
-            Back
-        </a>
+            <div asp-validation-summary="ModelOnly"
+                 class="text-danger"></div>
 
-    </div>
+            <!-- Name -->
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label">
+                    Resort Name
+                </label>
 
-    <div class="card border-0 shadow-sm">
+                <input asp-for="Name"
+                       class="form-control" />
 
-        <div class="card-body p-4">
+                <span asp-validation-for="Name"
+                      class="text-danger"></span>
+            </div>
 
-            <form asp-action="Create" method="post">
+            <!-- City -->
+            <div class="mb-3">
+                <label asp-for="CityId" class="form-label">
+                    City
+                </label>
 
-                <div asp-validation-summary="ModelOnly"
-                     class="text-danger mb-3">
-                </div>
+                <select asp-for="CityId"
+                        asp-items="ViewBag.CityId"
+                        class="form-control">
 
-                <div class="mb-3">
-                    <label asp-for="Name"
-                           class="form-label fw-semibold">
-                        Resort Name
-                    </label>
+                    <option value="">
+                        -- Select City --
+                    </option>
 
-                    <input asp-for="Name"
-                           class="form-control"
-                           placeholder="Enter resort name" />
+                </select>
 
-                    <span asp-validation-for="Name"
-                          class="text-danger"></span>
-                </div>
+                <span asp-validation-for="CityId"
+                      class="text-danger"></span>
+            </div>
 
-                <div class="mb-3">
-                    <label asp-for="CityId"
-                           class="form-label fw-semibold">
-                        City
-                    </label>
+            <!-- Price -->
+            <div class="mb-3">
+                <label asp-for="Price" class="form-label">
+                    Price
+                </label>
 
-                    <select asp-for="CityId"
-                            class="form-select"
-                            asp-items="ViewBag.CityId">
+                <input asp-for="Price"
+                       type="number"
+                       class="form-control" />
 
-                        <option value="">
-                            -- Select City --
-                        </option>
+                <span asp-validation-for="Price"
+                      class="text-danger"></span>
+            </div>
 
-                    </select>
+            <!-- Rating -->
+            <div class="mb-3">
+                <label asp-for="Rating" class="form-label">
+                    Rating
+                </label>
 
-                    <span asp-validation-for="CityId"
-                          class="text-danger"></span>
-                </div>
+                <input asp-for="Rating"
+                       type="number"
+                       min="1"
+                       max="5"
+                       class="form-control" />
 
-                <div class="row">
+                <span asp-validation-for="Rating"
+                      class="text-danger"></span>
+            </div>
 
-                    <div class="col-md-6 mb-3">
+            <!-- Availability -->
+            <div class="form-check mb-3">
 
-                        <label asp-for="Price"
-                               class="form-label fw-semibold">
-                            Price
-                        </label>
+                <input asp-for="Availability"
+                       class="form-check-input" />
 
-                        <div class="input-group">
-                            <span class="input-group-text">Rs.</span>
+                <label asp-for="Availability"
+                       class="form-check-label">
+                    Available
+                </label>
 
-                            <input asp-for="Price"
-                                   type="number"
-                                   class="form-control" />
-                        </div>
+            </div>
 
-                        <span asp-validation-for="Price"
-                              class="text-danger"></span>
+            <!-- IMAGE UPLOAD -->
+            <div class="mb-3">
 
-                    </div>
+                <label class="form-label">
+                    Resort Image
+                </label>
 
-                    <div class="col-md-6 mb-3">
+                <input type="file"
+                       name="ImageFile"
+                       class="form-control"
+                       accept="image/*" />
 
-                        <label asp-for="Rating"
-                               class="form-label fw-semibold">
-                            Rating
-                        </label>
+                <small class="text-muted">
+                    Choose an image from your computer.
+                </small>
 
-                        <select asp-for="Rating"
-                                class="form-select">
+            </div>
 
-                            <option value="1">1 Star</option>
-                            <option value="2">2 Stars</option>
-                            <option value="3">3 Stars</option>
-                            <option value="4">4 Stars</option>
-                            <option value="5">5 Stars</option>
+            <button type="submit"
+                    class="btn btn-primary">
+                Create Resort
+            </button>
 
-                        </select>
+            <a asp-action="Index"
+               class="btn btn-secondary">
+                Back
+            </a>
 
-                        <span asp-validation-for="Rating"
-                              class="text-danger"></span>
-
-                    </div>
-
-                </div>
-
-                <div class="mb-3">
-
-                    <label asp-for="ImagePath"
-                           class="form-label fw-semibold">
-                        Image Path
-                    </label>
-
-                    <input asp-for="ImagePath"
-                           class="form-control"
-                           placeholder="/images/resorts/resort.jpg" />
-
-                    <span asp-validation-for="ImagePath"
-                          class="text-danger"></span>
-
-                </div>
-
-                <div class="form-check mb-4">
-
-                    <input asp-for="Availability"
-                           class="form-check-input" />
-
-                    <label asp-for="Availability"
-                           class="form-check-label">
-                        Resort is Available
-                    </label>
-
-                </div>
-
-                <button type="submit"
-                        class="btn btn-primary">
-
-                    <i class="bi bi-check-circle me-1"></i>
-                    Save Resort
-
-                </button>
-
-                <a asp-action="Index"
-                   class="btn btn-secondary ms-2">
-                    Cancel
-                </a>
-
-            </form>
-
-        </div>
+        </form>
 
     </div>
-
 </div>
 
 @section Scripts {

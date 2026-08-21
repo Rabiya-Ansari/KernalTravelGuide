@@ -5,163 +5,109 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<div class="container-fluid">
+<h1>Hotels</h1>
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h2 class="fw-bold mb-1">Hotels</h2>
-            <p class="text-muted mb-0">
-                Manage hotels and accommodation options.
-            </p>
-        </div>
+<p>
+    <a asp-action="Create"
+       class="btn btn-primary">
+        Add New Hotel
+    </a>
+</p>
 
-        <a asp-action="Create" class="btn btn-primary">
-            <i class="bi bi-plus-circle me-1"></i>
-            Add Hotel
-        </a>
-    </div>
+<table class="table table-bordered table-striped">
 
-    <div class="card border-0 shadow-sm">
+    <thead>
+        <tr>
+            <th>Image</th>
+            <th>Name</th>
+            <th>City</th>
+            <th>Price/Night</th>
+            <th>Stars</th>
+            <th>Contact</th>
+            <th>Availability</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
 
-        <div class="card-header bg-white border-0 py-3">
-            <h5 class="fw-bold mb-0">All Hotels</h5>
-        </div>
+    <tbody>
 
-        <div class="card-body">
+        @foreach (var item in Model)
+        {
+            <tr>
 
-            <div class="table-responsive">
+                <td>
+                    @if (!string.IsNullOrEmpty(item.ImagePath))
+                    {
+                        <img src="@item.ImagePath"
+                             alt="@item.Name"
+                             style="width:90px;height:65px;object-fit:cover;border-radius:6px;" />
+                    }
+                    else
+                    {
+                        <span>No Image</span>
+                    }
+                </td>
 
-                <table class="table table-hover align-middle">
+                <td>
+                    @item.Name
+                </td>
 
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Hotel</th>
-                            <th>City</th>
-                            <th>Price/Night</th>
-                            <th>Stars</th>
-                            <th>Availability</th>
-                            <th class="text-end">Actions</th>
-                        </tr>
-                    </thead>
+                <td>
+                    @item.City?.Name
+                </td>
 
-                    <tbody>
+                <td>
+                    @item.PricePerNight
+                </td>
 
-                        @if (Model != null && Model.Any())
-                        {
-                            int count = 1;
+                <td>
+                    @item.StarRating ⭐
+                </td>
 
-                            foreach (var item in Model)
-                            {
-                                <tr>
+                <td>
+                    @item.ContactNo
+                </td>
 
-                                    <td>@count</td>
+                <td>
+                    @if (item.Availability)
+                    {
+                        <span class="badge bg-success">
+                            Available
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger">
+                            Not Available
+                        </span>
+                    }
+                </td>
 
-                                    <td>
-                                        <strong>@item.Name</strong>
-                                    </td>
+                <td>
 
-                                    <td>
-                                        <span class="badge bg-light text-dark">
-                                            <i class="bi bi-geo-alt me-1"></i>
-                                            @(item.City?.Name ?? "N/A")
-                                        </span>
-                                    </td>
+                    <a asp-action="Edit"
+                       asp-route-id="@item.Id"
+                       class="btn btn-sm btn-warning">
+                        Edit
+                    </a>
 
-                                    <td>
-                                        Rs. @item.PricePerNight.ToString("N0")
-                                    </td>
+                    <a asp-action="Details"
+                       asp-route-id="@item.Id"
+                       class="btn btn-sm btn-info">
+                        Details
+                    </a>
 
-                                    <td>
-                                        <span class="text-warning">
-                                            @for (int i = 1; i <= 5; i++)
-                                            {
-                                                if (i <= item.StarRating)
-                                                {
-                                                    <i class="bi bi-star-fill"></i>
-                                                }
-                                                else
-                                                {
-                                                    <i class="bi bi-star"></i>
-                                                }
-                                            }
-                                        </span>
-                                    </td>
+                    <a asp-action="Delete"
+                       asp-route-id="@item.Id"
+                       class="btn btn-sm btn-danger">
+                        Delete
+                    </a>
 
-                                    <td>
-                                        @if (item.Availability)
-                                        {
-                                            <span class="badge bg-success">
-                                                Available
-                                            </span>
-                                        }
-                                        else
-                                        {
-                                            <span class="badge bg-secondary">
-                                                Unavailable
-                                            </span>
-                                        }
-                                    </td>
+                </td>
 
-                                    <td class="text-end">
+            </tr>
+        }
 
-                                        <a asp-action="Details"
-                                           asp-route-id="@item.Id"
-                                           class="btn btn-sm btn-outline-info me-1"
-                                           title="Details">
-                                            <i class="bi bi-eye"></i>
-                                        </a>
+    </tbody>
 
-                                        <a asp-action="Edit"
-                                           asp-route-id="@item.Id"
-                                           class="btn btn-sm btn-outline-primary me-1"
-                                           title="Edit">
-                                            <i class="bi bi-pencil"></i>
-                                        </a>
-
-                                        <a asp-action="Delete"
-                                           asp-route-id="@item.Id"
-                                           class="btn btn-sm btn-outline-danger"
-                                           title="Delete">
-                                            <i class="bi bi-trash"></i>
-                                        </a>
-
-                                    </td>
-
-                                </tr>
-
-                                count++;
-                            }
-                        }
-                        else
-                        {
-                            <tr>
-                                <td colspan="7"
-                                    class="text-center text-muted py-5">
-
-                                    <i class="bi bi-building fs-1 d-block mb-2"></i>
-
-                                    No hotels found.
-
-                                    <br />
-
-                                    <a asp-action="Create"
-                                       class="btn btn-primary btn-sm mt-3">
-                                        Add First Hotel
-                                    </a>
-
-                                </td>
-                            </tr>
-                        }
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
+</table>

@@ -5,84 +5,203 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h1>Restaurants</h1>
+<div class="d-flex justify-content-between align-items-center mb-4">
 
-<p>
+    <div>
+        <h2 class="fw-bold mb-1">Restaurants</h2>
+        <p class="text-muted mb-0">
+            Manage restaurants available in Kernal Travel Guide.
+        </p>
+    </div>
+
     <a asp-action="Create"
        class="btn btn-primary">
-        Add New Restaurant
+        <i class="bi bi-plus-lg me-1"></i>
+        Add Restaurant
     </a>
-</p>
 
-<table class="table table-bordered table-striped">
+</div>
 
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>City</th>
-            <th>Rating</th>
-            <th>Phone</th>
-            <th>Image</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
 
-    <tbody>
+<div class="card border-0 shadow-sm">
 
-        @foreach (var item in Model)
-        {
-            <tr>
+    <div class="card-body">
 
-                <td>
-                    @item.Name
-                </td>
+        <div class="table-responsive">
 
-                <td>
-                    @item.City?.Name
-                </td>
+            <table class="table table-hover align-middle mb-0">
 
-                <td>
-                    @item.Rating ⭐
-                </td>
+                <thead class="table-light">
 
-                <td>
-                    @item.Phone
-                </td>
+                    <tr>
+                        <th>Image</th>
+                        <th>Restaurant</th>
+                        <th>City</th>
+                        <th>Rating</th>
+                        <th>Phone</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
 
-                <td>
-                    @if (!string.IsNullOrEmpty(item.ImagePath))
+                </thead>
+
+                <tbody>
+
+                    @if (Model.Any())
                     {
-                        <img src="@item.ImagePath"
-                             alt="@item.Name"
-                             style="width:80px;height:60px;object-fit:cover;" />
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+
+                                <!-- Image -->
+                                <td>
+
+                                    @if (!string.IsNullOrEmpty(item.ImagePath))
+                                    {
+                                        <img src="@Url.Content(item.ImagePath)"
+                                             alt="@item.Name"
+                                             style="width:65px;
+                                        height:50px;
+                                        object-fit:cover;
+                                        border-radius:8px;" />
+                                    }
+                                    else
+                                    {
+                                        <div class="d-flex align-items-center justify-content-center bg-light"
+                                             style="width:65px;
+                                            height:50px;
+                                            border-radius:8px;">
+
+                                            <i class="bi bi-image text-muted"></i>
+
+                                        </div>
+                                    }
+
+                                </td>
+
+
+                                <!-- Name -->
+                                <td>
+                                    <strong>
+                                        @item.Name
+                                    </strong>
+                                </td>
+
+
+                                <!-- City -->
+                                <td>
+                                    @if (item.City != null)
+                                    {
+                                        <span>
+                                            <i class="bi bi-geo-alt me-1"></i>
+                                            @item.City.Name
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">
+                                            Not assigned
+                                        </span>
+                                    }
+                                </td>
+
+
+                                <!-- Rating -->
+                                <td>
+
+                                    <span class="badge bg-warning text-dark">
+                                        <i class="bi bi-star-fill me-1"></i>
+                                        @item.Rating
+                                    </span>
+
+                                </td>
+
+
+                                <!-- Phone -->
+                                <td>
+                                    @if (!string.IsNullOrEmpty(item.Phone))
+                                    {
+                                        @item.Phone
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">
+                                            —
+                                        </span>
+                                    }
+                                </td>
+
+
+                                <!-- Actions -->
+                                <td class="text-end">
+
+                                    <a asp-action="Details"
+                                       asp-route-id="@item.Id"
+                                       class="btn btn-sm btn-info me-1"
+                                       title="View Details">
+
+                                        <i class="bi bi-eye"></i>
+
+                                    </a>
+
+                                    <a asp-action="Edit"
+                                       asp-route-id="@item.Id"
+                                       class="btn btn-sm btn-warning me-1"
+                                       title="Edit">
+
+                                        <i class="bi bi-pencil"></i>
+
+                                    </a>
+
+                                    <a asp-action="Delete"
+                                       asp-route-id="@item.Id"
+                                       class="btn btn-sm btn-danger"
+                                       title="Delete">
+
+                                        <i class="bi bi-trash"></i>
+
+                                    </a>
+
+                                </td>
+
+                            </tr>
+                        }
                     }
-                </td>
+                    else
+                    {
+                        <tr>
 
-                <td>
+                            <td colspan="6"
+                                class="text-center py-5">
 
-                    <a asp-action="Edit"
-                       asp-route-id="@item.Id"
-                       class="btn btn-sm btn-warning">
-                        Edit
-                    </a>
+                                <i class="bi bi-cup-hot display-5 text-muted"></i>
 
-                    <a asp-action="Details"
-                       asp-route-id="@item.Id"
-                       class="btn btn-sm btn-info">
-                        Details
-                    </a>
+                                <h5 class="mt-3">
+                                    No Restaurants Found
+                                </h5>
 
-                    <a asp-action="Delete"
-                       asp-route-id="@item.Id"
-                       class="btn btn-sm btn-danger">
-                        Delete
-                    </a>
+                                <p class="text-muted">
+                                    Start by adding your first restaurant.
+                                </p>
 
-                </td>
+                                <a asp-action="Create"
+                                   class="btn btn-primary">
 
-            </tr>
-        }
+                                    <i class="bi bi-plus-lg me-1"></i>
+                                    Add Restaurant
 
-    </tbody>
+                                </a>
 
-</table>
+                            </td>
+
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>

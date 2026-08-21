@@ -1,115 +1,79 @@
 @model KernalTravelGuide.Models.Resort
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Delete Resort";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h1>Delete</h1>
+<h1>Delete Resort</h1>
 
-<h3>Are you sure you want to delete this resort?</h3>
-
-<div>
-
-    <h4>Resort</h4>
-    <hr />
-
-    <dl class="row">
-
-        <dt class="col-sm-3">
-            Name
-        </dt>
-
-        <dd class="col-sm-9">
-            @Model.Name
-        </dd>
-
-
-        <dt class="col-sm-3">
-            City
-        </dt>
-
-        <dd class="col-sm-9">
-            @Model.City?.Name
-        </dd>
-
-
-        <dt class="col-sm-3">
-            Price
-        </dt>
-
-        <dd class="col-sm-9">
-            @Model.Price
-        </dd>
-
-
-        <dt class="col-sm-3">
-            Rating
-        </dt>
-
-        <dd class="col-sm-9">
-            @Model.Rating / 5
-        </dd>
-
-
-        <dt class="col-sm-3">
-            Availability
-        </dt>
-
-        <dd class="col-sm-9">
-
-            @if (Model.Availability)
-            {
-                <span class="badge bg-success">
-                    Available
-                </span>
-            }
-            else
-            {
-                <span class="badge bg-danger">
-                    Not Available
-                </span>
-            }
-
-        </dd>
-
-
-        <dt class="col-sm-3">
-            Image
-        </dt>
-
-        <dd class="col-sm-9">
-
-            @if (!string.IsNullOrEmpty(Model.ImagePath))
-            {
-                <img src="@Model.ImagePath"
-                     alt="@Model.Name"
-                     width="150" />
-            }
-            else
-            {
-                <span>No Image</span>
-            }
-
-        </dd>
-
-    </dl>
-
-
-    <form asp-action="Delete">
-
-        <input type="hidden"
-               asp-for="Id" />
-
-        <input type="submit"
-               value="Delete"
-               class="btn btn-danger" />
-
-        <a asp-action="Index"
-           class="btn btn-secondary">
-            Back to List
-        </a>
-
-    </form>
-
+<div class="alert alert-danger">
+    Are you sure you want to delete this resort?
 </div>
+
+@if (!string.IsNullOrEmpty(Model.ImagePath))
+{
+    <div class="mb-3">
+
+        <img src="@Model.ImagePath"
+             alt="@Model.Name"
+             style="width:200px;
+        height:130px;
+        object-fit:cover;
+        border-radius:8px;" />
+
+    </div>
+}
+
+<dl class="row">
+
+    <dt class="col-sm-3">
+        Name
+    </dt>
+
+    <dd class="col-sm-9">
+        @Model.Name
+    </dd>
+
+    <dt class="col-sm-3">
+        City
+    </dt>
+
+    <dd class="col-sm-9">
+        @Model.City?.Name
+    </dd>
+
+    <dt class="col-sm-3">
+        Price
+    </dt>
+
+    <dd class="col-sm-9">
+        @Model.Price
+    </dd>
+
+    <dt class="col-sm-3">
+        Rating
+    </dt>
+
+    <dd class="col-sm-9">
+        @Model.Rating ⭐
+    </dd>
+
+</dl>
+
+<form asp-action="Delete" method="post">
+
+    <input type="hidden"
+           asp-for="Id" />
+
+    <button type="submit"
+            class="btn btn-danger">
+        Delete
+    </button>
+
+    <a asp-action="Index"
+       class="btn btn-secondary">
+        Cancel
+    </a>
+
+</form>

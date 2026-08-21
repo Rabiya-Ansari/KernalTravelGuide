@@ -5,72 +5,149 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h1>Restaurant Details</h1>
+<div class="mb-4">
+
+    <h2 class="fw-bold">
+        Restaurant Details
+    </h2>
+
+    <p class="text-muted">
+        View restaurant information.
+    </p>
+
+</div>
 
 
+<div class="card border-0 shadow-sm">
 
-<dl class="row">
+    <div class="card-body p-4">
 
-    <dt class="col-sm-3">
-        Name
-    </dt>
+        <div class="row">
 
-    <dd class="col-sm-9">
-        @Model.Name
-    </dd>
+            <!-- Image -->
+            <div class="col-md-4 mb-4">
 
-    <dt class="col-sm-3">
-        City
-    </dt>
+                @if (!string.IsNullOrEmpty(Model.ImagePath))
+                {
+                    <img src="@Url.Content(Model.ImagePath)"
+                         alt="@Model.Name"
+                         class="img-fluid rounded shadow-sm"
+                         style="
+                    width:100%;
+                    max-height:300px;
+                    object-fit:cover;
+                    " />
+                }
+                else
+                {
+                    <div class="bg-light rounded d-flex
+                        align-items-center
+                        justify-content-center"
+                         style="height:250px;">
 
-    <dd class="col-sm-9">
-        @Model.City?.Name
-    </dd>
+                        <span class="text-muted">
+                            No Image
+                        </span>
 
-    <dt class="col-sm-3">
-        Rating
-    </dt>
+                    </div>
+                }
 
-    <dd class="col-sm-9">
-        @Model.Rating ⭐
-    </dd>
+            </div>
 
-    <dt class="col-sm-3">
-        Phone
-    </dt>
 
-    <dd class="col-sm-9">
-        @Model.Phone
-    </dd>
+            <!-- Information -->
+            <div class="col-md-8">
 
-    <dt class="col-sm-3">
-        Image
-    </dt>
+                <h3 class="fw-bold mb-4">
+                    @Model.Name
+                </h3>
 
-    <dd class="col-sm-9">
 
-        @if (!string.IsNullOrEmpty(Model.ImagePath))
-        {
-            <img src="@Model.ImagePath"
-                 alt="@Model.Name"
-                 style="max-width:250px;" />
-        }
+                <dl class="row">
 
-    </dd>
+                    <dt class="col-sm-4">
+                        City
+                    </dt>
 
-</dl>
+                    <dd class="col-sm-8">
+                        @Model.City?.Name
+                    </dd>
 
-<div>
 
-    <a asp-action="Edit"
-       asp-route-id="@Model.Id"
-       class="btn btn-warning">
-        Edit
-    </a>
+                    <dt class="col-sm-4">
+                        Rating
+                    </dt>
 
-    <a asp-action="Index"
-       class="btn btn-secondary">
-        Back
-    </a>
+                    <dd class="col-sm-8">
+
+                        <span class="badge bg-warning text-dark">
+
+                            <i class="bi bi-star-fill"></i>
+
+                            @Model.Rating / 5
+
+                        </span>
+
+                    </dd>
+
+
+                    <dt class="col-sm-4">
+                        Phone
+                    </dt>
+
+                    <dd class="col-sm-8">
+
+                        @if (!string.IsNullOrEmpty(Model.Phone))
+                        {
+                            @Model.Phone
+                        }
+                        else
+                        {
+                            <span class="text-muted">
+                                Not available
+                            </span>
+                        }
+
+                    </dd>
+
+                </dl>
+
+
+                <div class="mt-4">
+
+                    <a asp-action="Edit"
+                       asp-route-id="@Model.Id"
+                       class="btn btn-warning">
+
+                        <i class="bi bi-pencil me-1"></i>
+                        Edit
+
+                    </a>
+
+
+                    <a asp-action="Delete"
+                       asp-route-id="@Model.Id"
+                       class="btn btn-danger ms-2">
+
+                        <i class="bi bi-trash me-1"></i>
+                        Delete
+
+                    </a>
+
+
+                    <a asp-action="Index"
+                       class="btn btn-secondary ms-2">
+
+                        Back
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
 
 </div>

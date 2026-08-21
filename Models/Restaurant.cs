@@ -19,6 +19,7 @@ namespace KernalTravelGuide.Models
         public double Rating { get; set; }
 
         [Phone]
+        [StringLength(30)]
         public string? Phone { get; set; }
 
         public string? ImagePath { get; set; }

@@ -1,0 +1,103 @@
+﻿@model IEnumerable<KernalTravelGuide.Data.ApplicationUser>
+
+@{
+    ViewData["Title"] = "Users";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="mb-1">Users</h1>
+        <p class="text-muted mb-0">
+            Manage registered users
+        </p>
+    </div>
+</div>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error"]
+    </div>
+}
+
+<div class="card shadow-sm border-0">
+
+    <div class="card-body">
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle">
+
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>User Name</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @if (Model.Any())
+                    {
+                        @foreach (var user in Model)
+                        {
+                            <tr>
+
+                                <td>
+                                    @user.FirstName @user.LastName
+                                </td>
+
+                                <td>
+                                    @user.Email
+                                </td>
+
+                                <td>
+                                    @user.PhoneNumber
+                                </td>
+
+                                <td>
+                                    @user.UserName
+                                </td>
+
+                                <td>
+
+                                    <a asp-action="Details"
+                                       asp-route-id="@user.Id"
+                                       class="btn btn-sm btn-info">
+                                        Details
+                                    </a>
+
+                                    <a asp-action="Delete"
+                                       asp-route-id="@user.Id"
+                                       class="btn btn-sm btn-danger">
+                                        Delete
+                                    </a>
+
+                                </td>
+
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5"
+                                class="text-center text-muted py-4">
+                                No users found.
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
