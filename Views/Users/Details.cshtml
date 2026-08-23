@@ -1,100 +1,172 @@
-﻿@model IEnumerable<KernalTravelGuide.Data.ApplicationUser>
+﻿@model KernalTravelGuide.Data.ApplicationUser
 
 @{
-    ViewData["Title"] = "Users";
+    ViewData["Title"] = "User Details";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+    var role = ViewBag.Role as string ?? "No Role";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-4">
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+
     <div>
-        <h1 class="mb-1">Users</h1>
+        <h1 class="mb-1">User Details</h1>
         <p class="text-muted mb-0">
-            Manage registered users
+            View complete user information.
         </p>
     </div>
-</div>
 
-@if (TempData["Error"] != null)
-{
-    <div class="alert alert-danger">
-        @TempData["Error"]
+    <div class="d-flex gap-2">
+
+        <a asp-action="Edit"
+           asp-route-id="@Model.Id"
+           class="btn btn-primary">
+            <i class="bi bi-pencil me-1"></i>
+            Edit User
+        </a>
+
+        <a asp-action="Index"
+           class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i>
+            Back
+        </a>
+
     </div>
-}
+
+</div>
 
 <div class="card shadow-sm border-0">
 
-    <div class="card-body">
+    <div class="card-body p-4">
 
-        <div class="table-responsive">
+        <div class="row g-4">
 
-            <table class="table table-hover align-middle">
+            <div class="col-md-6">
+                <label class="form-label text-muted">
+                    First Name
+                </label>
 
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Phone</th>
-                        <th>User Name</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
+                <div class="fw-semibold">
+                    @Model.FirstName
+                </div>
+            </div>
 
-                <tbody>
+            <div class="col-md-6">
+                <label class="form-label text-muted">
+                    Last Name
+                </label>
 
-                    @if (Model.Any())
+                <div class="fw-semibold">
+                    @Model.LastName
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label text-muted">
+                    Email
+                </label>
+
+                <div>
+                    @(Model.Email ?? "—")
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label text-muted">
+                    Username
+                </label>
+
+                <div>
+                    @(Model.UserName ?? "—")
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label text-muted">
+                    Phone
+                </label>
+
+                <div>
+                    @(string.IsNullOrWhiteSpace(Model.PhoneNumber)
+                        ? "—"
+                        : Model.PhoneNumber)
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label text-muted">
+                    Role
+                </label>
+
+                <div>
+
+                    @if (role == "Admin")
                     {
-                        @foreach (var user in Model)
-                        {
-                            <tr>
-
-                                <td>
-                                    @user.FirstName @user.LastName
-                                </td>
-
-                                <td>
-                                    @user.Email
-                                </td>
-
-                                <td>
-                                    @user.PhoneNumber
-                                </td>
-
-                                <td>
-                                    @user.UserName
-                                </td>
-
-                                <td>
-
-                                    <a asp-action="Details"
-                                       asp-route-id="@user.Id"
-                                       class="btn btn-sm btn-info">
-                                        Details
-                                    </a>
-
-                                    <a asp-action="Delete"
-                                       asp-route-id="@user.Id"
-                                       class="btn btn-sm btn-danger">
-                                        Delete
-                                    </a>
-
-                                </td>
-
-                            </tr>
-                        }
+                        <span class="badge text-bg-danger">
+                            Admin
+                        </span>
                     }
                     else
                     {
-                        <tr>
-                            <td colspan="5"
-                                class="text-center text-muted py-4">
-                                No users found.
-                            </td>
-                        </tr>
+                        <span class="badge text-bg-primary">
+                            @role
+                        </span>
                     }
 
-                </tbody>
+                </div>
+            </div>
 
-            </table>
+            <div class="col-12">
+
+                <label class="form-label text-muted">
+                    Address
+                </label>
+
+                <div>
+                    @(string.IsNullOrWhiteSpace(Model.Address)
+                        ? "—"
+                        : Model.Address)
+                </div>
+
+            </div>
+
+            <div class="col-md-6">
+
+                <label class="form-label text-muted">
+                    Created On
+                </label>
+
+                <div>
+                    @Model.CreatedOn.ToString(
+                        "dd MMM yyyy, hh:mm tt")
+                </div>
+
+            </div>
+
+            <div class="col-md-6">
+
+                <label class="form-label text-muted">
+                    Email Status
+                </label>
+
+                <div>
+
+                    @if (Model.EmailConfirmed)
+                    {
+                        <span class="badge text-bg-success">
+                            Confirmed
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="badge text-bg-warning">
+                            Not Confirmed
+                        </span>
+                    }
+
+                </div>
+
+            </div>
 
         </div>
 

@@ -1,0 +1,214 @@
+﻿@model KernalTravelGuide.Models.ViewModels.UserEditViewModel
+
+@{
+    ViewData["Title"] = "Edit User";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+    var roles =
+        ViewBag.Roles as List<string>
+        ?? new List<string>();
+
+    var isCurrentUser =
+        ViewBag.IsCurrentUser is bool value && value;
+}
+
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+
+    <div>
+        <h1 class="mb-1">
+            Edit User
+        </h1>
+
+        <p class="text-muted mb-0">
+            Update user profile and role.
+        </p>
+    </div>
+
+    <a asp-action="Index"
+       class="btn btn-outline-secondary">
+
+        <i class="bi bi-arrow-left me-1"></i>
+        Back to Users
+
+    </a>
+
+</div>
+
+<div asp-validation-summary="ModelOnly"
+     class="alert alert-danger">
+</div>
+
+<div class="card shadow-sm border-0">
+
+    <div class="card-body p-4">
+
+        <form asp-action="Edit"
+              method="post">
+
+            @Html.AntiForgeryToken()
+
+            <input asp-for="Id"
+                   type="hidden" />
+
+            <div class="row g-3">
+
+                <div class="col-md-6">
+
+                    <label asp-for="FirstName"
+                           class="form-label">
+                    </label>
+
+                    <input asp-for="FirstName"
+                           class="form-control" />
+
+                    <span asp-validation-for="FirstName"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <label asp-for="LastName"
+                           class="form-label">
+                    </label>
+
+                    <input asp-for="LastName"
+                           class="form-control" />
+
+                    <span asp-validation-for="LastName"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <label asp-for="Email"
+                           class="form-label">
+                    </label>
+
+                    <input asp-for="Email"
+                           class="form-control"
+                           type="email" />
+
+                    <span asp-validation-for="Email"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <label asp-for="PhoneNumber"
+                           class="form-label">
+                        Phone Number
+                    </label>
+
+                    <input asp-for="PhoneNumber"
+                           class="form-control" />
+
+                    <span asp-validation-for="PhoneNumber"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+                <div class="col-12">
+
+                    <label asp-for="Address"
+                           class="form-label">
+                    </label>
+
+                    <textarea asp-for="Address"
+                              class="form-control"
+                              rows="3">
+                    </textarea>
+
+                    <span asp-validation-for="Address"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <label asp-for="Role"
+                           class="form-label">
+                        Role
+                    </label>
+
+                    @if (isCurrentUser)
+                    {
+                        <!-- Keep the current role submitted because the select is disabled. -->
+                        <input asp-for="Role"
+                               type="hidden" />
+
+                        <select class="form-select"
+                                disabled>
+
+                            @foreach (var role in roles)
+                            {
+                                <option value="@role"
+                                        selected="@(role == Model.Role)">
+                                    @role
+                                </option>
+                            }
+
+                        </select>
+
+                        <small class="text-muted">
+                            You cannot change your own Admin role.
+                        </small>
+                    }
+                    else
+                    {
+                        <select asp-for="Role"
+                                class="form-select">
+
+                            @foreach (var role in roles)
+                            {
+                                <option value="@role">
+                                    @role
+                                </option>
+                            }
+
+                        </select>
+
+                        <span asp-validation-for="Role"
+                              class="text-danger">
+                        </span>
+                    }
+
+                </div>
+
+            </div>
+
+            <div class="d-flex justify-content-end gap-2 mt-4">
+
+                <a asp-action="Index"
+                   class="btn btn-light border">
+                    Cancel
+                </a>
+
+                <button type="submit"
+                        class="btn btn-primary">
+
+                    <i class="bi bi-check2-circle me-1"></i>
+                    Save Changes
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+
+}

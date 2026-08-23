@@ -1,4 +1,7 @@
-﻿@{
+﻿@model KernalTravelGuide.Models.ViewModels.HomeViewModel
+
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
@@ -11,41 +14,50 @@
 
 					<div class="row">
 						<div class="col-12">
-							<form class="form">
+							<form asp-controller="Search"
+								  asp-action="Index"
+								  method="get"
+								  class="form">
+
 								<div class="row mb-2">
+
 									<div class="col-sm-12 col-md-6 mb-3 mb-lg-0 col-lg-4">
-										<select name="" id="" class="form-control custom-select">
-											<option value="">Destination</option>
-											<option value="">Peru</option>
-											<option value="">Japan</option>
-											<option value="">Thailand</option>
-											<option value="">Brazil</option>
-											<option value="">United States</option>
-											<option value="">Israel</option>
-											<option value="">China</option>
-											<option value="">Russia</option>
-										</select>
+
+										<input type="text"
+											   name="query"
+											   class="form-control"
+											   placeholder="Search destination..." />
+
 									</div>
+
 									<div class="col-sm-12 col-md-6 mb-3 mb-lg-0 col-lg-5">
-										<input type="text" class="form-control" name="daterange">
+
+										<select name="type"
+												class="form-control custom-select">
+
+											<option value="">All Categories</option>
+											<option value="TouristSpot">Tourist Spots</option>
+											<option value="Hotel">Hotels</option>
+											<option value="Restaurant">Restaurants</option>
+											<option value="Resort">Resorts</option>
+
+										</select>
+
 									</div>
+
 									<div class="col-sm-12 col-md-6 mb-3 mb-lg-0 col-lg-3">
-										<input type="text" class="form-control" placeholder="# of People">
+
+										<button type="submit"
+												class="btn btn-primary btn-block">
+
+											Search
+
+										</button>
+
 									</div>
 
 								</div>
-								<div class="row align-items-center">
-									<div class="col-sm-12 col-md-6 mb-3 mb-lg-0 col-lg-4">
-										<input type="submit" class="btn btn-primary btn-block" value="Search">
-									</div>
-									<div class="col-lg-8">
-										<label class="control control--checkbox mt-3">
-											<span class="caption">Save this search</span>
-											<input type="checkbox" checked="checked" />
-											<div class="control__indicator"></div>
-										</label>
-									</div>
-								</div>
+
 							</form>
 						</div>
 					</div>
@@ -75,7 +87,7 @@
 		</div>
 		<div class="row align-items-stretch">
 			<div class="col-lg-4 order-lg-1">
-				<div class="h-100"><div class="frame h-100"><div class="feature-img-bg h-100" style="background-image: url('images/hero-slider-1.jpg');"></div></div></div>
+				<div class="h-100"><div class="frame h-100"><div class="feature-img-bg h-100" style="background-image: url('@Url.Content("~/client/assets/images/hero-slider-1.jpg")');"></div></div></div>
 			</div>
 
 			<div class="col-6 col-sm-6 col-lg-4 feature-1-wrap d-md-flex flex-md-column order-lg-1">
@@ -125,38 +137,51 @@
 <div class="untree_co-section count-numbers py-5">
 	<div class="container">
 		<div class="row">
-			<div class="col-6 col-sm-6 col-md-6 col-lg-3">
+
+			<div class="col-6 col-lg-3">
 				<div class="counter-wrap">
 					<div class="counter">
-						<span class="" data-number="9313">0</span>
+						<span data-number="@Model.TouristSpotCount">
+							@Model.TouristSpotCount
+						</span>
 					</div>
-					<span class="caption">No. of Travels</span>
+					<span class="caption">Tourist Spots</span>
 				</div>
 			</div>
-			<div class="col-6 col-sm-6 col-md-6 col-lg-3">
+
+			<div class="col-6 col-lg-3">
 				<div class="counter-wrap">
 					<div class="counter">
-						<span class="" data-number="8492">0</span>
+						<span data-number="@Model.HotelCount">
+							@Model.HotelCount
+						</span>
 					</div>
-					<span class="caption">No. of Clients</span>
+					<span class="caption">Hotels</span>
 				</div>
 			</div>
-			<div class="col-6 col-sm-6 col-md-6 col-lg-3">
+
+			<div class="col-6 col-lg-3">
 				<div class="counter-wrap">
 					<div class="counter">
-						<span class="" data-number="100">0</span>
+						<span data-number="@Model.RestaurantCount">
+							@Model.RestaurantCount
+						</span>
 					</div>
-					<span class="caption">No. of Employees</span>
+					<span class="caption">Restaurants</span>
 				</div>
 			</div>
-			<div class="col-6 col-sm-6 col-md-6 col-lg-3">
+
+			<div class="col-6 col-lg-3">
 				<div class="counter-wrap">
 					<div class="counter">
-						<span class="" data-number="120">0</span>
+						<span data-number="@Model.ResortCount">
+							@Model.ResortCount
+						</span>
 					</div>
-					<span class="caption">No. of Countries</span>
+					<span class="caption">Resorts</span>
 				</div>
 			</div>
+
 		</div>
 	</div>
 </div>
@@ -169,68 +194,44 @@
 			<div class="col-lg-7"><h2 class="section-title text-center">Popular Destination</h2></div>
 		</div>
 
-		<div class="owl-carousel owl-3-slider">
+		<div class="owl-single owl-carousel no-nav">
 
-			<div class="item">
-				<a class="media-thumb" href="images/hero-slider-1.jpg" data-fancybox="gallery">
-					<div class="media-text">
-						<h3>Pragser Wildsee</h3>
-						<span class="location">Italy</span>
+			@foreach (var review in Model.Reviews)
+			{
+				<div class="testimonial mx-auto">
+
+					<h3 class="name">
+						@(review.User == null
+							? "Customer"
+							: $"{review.User.FirstName} {review.User.LastName}")
+					</h3>
+
+					<div class="mb-3 text-warning">
+
+						@for (int i = 1; i <= 5; i++)
+						{
+							if (i <= review.Rating)
+							{
+								<i class="bi bi-star-fill"></i>
+							}
+							else
+							{
+								<i class="bi bi-star"></i>
+							}
+						}
+
 					</div>
-					<img src="~/client/assets/images/hero-slider-1.jpg" alt="Image" class="img-fluid">
-				</a>
-			</div>
 
-			<div class="item">
-				<a class="media-thumb" href="images/hero-slider-2.jpg" data-fancybox="gallery">
-					<div class="media-text">
-						<h3>Oia</h3>
-						<span class="location">Greece</span>
-					</div>
-					<img src="~/client/assets/images/hero-slider-2.jpg" alt="Image" class="img-fluid">
-				</a>
-			</div>
+					<blockquote>
 
-			<div class="item">
-				<a class="media-thumb" href="images/hero-slider-3.jpg" data-fancybox="gallery">
-					<div class="media-text">
-						<h3>Perhentian Islands</h3>
-						<span class="location">Malaysia</span>
-					</div>
-					<img src="~/client/assets/images/hero-slider-3.jpg" alt="Image" class="img-fluid">
-				</a>
-			</div>
+						<p>
+							&ldquo;@review.Comment&rdquo;
+						</p>
 
+					</blockquote>
 
-			<div class="item">
-				<a class="media-thumb" href="images/hero-slider-4.jpg" data-fancybox="gallery">
-					<div class="media-text">
-						<h3>Rialto Bridge</h3>
-						<span class="location">Italy</span>
-					</div>
-					<img src="~/client/assets/images/hero-slider-4.jpg" alt="Image" class="img-fluid">
-				</a>
-			</div>
-
-			<div class="item">
-				<a class="media-thumb" href="images/hero-slider-5.jpg" data-fancybox="gallery">
-					<div class="media-text">
-						<h3>San Francisco, United States</h3>
-						<span class="location">United States</span>
-					</div>
-					<img src="~/client/assets/images/hero-slider-5.jpg" alt="Image" class="img-fluid">
-				</a>
-			</div>
-
-			<div class="item">
-				<a class="media-thumb" href="images/hero-slider-1.jpg" data-fancybox="gallery">
-					<div class="media-text">
-						<h3>Lake Thun</h3>
-						<span class="location">Switzerland</span>
-					</div>
-					<img src="~/client/assets/images/hero-slider-2.jpg" alt="Image" class="img-fluid">
-				</a>
-			</div>
+				</div>
+			}
 
 		</div>
 
