@@ -17,8 +17,7 @@ public class GalleryController : Controller
         _environment = environment;
     }
 
-    // ================= INDEX =================
-
+    // GET: Gallery
     public async Task<IActionResult> Index()
     {
         var galleries = await _context.Galleries
@@ -32,9 +31,7 @@ public class GalleryController : Controller
         return View(galleries);
     }
 
-
-    // ================= DETAILS =================
-
+    // GET: Gallery/Details/5
     public async Task<IActionResult> Details(int? id)
     {
         if (id == null)
@@ -54,91 +51,81 @@ public class GalleryController : Controller
         return View(gallery);
     }
 
-
-    // ================= CREATE GET =================
-
+    // GET: Gallery/Create
     public async Task<IActionResult> Create()
     {
         await LoadDropdowns();
-
         return View();
     }
 
-
-    // ================= CREATE POST =================
-
+    // POST: Gallery/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(
         Gallery gallery,
-        IFormFile ImageFile)
+        IFormFile? ImageFile)
     {
         // Image required
         if (ImageFile == null || ImageFile.Length == 0)
         {
             ModelState.AddModelError(
-                "ImageFile",
-                "Please select an image.");
-        }
-
-        if (ModelState.IsValid)
-        {
-            // Upload folder
-            string uploadsFolder = Path.Combine(
-                _environment.WebRootPath,
-                "uploads",
-                "gallery"
+                "ImagePath",
+                "Please select an image."
             );
-
-            if (!Directory.Exists(uploadsFolder))
-            {
-                Directory.CreateDirectory(uploadsFolder);
-            }
-
-            // Unique file name
-            string extension =
-                Path.GetExtension(ImageFile.FileName);
-
-            string fileName =
-                Guid.NewGuid().ToString() + extension;
-
-            string filePath =
-                Path.Combine(uploadsFolder, fileName);
-
-            // Save image
-            using (var stream = new FileStream(
-                filePath,
-                FileMode.Create))
-            {
-                await ImageFile.CopyToAsync(stream);
-            }
-
-            // Database path
-            gallery.ImagePath =
-                "/uploads/gallery/" + fileName;
-
-            _context.Galleries.Add(gallery);
-
-            await _context.SaveChangesAsync();
-
-            return RedirectToAction(nameof(Index));
         }
 
-        await LoadDropdowns();
+        if (!ModelState.IsValid)
+        {
+            await LoadDropdowns();
+            return View(gallery);
+        }
 
-        return View(gallery);
+        // Save image
+        string folderPath = Path.Combine(
+            _environment.WebRootPath,
+            "images",
+            "gallery"
+        );
+
+        if (!Directory.Exists(folderPath))
+        {
+            Directory.CreateDirectory(folderPath);
+        }
+
+        string fileName =
+            Guid.NewGuid().ToString()
+            + Path.GetExtension(ImageFile!.FileName);
+
+        string filePath = Path.Combine(
+            folderPath,
+            fileName
+        );
+
+        using (var stream = new FileStream(
+            filePath,
+            FileMode.Create))
+        {
+            await ImageFile.CopyToAsync(stream);
+        }
+
+        gallery.ImagePath =
+            "/images/gallery/" + fileName;
+
+        _context.Galleries.Add(gallery);
+
+        await _context.SaveChangesAsync();
+
+        return RedirectToAction(nameof(Index));
     }
 
-
-    // ================= EDIT GET =================
-
+    // GET: Gallery/Edit/5
     public async Task<IActionResult> Edit(int? id)
     {
         if (id == null)
             return NotFound();
 
-        var gallery =
-            await _context.Galleries.FindAsync(id);
+        var gallery = await _context.Galleries
+            .FirstOrDefaultAsync(g => g.Id == id);
 
         if (gallery == null)
             return NotFound();
@@ -148,9 +135,7 @@ public class GalleryController : Controller
         return View(gallery);
     }
 
-
-    // ================= EDIT POST =================
-
+    // POST: Gallery/Edit/5
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(
@@ -169,31 +154,35 @@ public class GalleryController : Controller
         if (existingGallery == null)
             return NotFound();
 
-        // Keep old image
-        gallery.ImagePath = existingGallery.ImagePath;
+        if (!ModelState.IsValid)
+        {
+            await LoadDropdowns();
+            return View(gallery);
+        }
 
-        // If new image selected
+        // New image selected
         if (ImageFile != null && ImageFile.Length > 0)
         {
-            string uploadsFolder = Path.Combine(
+            string folderPath = Path.Combine(
                 _environment.WebRootPath,
-                "uploads",
+                "images",
                 "gallery"
             );
 
-            if (!Directory.Exists(uploadsFolder))
+            if (!Directory.Exists(folderPath))
             {
-                Directory.CreateDirectory(uploadsFolder);
+                Directory.CreateDirectory(folderPath);
             }
 
-            string extension =
-                Path.GetExtension(ImageFile.FileName);
+            // Delete old image
+            DeleteImage(existingGallery.ImagePath);
 
             string fileName =
-                Guid.NewGuid().ToString() + extension;
+                Guid.NewGuid().ToString()
+                + Path.GetExtension(ImageFile.FileName);
 
             string filePath =
-                Path.Combine(uploadsFolder, fileName);
+                Path.Combine(folderPath, fileName);
 
             using (var stream = new FileStream(
                 filePath,
@@ -202,42 +191,24 @@ public class GalleryController : Controller
                 await ImageFile.CopyToAsync(stream);
             }
 
-            // Delete old image
-            if (!string.IsNullOrEmpty(existingGallery.ImagePath))
-            {
-                string oldImagePath =
-                    Path.Combine(
-                        _environment.WebRootPath,
-                        existingGallery.ImagePath.TrimStart('/')
-                    );
-
-                if (System.IO.File.Exists(oldImagePath))
-                {
-                    System.IO.File.Delete(oldImagePath);
-                }
-            }
-
             gallery.ImagePath =
-                "/uploads/gallery/" + fileName;
+                "/images/gallery/" + fileName;
         }
-
-        if (ModelState.IsValid)
+        else
         {
-            _context.Update(gallery);
-
-            await _context.SaveChangesAsync();
-
-            return RedirectToAction(nameof(Index));
+            // Keep old image
+            gallery.ImagePath =
+                existingGallery.ImagePath;
         }
 
-        await LoadDropdowns();
+        _context.Galleries.Update(gallery);
 
-        return View(gallery);
+        await _context.SaveChangesAsync();
+
+        return RedirectToAction(nameof(Index));
     }
 
-
-    // ================= DELETE GET =================
-
+    // GET: Gallery/Delete/5
     public async Task<IActionResult> Delete(int? id)
     {
         if (id == null)
@@ -257,9 +228,7 @@ public class GalleryController : Controller
         return View(gallery);
     }
 
-
-    // ================= DELETE POST =================
-
+    // POST: Gallery/Delete/5
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id)
@@ -271,19 +240,7 @@ public class GalleryController : Controller
             return NotFound();
 
         // Delete physical image
-        if (!string.IsNullOrEmpty(gallery.ImagePath))
-        {
-            string imagePath =
-                Path.Combine(
-                    _environment.WebRootPath,
-                    gallery.ImagePath.TrimStart('/')
-                );
-
-            if (System.IO.File.Exists(imagePath))
-            {
-                System.IO.File.Delete(imagePath);
-            }
-        }
+        DeleteImage(gallery.ImagePath);
 
         _context.Galleries.Remove(gallery);
 
@@ -292,9 +249,7 @@ public class GalleryController : Controller
         return RedirectToAction(nameof(Index));
     }
 
-
-    // ================= DROPDOWNS =================
-
+    // Dropdown data
     private async Task LoadDropdowns()
     {
         ViewBag.TouristSpots =
@@ -321,5 +276,26 @@ public class GalleryController : Controller
             await _context.TourPackages
                 .OrderBy(x => x.PackageName)
                 .ToListAsync();
+    }
+
+    // Delete physical image
+    private void DeleteImage(string? imagePath)
+    {
+        if (string.IsNullOrEmpty(imagePath))
+            return;
+
+        string fullPath = Path.Combine(
+            _environment.WebRootPath,
+            imagePath.TrimStart('/')
+                .Replace(
+                    "/",
+                    Path.DirectorySeparatorChar.ToString()
+                )
+        );
+
+        if (System.IO.File.Exists(fullPath))
+        {
+            System.IO.File.Delete(fullPath);
+        }
     }
 }

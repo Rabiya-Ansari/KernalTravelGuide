@@ -5,21 +5,24 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h2>Edit Tourist Spot</h2>
+<h1>Edit Tourist Spot</h1>
 
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-7">
 
-        <form asp-action="Edit">
+        <form asp-action="Edit"
+              method="post"
+              enctype="multipart/form-data">
 
             <div asp-validation-summary="ModelOnly"
                  class="text-danger"></div>
 
             <input type="hidden" asp-for="Id" />
 
-            <!-- Name -->
             <div class="form-group mb-3">
-                <label asp-for="Name"></label>
+                <label asp-for="Name">
+                    Spot Name
+                </label>
 
                 <input asp-for="Name"
                        class="form-control" />
@@ -28,9 +31,10 @@
                       class="text-danger"></span>
             </div>
 
-            <!-- Description -->
             <div class="form-group mb-3">
-                <label asp-for="Description"></label>
+                <label asp-for="Description">
+                    Description
+                </label>
 
                 <textarea asp-for="Description"
                           class="form-control"
@@ -40,7 +44,6 @@
                       class="text-danger"></span>
             </div>
 
-            <!-- City -->
             <div class="form-group mb-3">
                 <label asp-for="CityId">
                     City
@@ -60,9 +63,10 @@
                       class="text-danger"></span>
             </div>
 
-            <!-- Entry Fee -->
             <div class="form-group mb-3">
-                <label asp-for="EntryFee"></label>
+                <label asp-for="EntryFee">
+                    Entry Fee
+                </label>
 
                 <input asp-for="EntryFee"
                        class="form-control"
@@ -73,9 +77,10 @@
                       class="text-danger"></span>
             </div>
 
-            <!-- Map URL -->
             <div class="form-group mb-3">
-                <label asp-for="MapUrl"></label>
+                <label asp-for="MapUrl">
+                    Google Maps URL
+                </label>
 
                 <input asp-for="MapUrl"
                        class="form-control" />
@@ -84,30 +89,57 @@
                       class="text-danger"></span>
             </div>
 
-            <!-- Image -->
+            <!-- CURRENT IMAGE -->
+            @if (!string.IsNullOrEmpty(Model.ImagePath))
+            {
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Current Image
+                    </label>
+
+                    <br />
+
+                    <img src="@Model.ImagePath"
+                         alt="@Model.Name"
+                         style="width:220px;height:140px;object-fit:cover;border-radius:8px;" />
+
+                </div>
+            }
+
+            <!-- NEW IMAGE -->
             <div class="form-group mb-3">
-                <label asp-for="ImagePath"></label>
 
-                <input asp-for="ImagePath"
-                       class="form-control" />
+                <label class="form-label">
+                    Change Image
+                </label>
 
-                <span asp-validation-for="ImagePath"
-                      class="text-danger"></span>
+                <input type="file"
+                       name="ImageFile"
+                       class="form-control"
+                       accept="image/*" />
+
+                <small class="text-muted">
+                    Leave empty to keep the current image.
+                </small>
+
             </div>
 
-            <!-- Active -->
             <div class="form-check mb-3">
+
                 <input asp-for="IsActive"
                        class="form-check-input" />
 
                 <label asp-for="IsActive"
                        class="form-check-label">
+                    Active
                 </label>
+
             </div>
 
             <button type="submit"
-                    class="btn btn-success">
-                Save
+                    class="btn btn-primary">
+                Save Changes
             </button>
 
             <a asp-action="Index"
@@ -122,6 +154,7 @@
 
 @section Scripts {
     @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        await Html.RenderPartialAsync(
+            "_ValidationScriptsPartial");
     }
 }

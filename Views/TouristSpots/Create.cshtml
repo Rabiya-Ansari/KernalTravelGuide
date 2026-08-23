@@ -1,215 +1,148 @@
 @model KernalTravelGuide.Models.TouristSpot
 
 @{
-    ViewData["Title"] = "Add Tourist Spot";
+    ViewData["Title"] = "Create Tourist Spot";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<div class="container-fluid">
+<h1>Create Tourist Spot</h1>
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
+<div class="row">
+    <div class="col-md-7">
 
-        <div>
-            <h2 class="fw-bold mb-1">Add Tourist Spot</h2>
+        <form asp-action="Create"
+              method="post"
+              enctype="multipart/form-data">
 
-            <p class="text-muted mb-0">
-                Add a new tourist attraction.
-            </p>
-        </div>
+            <div asp-validation-summary="ModelOnly"
+                 class="text-danger"></div>
 
-        <a asp-action="Index"
-           class="btn btn-outline-secondary">
+            <div class="form-group mb-3">
+                <label asp-for="Name"
+                       class="control-label">
+                    Spot Name
+                </label>
 
-            <i class="bi bi-arrow-left me-1"></i>
-            Back
+                <input asp-for="Name"
+                       class="form-control" />
 
-        </a>
+                <span asp-validation-for="Name"
+                      class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Description"
+                       class="control-label">
+                    Description
+                </label>
+
+                <textarea asp-for="Description"
+                          class="form-control"
+                          rows="4"></textarea>
+
+                <span asp-validation-for="Description"
+                      class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="CityId"
+                       class="control-label">
+                    City
+                </label>
+
+                <select asp-for="CityId"
+                        class="form-control"
+                        asp-items="ViewBag.CityId">
+
+                    <option value="">
+                        -- Select City --
+                    </option>
+
+                </select>
+
+                <span asp-validation-for="CityId"
+                      class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="EntryFee"
+                       class="control-label">
+                    Entry Fee
+                </label>
+
+                <input asp-for="EntryFee"
+                       class="form-control"
+                       type="number"
+                       min="0"
+                       max="50000"
+                       step="0.01" />
+
+                <span asp-validation-for="EntryFee"
+                      class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="MapUrl"
+                       class="control-label">
+                    Google Maps URL
+                </label>
+
+                <input asp-for="MapUrl"
+                       class="form-control"
+                       placeholder="https://maps.google.com/..." />
+
+                <span asp-validation-for="MapUrl"
+                      class="text-danger"></span>
+            </div>
+
+            <!-- ACTUAL IMAGE -->
+            <div class="form-group mb-3">
+
+                <label class="form-label">
+                    Tourist Spot Image
+                </label>
+
+                <input type="file"
+                       name="ImageFile"
+                       class="form-control"
+                       accept="image/*" />
+
+                <small class="text-muted">
+                    Choose an image from your computer.
+                </small>
+
+            </div>
+
+            <div class="form-check mb-3">
+
+                <input asp-for="IsActive"
+                       class="form-check-input" />
+
+                <label asp-for="IsActive"
+                       class="form-check-label">
+                    Active
+                </label>
+
+            </div>
+
+            <button type="submit"
+                    class="btn btn-primary">
+                Create Tourist Spot
+            </button>
+
+            <a asp-action="Index"
+               class="btn btn-secondary">
+                Back
+            </a>
+
+        </form>
 
     </div>
-
-
-    <div class="card border-0 shadow-sm">
-
-        <div class="card-body p-4">
-
-            <form asp-action="Create" method="post">
-
-                <div asp-validation-summary="ModelOnly"
-                     class="text-danger mb-3">
-                </div>
-
-
-                <!-- Name -->
-
-                <div class="mb-3">
-
-                    <label asp-for="Name"
-                           class="form-label fw-semibold">
-                        Tourist Spot Name
-                    </label>
-
-                    <input asp-for="Name"
-                           class="form-control"
-                           placeholder="Enter tourist spot name" />
-
-                    <span asp-validation-for="Name"
-                          class="text-danger">
-                    </span>
-
-                </div>
-
-
-                <!-- Description -->
-
-                <div class="mb-3">
-
-                    <label asp-for="Description"
-                           class="form-label fw-semibold">
-                        Description
-                    </label>
-
-                    <textarea asp-for="Description"
-                              class="form-control"
-                              rows="4"
-                              placeholder="Enter description">
-                    </textarea>
-
-                    <span asp-validation-for="Description"
-                          class="text-danger">
-                    </span>
-
-                </div>
-
-
-                <!-- City -->
-
-                <div class="mb-3">
-
-                    <label asp-for="CityId"
-                           class="form-label fw-semibold">
-                        City
-                    </label>
-
-                    <select asp-for="CityId"
-                            class="form-select"
-                            asp-items="ViewBag.CityId">
-
-                        <option value="">
-                            -- Select City --
-                        </option>
-
-                    </select>
-
-                    <span asp-validation-for="CityId"
-                          class="text-danger">
-                    </span>
-
-                </div>
-
-
-                <!-- Entry Fee -->
-
-                <div class="mb-3">
-
-                    <label asp-for="EntryFee"
-                           class="form-label fw-semibold">
-                        Entry Fee
-                    </label>
-
-                    <input asp-for="EntryFee"
-                           type="number"
-                           class="form-control"
-                           placeholder="Enter entry fee" />
-
-                    <span asp-validation-for="EntryFee"
-                          class="text-danger">
-                    </span>
-
-                </div>
-
-
-                <!-- Map URL -->
-
-                <div class="mb-3">
-
-                    <label asp-for="MapUrl"
-                           class="form-label fw-semibold">
-                        Google Maps URL
-                    </label>
-
-                    <input asp-for="MapUrl"
-                           class="form-control"
-                           placeholder="https://maps.google.com/..." />
-
-                    <span asp-validation-for="MapUrl"
-                          class="text-danger">
-                    </span>
-
-                </div>
-
-
-                <!-- Image Path -->
-
-                <div class="mb-3">
-
-                    <label asp-for="ImagePath"
-                           class="form-label fw-semibold">
-                        Image Path
-                    </label>
-
-                    <input asp-for="ImagePath"
-                           class="form-control"
-                           placeholder="/images/touristspots/example.jpg" />
-
-                    <span asp-validation-for="ImagePath"
-                          class="text-danger">
-                    </span>
-
-                </div>
-
-
-                <!-- Active -->
-
-                <div class="form-check mb-4">
-
-                    <input asp-for="IsActive"
-                           class="form-check-input" />
-
-                    <label asp-for="IsActive"
-                           class="form-check-label">
-                        Active Tourist Spot
-                    </label>
-
-                </div>
-
-
-                <!-- Buttons -->
-
-                <button type="submit"
-                        class="btn btn-primary">
-
-                    <i class="bi bi-check-circle me-1"></i>
-                    Save Tourist Spot
-
-                </button>
-
-                <a asp-action="Index"
-                   class="btn btn-secondary ms-2">
-
-                    Cancel
-
-                </a>
-
-            </form>
-
-        </div>
-
-    </div>
-
 </div>
 
 @section Scripts {
     @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        await Html.RenderPartialAsync(
+            "_ValidationScriptsPartial");
     }
 }

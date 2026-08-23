@@ -1,60 +1,176 @@
 @model KernalTravelGuide.Models.TourPackage
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Tour Package";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h1>Edit</h1>
+<h1 class="mb-4">Edit Tour Package</h1>
 
-<h4>TourPackage</h4>
-<hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="PackageName" class="control-label"></label>
-                <input asp-for="PackageName" class="form-control" />
-                <span asp-validation-for="PackageName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DurationDays" class="control-label"></label>
-                <input asp-for="DurationDays" class="form-control" />
-                <span asp-validation-for="DurationDays" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Price" class="control-label"></label>
-                <input asp-for="Price" class="form-control" />
-                <span asp-validation-for="Price" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ImagePath" class="control-label"></label>
-                <input asp-for="ImagePath" class="form-control" />
-                <span asp-validation-for="ImagePath" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="IsAvailable" class="control-label"></label>
-                <input asp-for="IsAvailable" class="form-check-input" />
-                <span asp-validation-for="IsAvailable" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+    <div class="col-md-7">
+
+        <form asp-action="Edit"
+              method="post"
+              enctype="multipart/form-data">
+
+            <div asp-validation-summary="ModelOnly"
+                 class="text-danger mb-3">
+            </div>
+
+            <input type="hidden"
+                   asp-for="Id" />
+
+            <!-- Package Name -->
+            <div class="mb-3">
+
+                <label asp-for="PackageName"
+                       class="form-label">
+                    Package Name
+                </label>
+
+                <input asp-for="PackageName"
+                       class="form-control" />
+
+                <span asp-validation-for="PackageName"
+                      class="text-danger">
+                </span>
+
+            </div>
+
+            <!-- Duration -->
+            <div class="mb-3">
+
+                <label asp-for="DurationDays"
+                       class="form-label">
+                    Duration (Days)
+                </label>
+
+                <input asp-for="DurationDays"
+                       class="form-control"
+                       type="number"
+                       min="1"
+                       max="30" />
+
+                <span asp-validation-for="DurationDays"
+                      class="text-danger">
+                </span>
+
+            </div>
+
+            <!-- Price -->
+            <div class="mb-3">
+
+                <label asp-for="Price"
+                       class="form-label">
+                    Price
+                </label>
+
+                <input asp-for="Price"
+                       class="form-control"
+                       type="number"
+                       min="1000"
+                       max="500000"
+                       step="0.01" />
+
+                <span asp-validation-for="Price"
+                      class="text-danger">
+                </span>
+
+            </div>
+
+            <!-- Description -->
+            <div class="mb-3">
+
+                <label asp-for="Description"
+                       class="form-label">
+                    Description
+                </label>
+
+                <textarea asp-for="Description"
+                          class="form-control"
+                          rows="5">
+                </textarea>
+
+                <span asp-validation-for="Description"
+                      class="text-danger">
+                </span>
+
+            </div>
+
+            <!-- Current Image -->
+            @if (!string.IsNullOrEmpty(Model.ImagePath))
+            {
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Current Image
+                    </label>
+
+                    <div>
+                        <img src="@Model.ImagePath"
+                             alt="@Model.PackageName"
+                             style="width:220px;
+                        height:150px;
+                        object-fit:cover;
+                        border-radius:10px;" />
+                    </div>
+
+                </div>
+            }
+
+            <!-- New Image -->
+            <div class="mb-3">
+
+                <label class="form-label">
+                    Change Image
+                </label>
+
+                <input type="file"
+                       name="ImageFile"
+                       class="form-control"
+                       accept="image/*" />
+
+                <small class="text-muted">
+                    Leave empty to keep the current image.
+                </small>
+
+            </div>
+
+            <!-- Availability -->
+            <div class="form-check mb-4">
+
+                <input asp-for="IsAvailable"
+                       class="form-check-input" />
+
+                <label asp-for="IsAvailable"
+                       class="form-check-label">
+                    Available
+                </label>
+
+            </div>
+
+            <button type="submit"
+                    class="btn btn-primary">
+                Save Changes
+            </button>
+
+            <a asp-action="Index"
+               class="btn btn-secondary">
+                Back
+            </a>
+
+        </form>
+
+    </div>
+
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync(
+            "_ValidationScriptsPartial"
+        );
+    }
 }

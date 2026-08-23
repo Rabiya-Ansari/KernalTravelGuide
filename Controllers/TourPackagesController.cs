@@ -7,16 +7,23 @@ using Microsoft.EntityFrameworkCore;
 public class TourPackagesController : Controller
 {
     private readonly AppDbContext _context;
+    private readonly IWebHostEnvironment _environment;
 
-    public TourPackagesController(AppDbContext context)
+    public TourPackagesController(
+        AppDbContext context,
+        IWebHostEnvironment environment)
     {
         _context = context;
+        _environment = environment;
     }
 
     // GET: TourPackages
     public async Task<IActionResult> Index()
     {
-        return View(await _context.TourPackages.ToListAsync());
+        var tourPackages = await _context.TourPackages
+            .ToListAsync();
+
+        return View(tourPackages);
     }
 
     // GET: TourPackages/Details/5
@@ -44,12 +51,48 @@ public class TourPackagesController : Controller
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(
-        [Bind("Id,PackageName,DurationDays,Price,Description,ImagePath,IsAvailable")]
-        TourPackage tourPackage)
+        [Bind("Id,PackageName,DurationDays,Price,Description,IsAvailable")]
+        TourPackage tourPackage,
+        IFormFile? ImageFile)
     {
         if (ModelState.IsValid)
         {
+            // Upload image
+            if (ImageFile != null && ImageFile.Length > 0)
+            {
+                string folderPath = Path.Combine(
+                    _environment.WebRootPath,
+                    "images",
+                    "tourpackages"
+                );
+
+                if (!Directory.Exists(folderPath))
+                {
+                    Directory.CreateDirectory(folderPath);
+                }
+
+                string fileName =
+                    Guid.NewGuid().ToString()
+                    + Path.GetExtension(ImageFile.FileName);
+
+                string filePath = Path.Combine(
+                    folderPath,
+                    fileName
+                );
+
+                using (var stream = new FileStream(
+                    filePath,
+                    FileMode.Create))
+                {
+                    await ImageFile.CopyToAsync(stream);
+                }
+
+                tourPackage.ImagePath =
+                    "/images/tourpackages/" + fileName;
+            }
+
             _context.TourPackages.Add(tourPackage);
+
             await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
@@ -64,7 +107,8 @@ public class TourPackagesController : Controller
         if (id == null)
             return NotFound();
 
-        var tourPackage = await _context.TourPackages.FindAsync(id);
+        var tourPackage =
+            await _context.TourPackages.FindAsync(id);
 
         if (tourPackage == null)
             return NotFound();
@@ -76,18 +120,82 @@ public class TourPackagesController : Controller
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(
-        int? id,
-        [Bind("Id,PackageName,DurationDays,Price,Description,ImagePath,IsAvailable")]
-        TourPackage tourPackage)
+        int id,
+        [Bind("Id,PackageName,DurationDays,Price,Description,IsAvailable")]
+        TourPackage tourPackage,
+        IFormFile? ImageFile)
     {
         if (id != tourPackage.Id)
             return NotFound();
 
         if (ModelState.IsValid)
         {
+            var existingPackage =
+                await _context.TourPackages
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(x => x.Id == id);
+
+            if (existingPackage == null)
+                return NotFound();
+
+            // If new image selected
+            if (ImageFile != null && ImageFile.Length > 0)
+            {
+                string folderPath = Path.Combine(
+                    _environment.WebRootPath,
+                    "images",
+                    "tourpackages"
+                );
+
+                if (!Directory.Exists(folderPath))
+                {
+                    Directory.CreateDirectory(folderPath);
+                }
+
+                // Delete old image
+                if (!string.IsNullOrEmpty(existingPackage.ImagePath))
+                {
+                    string oldImagePath =
+                        Path.Combine(
+                            _environment.WebRootPath,
+                            existingPackage.ImagePath.TrimStart('/')
+                                .Replace("/", Path.DirectorySeparatorChar.ToString())
+                        );
+
+                    if (System.IO.File.Exists(oldImagePath))
+                    {
+                        System.IO.File.Delete(oldImagePath);
+                    }
+                }
+
+                string fileName =
+                    Guid.NewGuid().ToString()
+                    + Path.GetExtension(ImageFile.FileName);
+
+                string filePath =
+                    Path.Combine(folderPath, fileName);
+
+                using (var stream = new FileStream(
+                    filePath,
+                    FileMode.Create))
+                {
+                    await ImageFile.CopyToAsync(stream);
+                }
+
+                tourPackage.ImagePath =
+                    "/images/tourpackages/" + fileName;
+            }
+            else
+            {
+                // Keep old image
+                tourPackage.ImagePath =
+                    existingPackage.ImagePath;
+            }
+
             try
             {
                 _context.Update(tourPackage);
+
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
@@ -110,8 +218,9 @@ public class TourPackagesController : Controller
         if (id == null)
             return NotFound();
 
-        var tourPackage = await _context.TourPackages
-            .FirstOrDefaultAsync(x => x.Id == id);
+        var tourPackage =
+            await _context.TourPackages
+                .FirstOrDefaultAsync(x => x.Id == id);
 
         if (tourPackage == null)
             return NotFound();
@@ -122,21 +231,43 @@ public class TourPackagesController : Controller
     // POST: TourPackages/Delete/5
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> DeleteConfirmed(int? id)
+    public async Task<IActionResult> DeleteConfirmed(int id)
     {
-        var tourPackage = await _context.TourPackages.FindAsync(id);
+        var tourPackage =
+            await _context.TourPackages.FindAsync(id);
 
-        if (tourPackage != null)
+        if (tourPackage == null)
+            return NotFound();
+
+        // Delete image from wwwroot
+        if (!string.IsNullOrEmpty(tourPackage.ImagePath))
         {
-            _context.TourPackages.Remove(tourPackage);
-            await _context.SaveChangesAsync();
+            string imagePath =
+                Path.Combine(
+                    _environment.WebRootPath,
+                    tourPackage.ImagePath.TrimStart('/')
+                        .Replace(
+                            "/",
+                            Path.DirectorySeparatorChar.ToString()
+                        )
+                );
+
+            if (System.IO.File.Exists(imagePath))
+            {
+                System.IO.File.Delete(imagePath);
+            }
         }
+
+        _context.TourPackages.Remove(tourPackage);
+
+        await _context.SaveChangesAsync();
 
         return RedirectToAction(nameof(Index));
     }
 
     private bool TourPackageExists(int id)
     {
-        return _context.TourPackages.Any(x => x.Id == id);
+        return _context.TourPackages
+            .Any(x => x.Id == id);
     }
 }

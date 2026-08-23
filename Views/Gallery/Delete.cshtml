@@ -5,126 +5,102 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<div class="container-fluid">
+<h1 class="mb-4">Delete Gallery Image</h1>
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
+<div class="alert alert-danger">
+    <strong>Are you sure?</strong>
+    This gallery image will be permanently deleted.
+</div>
 
-        <h2>Delete Gallery Image</h2>
+<div class="card mb-4">
 
-        <a asp-action="Index"
-           class="btn btn-secondary">
+    <div class="card-body">
 
-            <i class="bi bi-arrow-left"></i>
-            Back
+        <div class="row">
 
-        </a>
+            <!-- Image -->
 
-    </div>
+            <div class="col-md-5">
 
-
-    <div class="card shadow-sm">
-
-        <div class="card-body">
-
-            <div class="alert alert-danger">
-
-                <strong>Are you sure?</strong>
-
-                This image will be permanently deleted.
+                @if (!string.IsNullOrEmpty(Model.ImagePath))
+                {
+                    <img src="@Model.ImagePath"
+                         alt="@Model.Caption"
+                         style="width:100%;
+                    max-height:300px;
+                    object-fit:cover;
+                    border-radius:12px;" />
+                }
+                else
+                {
+                    <div class="border rounded p-5 text-center">
+                        No Image
+                    </div>
+                }
 
             </div>
 
+            <!-- Information -->
 
-            <div class="row align-items-center">
+            <div class="col-md-7">
 
+                <h3>
+                    @(Model.Caption ?? "Gallery Image")
+                </h3>
 
-                <div class="col-md-4 text-center">
+                <hr />
 
-                    <img src="@Model.ImagePath"
-                         alt="@Model.Caption"
-                         class="img-fluid rounded"
-                         style="max-height:250px;" />
+                <dl class="row">
 
-                </div>
+                    <dt class="col-sm-5">
+                        Caption
+                    </dt>
 
+                    <dd class="col-sm-7">
+                        @(Model.Caption ?? "-")
+                    </dd>
 
-                <div class="col-md-8">
+                    <dt class="col-sm-5">
+                        Tourist Spot
+                    </dt>
 
-                    <h4>
-                        @Model.Caption
-                    </h4>
+                    <dd class="col-sm-7">
+                        @(Model.TouristSpot?.Name ?? "-")
+                    </dd>
 
-                    <p>
-                        <strong>Image:</strong>
-                        @Model.ImagePath
-                    </p>
+                    <dt class="col-sm-5">
+                        Hotel
+                    </dt>
 
-                    @if (Model.TouristSpot != null)
-                    {
-                        <p>
-                            <strong>Tourist Spot:</strong>
-                            @Model.TouristSpot.Name
-                        </p>
-                    }
+                    <dd class="col-sm-7">
+                        @(Model.Hotel?.Name ?? "-")
+                    </dd>
 
-                    @if (Model.Hotel != null)
-                    {
-                        <p>
-                            <strong>Hotel:</strong>
-                            @Model.Hotel.Name
-                        </p>
-                    }
+                    <dt class="col-sm-5">
+                        Restaurant
+                    </dt>
 
-                    @if (Model.Restaurant != null)
-                    {
-                        <p>
-                            <strong>Restaurant:</strong>
-                            @Model.Restaurant.Name
-                        </p>
-                    }
+                    <dd class="col-sm-7">
+                        @(Model.Restaurant?.Name ?? "-")
+                    </dd>
 
-                    @if (Model.Resort != null)
-                    {
-                        <p>
-                            <strong>Resort:</strong>
-                            @Model.Resort.Name
-                        </p>
-                    }
+                    <dt class="col-sm-5">
+                        Resort
+                    </dt>
 
-                    @if (Model.TourPackage != null)
-                    {
-                        <p>
-                            <strong>Tour Package:</strong>
-                            @Model.TourPackage.PackageName
-                        </p>
-                    }
+                    <dd class="col-sm-7">
+                        @(Model.Resort?.Name ?? "-")
+                    </dd>
 
+                    <dt class="col-sm-5">
+                        Tour Package
+                    </dt>
 
-                    <form asp-action="Delete"
-                          method="post"
-                          class="mt-4">
+                    <dd class="col-sm-7">
+                        @(Model.TourPackage?.PackageName ?? "-")
+                    </dd>
 
-                        <input type="hidden"
-                               asp-for="Id" />
-
-                        <button type="submit"
-                                class="btn btn-danger">
-
-                            <i class="bi bi-trash"></i>
-                            Yes, Delete
-
-                        </button>
-
-                        <a asp-action="Index"
-                           class="btn btn-secondary">
-
-                            Cancel
-
-                        </a>
-
-                    </form>
-
-                </div>
+                </dl>
 
             </div>
 
@@ -133,3 +109,21 @@
     </div>
 
 </div>
+
+<form asp-action="Delete"
+      method="post">
+
+    <input type="hidden"
+           asp-for="Id" />
+
+    <button type="submit"
+            class="btn btn-danger">
+        Yes, Delete
+    </button>
+
+    <a asp-action="Index"
+       class="btn btn-secondary">
+        Cancel
+    </a>
+
+</form>

@@ -1,79 +1,111 @@
 @model KernalTravelGuide.Models.TouristSpot
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Tourist Spot Details";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h2>Tourist Spot Details</h2>
+<h1>Tourist Spot Details</h1>
 
-<table class="table table-bordered">
+<div class="row">
 
-    <tr>
-        <th>Name</th>
-        <td>@Model.Name</td>
-    </tr>
+    <div class="col-md-5">
 
-    <tr>
-        <th>Description</th>
-        <td>@Model.Description</td>
-    </tr>
+        @if (!string.IsNullOrEmpty(Model.ImagePath))
+        {
+            <img src="@Model.ImagePath"
+                 alt="@Model.Name"
+                 style="width:100%;max-width:400px;height:260px;object-fit:cover;border-radius:10px;" />
+        }
+        else
+        {
+            <p>No image available.</p>
+        }
 
-    <tr>
-        <th>City</th>
-        <td>@Model.City?.Name</td>
-    </tr>
+    </div>
 
-    <tr>
-        <th>Entry Fee</th>
-        <td>@Model.EntryFee</td>
-    </tr>
+    <div class="col-md-7">
 
-    <tr>
-        <th>Map URL</th>
-        <td>
-            @if (!string.IsNullOrEmpty(Model.MapUrl))
-            {
-                <a href="@Model.MapUrl"
-                   target="_blank">
-                    View Map
-                </a>
-            }
-            else
-            {
-                <span>No map available</span>
-            }
-        </td>
-    </tr>
+        <dl class="row">
 
-    <tr>
-        <th>Image</th>
-        <td>@Model.ImagePath</td>
-    </tr>
+            <dt class="col-sm-4">
+                Name
+            </dt>
 
-    <tr>
-        <th>Status</th>
-        <td>
-            @if (Model.IsActive)
-            {
-                <span class="badge bg-success">Active</span>
-            }
-            else
-            {
-                <span class="badge bg-danger">Inactive</span>
-            }
-        </td>
-    </tr>
+            <dd class="col-sm-8">
+                @Model.Name
+            </dd>
 
-</table>
+            <dt class="col-sm-4">
+                Description
+            </dt>
 
-<a asp-action="Edit"
-   asp-route-id="@Model.Id"
-   class="btn btn-warning">
-    Edit
-</a>
+            <dd class="col-sm-8">
+                @Model.Description
+            </dd>
 
-<a asp-action="Index"
-   class="btn btn-secondary">
-    Back
-</a>
+            <dt class="col-sm-4">
+                City
+            </dt>
+
+            <dd class="col-sm-8">
+                @Model.City?.Name
+            </dd>
+
+            <dt class="col-sm-4">
+                Entry Fee
+            </dt>
+
+            <dd class="col-sm-8">
+                @Model.EntryFee
+            </dd>
+
+            <dt class="col-sm-4">
+                Map
+            </dt>
+
+            <dd class="col-sm-8">
+                @if (!string.IsNullOrEmpty(Model.MapUrl))
+                {
+                    <a href="@Model.MapUrl"
+                       target="_blank">
+                        Open Google Maps
+                    </a>
+                }
+            </dd>
+
+            <dt class="col-sm-4">
+                Status
+            </dt>
+
+            <dd class="col-sm-8">
+                @if (Model.IsActive)
+                {
+                    <span class="badge bg-success">
+                        Active
+                    </span>
+                }
+                else
+                {
+                    <span class="badge bg-danger">
+                        Inactive
+                    </span>
+                }
+            </dd>
+
+        </dl>
+
+        <a asp-action="Edit"
+           asp-route-id="@Model.Id"
+           class="btn btn-warning">
+            Edit
+        </a>
+
+        <a asp-action="Index"
+           class="btn btn-secondary">
+            Back
+        </a>
+
+    </div>
+
+</div>

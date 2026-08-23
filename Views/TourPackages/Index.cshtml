@@ -1,66 +1,130 @@
 @model IEnumerable<KernalTravelGuide.Models.TourPackage>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Tour Packages";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h1>Index</h1>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Tour Packages</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.PackageName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DurationDays)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Price)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ImagePath)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsAvailable)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(model => item.PackageName)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.DurationDays)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Price)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.ImagePath)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.IsAvailable)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <a asp-action="Create" class="btn btn-primary">
+        + Add Tour Package
+    </a>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped align-middle">
+
+        <thead class="table-dark">
+            <tr>
+                <th>Image</th>
+                <th>Package Name</th>
+                <th>Duration</th>
+                <th>Price</th>
+                <th>Description</th>
+                <th>Available</th>
+                <th style="width:220px;">Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            @if (!Model.Any())
+            {
+                <tr>
+                    <td colspan="7" class="text-center">
+                        No tour packages found.
+                    </td>
+                </tr>
+            }
+            else
+            {
+                @foreach (var item in Model)
+                {
+                    <tr>
+
+                        <td>
+                            @if (!string.IsNullOrEmpty(item.ImagePath))
+                            {
+                                <img src="@item.ImagePath"
+                                     alt="@item.PackageName"
+                                     style="width:100px;
+                                height:70px;
+                                object-fit:cover;
+                                border-radius:8px;" />
+                            }
+                            else
+                            {
+                                <span class="text-muted">
+                                    No Image
+                                </span>
+                            }
+                        </td>
+
+                        <td>
+                            <strong>@item.PackageName</strong>
+                        </td>
+
+                        <td>
+                            @item.DurationDays Days
+                        </td>
+
+                        <td>
+                            Rs. @item.Price.ToString("N0")
+                        </td>
+
+                        <td>
+                            @if (!string.IsNullOrEmpty(item.Description))
+                            {
+                                @(item.Description.Length > 60
+                                    ? item.Description.Substring(0, 60) + "..."
+                                    : item.Description)
+                            }
+                        </td>
+
+                        <td>
+                            @if (item.IsAvailable)
+                            {
+                                <span class="badge bg-success">
+                                    Available
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">
+                                    Not Available
+                                </span>
+                            }
+                        </td>
+
+                        <td>
+
+                            <a asp-action="Edit"
+                               asp-route-id="@item.Id"
+                               class="btn btn-sm btn-warning">
+                                Edit
+                            </a>
+
+                            <a asp-action="Details"
+                               asp-route-id="@item.Id"
+                               class="btn btn-sm btn-info text-white">
+                                Details
+                            </a>
+
+                            <a asp-action="Delete"
+                               asp-route-id="@item.Id"
+                               class="btn btn-sm btn-danger">
+                                Delete
+                            </a>
+
+                        </td>
+
+                    </tr>
+                }
+            }
+
+        </tbody>
+
+    </table>
+</div>

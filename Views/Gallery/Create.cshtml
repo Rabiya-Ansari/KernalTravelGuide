@@ -5,259 +5,206 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<div class="container-fluid">
+<h1 class="mb-4">Add Gallery Image</h1>
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h2>Add Gallery Image</h2>
-            <p class="text-muted">
-                Upload an image and connect it with your travel content.
-            </p>
-        </div>
+<div class="row">
+    <div class="col-md-7">
 
-        <a asp-action="Index" class="btn btn-secondary">
-            <i class="bi bi-arrow-left"></i> Back
-        </a>
-    </div>
+        <form asp-action="Create"
+              method="post"
+              enctype="multipart/form-data">
 
+            <div asp-validation-summary="ModelOnly"
+                 class="text-danger mb-3"></div>
 
-    <div class="card shadow-sm">
+            <!-- IMAGE -->
+            <div class="mb-3">
 
-        <div class="card-body">
+                <label class="form-label">
+                    Select Image
+                </label>
 
-            <form asp-action="Create"
-                  method="post"
-                  enctype="multipart/form-data">
+                <input type="file"
+                       name="ImageFile"
+                       class="form-control"
+                       accept="image/*"
+                       required />
 
-                <div asp-validation-summary="ModelOnly"
-                     class="text-danger mb-3">
-                </div>
+                <span asp-validation-for="ImagePath"
+                      class="text-danger"></span>
 
+                <small class="text-muted">
+                    Select image from your computer.
+                </small>
 
-                <!-- IMAGE -->
+            </div>
 
-                <div class="mb-4">
+            <!-- CAPTION -->
+            <div class="mb-3">
 
-                    <label class="form-label">
-                        Gallery Image
-                    </label>
+                <label asp-for="Caption"
+                       class="form-label">
+                    Caption
+                </label>
 
-                    <input type="file"
-                           name="ImageFile"
-                           class="form-control"
-                           accept="image/*"
-                           required />
+                <input asp-for="Caption"
+                       class="form-control"
+                       placeholder="Beautiful mountain view" />
 
-                    <span asp-validation-for="ImagePath"
-                          class="text-danger">
-                    </span>
+                <span asp-validation-for="Caption"
+                      class="text-danger"></span>
 
-                    <small class="text-muted">
-                        JPG, JPEG, PNG, WEBP recommended.
-                    </small>
+            </div>
 
-                </div>
+            <!-- TOURIST SPOT -->
+            <div class="mb-3">
 
+                <label asp-for="TouristSpotId"
+                       class="form-label">
+                    Tourist Spot
+                </label>
 
-                <!-- CAPTION -->
+                <select asp-for="TouristSpotId"
+                        class="form-select">
 
-                <div class="mb-4">
+                    <option value="">
+                        -- Select Tourist Spot --
+                    </option>
 
-                    <label asp-for="Caption"
-                           class="form-label">
-                        Caption
-                    </label>
+                    @foreach (var item in ViewBag.TouristSpots)
+                    {
+                        <option value="@item.Id">
+                            @item.Name
+                        </option>
+                    }
 
-                    <input asp-for="Caption"
-                           class="form-control"
-                           placeholder="Beautiful mountain view" />
+                </select>
 
-                    <span asp-validation-for="Caption"
-                          class="text-danger">
-                    </span>
+            </div>
 
-                </div>
+            <!-- HOTEL -->
+            <div class="mb-3">
 
+                <label asp-for="HotelId"
+                       class="form-label">
+                    Hotel
+                </label>
 
-                <div class="row">
+                <select asp-for="HotelId"
+                        class="form-select">
 
+                    <option value="">
+                        -- Select Hotel --
+                    </option>
 
-                    <!-- TOURIST SPOT -->
+                    @foreach (var item in ViewBag.Hotels)
+                    {
+                        <option value="@item.Id">
+                            @item.Name
+                        </option>
+                    }
 
-                    <div class="col-md-6 mb-3">
+                </select>
 
-                        <label asp-for="TouristSpotId"
-                               class="form-label">
-                            Tourist Spot
-                        </label>
+            </div>
 
-                        <select asp-for="TouristSpotId"
-                                class="form-select">
+            <!-- RESTAURANT -->
+            <div class="mb-3">
 
-                            <option value="">
-                                -- Select Tourist Spot --
-                            </option>
+                <label asp-for="RestaurantId"
+                       class="form-label">
+                    Restaurant
+                </label>
 
-                            @foreach (var item in ViewBag.TouristSpots)
-                            {
-                                <option value="@item.Id">
-                                    @item.Name
-                                </option>
-                            }
+                <select asp-for="RestaurantId"
+                        class="form-select">
 
-                        </select>
+                    <option value="">
+                        -- Select Restaurant --
+                    </option>
 
-                    </div>
+                    @foreach (var item in ViewBag.Restaurants)
+                    {
+                        <option value="@item.Id">
+                            @item.Name
+                        </option>
+                    }
 
+                </select>
 
-                    <!-- HOTEL -->
+            </div>
 
-                    <div class="col-md-6 mb-3">
+            <!-- RESORT -->
+            <div class="mb-3">
 
-                        <label asp-for="HotelId"
-                               class="form-label">
-                            Hotel
-                        </label>
+                <label asp-for="ResortId"
+                       class="form-label">
+                    Resort
+                </label>
 
-                        <select asp-for="HotelId"
-                                class="form-select">
+                <select asp-for="ResortId"
+                        class="form-select">
 
-                            <option value="">
-                                -- Select Hotel --
-                            </option>
+                    <option value="">
+                        -- Select Resort --
+                    </option>
 
-                            @foreach (var item in ViewBag.Hotels)
-                            {
-                                <option value="@item.Id">
-                                    @item.Name
-                                </option>
-                            }
+                    @foreach (var item in ViewBag.Resorts)
+                    {
+                        <option value="@item.Id">
+                            @item.Name
+                        </option>
+                    }
 
-                        </select>
+                </select>
 
-                    </div>
+            </div>
 
+            <!-- TOUR PACKAGE -->
+            <div class="mb-4">
 
-                    <!-- RESTAURANT -->
+                <label asp-for="TourPackageId"
+                       class="form-label">
+                    Tour Package
+                </label>
 
-                    <div class="col-md-6 mb-3">
+                <select asp-for="TourPackageId"
+                        class="form-select">
 
-                        <label asp-for="RestaurantId"
-                               class="form-label">
-                            Restaurant
-                        </label>
+                    <option value="">
+                        -- Select Tour Package --
+                    </option>
 
-                        <select asp-for="RestaurantId"
-                                class="form-select">
+                    @foreach (var item in ViewBag.TourPackages)
+                    {
+                        <option value="@item.Id">
+                            @item.PackageName
+                        </option>
+                    }
 
-                            <option value="">
-                                -- Select Restaurant --
-                            </option>
+                </select>
 
-                            @foreach (var item in ViewBag.Restaurants)
-                            {
-                                <option value="@item.Id">
-                                    @item.Name
-                                </option>
-                            }
+            </div>
 
-                        </select>
+            <button type="submit"
+                    class="btn btn-primary">
+                Save Image
+            </button>
 
-                    </div>
+            <a asp-action="Index"
+               class="btn btn-secondary">
+                Back
+            </a>
 
-
-                    <!-- RESORT -->
-
-                    <div class="col-md-6 mb-3">
-
-                        <label asp-for="ResortId"
-                               class="form-label">
-                            Resort
-                        </label>
-
-                        <select asp-for="ResortId"
-                                class="form-select">
-
-                            <option value="">
-                                -- Select Resort --
-                            </option>
-
-                            @foreach (var item in ViewBag.Resorts)
-                            {
-                                <option value="@item.Id">
-                                    @item.Name
-                                </option>
-                            }
-
-                        </select>
-
-                    </div>
-
-
-                    <!-- TOUR PACKAGE -->
-
-                    <div class="col-md-6 mb-3">
-
-                        <label asp-for="TourPackageId"
-                               class="form-label">
-                            Tour Package
-                        </label>
-
-                        <select asp-for="TourPackageId"
-                                class="form-select">
-
-                            <option value="">
-                                -- Select Tour Package --
-                            </option>
-
-                            @foreach (var item in ViewBag.TourPackages)
-                            {
-                                <option value="@item.Id">
-                                    @item.PackageName
-                                </option>
-                            }
-
-                        </select>
-
-                    </div>
-
-                </div>
-
-
-                <div class="mt-4">
-
-                    <button type="submit"
-                            class="btn btn-primary">
-
-                        <i class="bi bi-upload"></i>
-                        Upload Image
-
-                    </button>
-
-                    <a asp-action="Index"
-                       class="btn btn-secondary">
-
-                        Cancel
-
-                    </a>
-
-                </div>
-
-            </form>
-
-        </div>
+        </form>
 
     </div>
-
 </div>
 
-
 @section Scripts {
-
     @{
         await Html.RenderPartialAsync(
             "_ValidationScriptsPartial"
         );
     }
-
 }
