@@ -1,0 +1,225 @@
+﻿@model KernalTravelGuide.Models.TourPackage
+
+@{
+    ViewData["Title"] = "Book Tour Package";
+}
+
+<div class="container py-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-8">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body p-4 p-lg-5">
+
+                    <div class="mb-4">
+
+                        <span class="text-primary fw-semibold">
+                            Tour Booking
+                        </span>
+
+                        <h2 class="fw-bold mt-2">
+                            @Model.PackageName
+                        </h2>
+
+                        <p class="text-muted">
+                            @Model.Description
+                        </p>
+
+                    </div>
+
+
+                    <div class="row mb-4">
+
+                        <div class="col-md-4">
+
+                            <small class="text-muted d-block">
+                                Duration
+                            </small>
+
+                            <strong>
+                                @Model.DurationDays Days
+                            </strong>
+
+                        </div>
+
+
+                        <div class="col-md-4">
+
+                            <small class="text-muted d-block">
+                                Price per person
+                            </small>
+
+                            <strong>
+                                @Model.Price.ToString("C")
+                            </strong>
+
+                        </div>
+
+
+                        <div class="col-md-4">
+
+                            <small class="text-muted d-block">
+                                Availability
+                            </small>
+
+                            <strong class="text-success">
+                                Available
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <form asp-controller="MyBookings"
+                          asp-action="Create"
+                          method="post">
+
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden"
+                               name="tourPackageId"
+                               value="@Model.Id" />
+
+
+                        <div class="mb-4">
+
+                            <label for="travelDate"
+                                   class="form-label fw-semibold">
+
+                                Travel Date
+
+                            </label>
+
+                            <input type="date"
+                                   id="travelDate"
+                                   name="travelDate"
+                                   class="form-control"
+                                   min="@DateTime.Today.ToString("yyyy-MM-dd")"
+                                   required />
+
+                            <span class="text-danger">
+                                @Html.ValidationMessage("travelDate")
+                            </span>
+
+                        </div>
+
+
+                        <div class="mb-4">
+
+                            <label for="numberOfPersons"
+                                   class="form-label fw-semibold">
+
+                                Number of Persons
+
+                            </label>
+
+                            <input type="number"
+                                   id="numberOfPersons"
+                                   name="numberOfPersons"
+                                   class="form-control"
+                                   min="1"
+                                   max="20"
+                                   value="1"
+                                   required />
+
+                            <span class="text-danger">
+                                @Html.ValidationMessage("numberOfPersons")
+                            </span>
+
+                        </div>
+
+
+                        <!-- Total preview -->
+                        <div class="alert alert-light border">
+
+                            <div class="d-flex justify-content-between">
+
+                                <span>
+                                    Estimated Total
+                                </span>
+
+                                <strong id="totalAmount">
+                                    @Model.Price.ToString("C")
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="d-flex gap-2">
+
+                            <a asp-controller="TourPackages"
+                               asp-action="Details"
+                               asp-route-id="@Model.Id"
+                               class="btn btn-outline-secondary">
+
+                                Back
+
+                            </a>
+
+
+                            <button type="submit"
+                                    class="btn btn-primary">
+
+                                Confirm Booking
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    // Package price coming from the server.
+    const packagePrice = @Model.Price.ToString(
+                System.Globalization.CultureInfo.InvariantCulture);
+
+    // Number of persons input.
+    const personsInput =
+        document.getElementById("numberOfPersons");
+
+    // Total amount display.
+    const totalAmount =
+        document.getElementById("totalAmount");
+
+
+    // Update the visual total whenever persons change.
+    personsInput.addEventListener("input", function () {
+
+        let persons =
+            parseInt(personsInput.value) || 1;
+
+        if (persons < 1)
+            persons = 1;
+
+        const total =
+            packagePrice * persons;
+
+        totalAmount.textContent =
+            total.toLocaleString(
+                undefined,
+                {
+                    style: "currency",
+                    currency: "USD"
+                });
+
+    });
+
+</script>

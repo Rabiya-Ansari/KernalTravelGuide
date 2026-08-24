@@ -1,0 +1,362 @@
+﻿@{
+    ViewData["Title"] = "My Dashboard";
+}
+
+<div class="container-fluid px-3 px-lg-4 py-4">
+
+    <!-- Header -->
+    <div class="mb-4">
+        <h2 class="fw-bold mb-1">
+            Welcome, @(User.Identity?.Name ?? "Traveler") 👋
+        </h2>
+
+        <p class="text-muted mb-0">
+            Manage your bookings and explore your next journey.
+        </p>
+    </div>
+    <li>
+        @if (User.Identity?.IsAuthenticated ?? false)
+        {
+            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
+                <button type="submit" class="dropdown-item">Logout</button>
+            </form>
+        }
+        @* <a class="dropdown-item"
+                                       asp-area="Identity"
+                                       asp-page="/Account/Logout">
+                                        Sign out
+                                    </a> *@
+    </li>
+
+    <!-- Statistics -->
+    <div class="row g-4 mb-4">
+
+        <!-- Total Bookings -->
+        <div class="col-lg-4 col-md-6">
+
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body p-4">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+                            <p class="text-muted mb-1">
+                                My Bookings
+                            </p>
+
+                            <h3 class="fw-bold mb-0">
+                                @ViewBag.TotalBookings
+                            </h3>
+                        </div>
+
+                        <div class="bg-primary bg-opacity-10 rounded-3 p-3">
+                            <i class="bi bi-calendar-check fs-3 text-primary"></i>
+                        </div>
+
+                    </div>
+
+                    <div class="mt-3">
+                        <a asp-controller="MyBookings"
+                           asp-action="Index"
+                           class="text-decoration-none small">
+                            View My Bookings →
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+
+        <!-- Pending -->
+        <div class="col-lg-4 col-md-6">
+
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body p-4">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+                            <p class="text-muted mb-1">
+                                Pending Bookings
+                            </p>
+
+                            <h3 class="fw-bold mb-0">
+                                @ViewBag.PendingBookings
+                            </h3>
+                        </div>
+
+                        <div class="bg-warning bg-opacity-10 rounded-3 p-3">
+                            <i class="bi bi-hourglass-split fs-3 text-warning"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+
+        <!-- Approved -->
+        <div class="col-lg-4 col-md-6">
+
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body p-4">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+                            <p class="text-muted mb-1">
+                                Confirmed Bookings
+                            </p>
+
+                            <h3 class="fw-bold mb-0">
+                                @ViewBag.ApprovedBookings
+                            </h3>
+                        </div>
+
+                        <div class="bg-success bg-opacity-10 rounded-3 p-3">
+                            <i class="bi bi-check-circle fs-3 text-success"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Main Actions -->
+    <div class="row g-4 mb-4">
+
+        <!-- My Bookings -->
+        <div class="col-lg-6">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body p-4">
+
+                    <div class="d-flex align-items-center mb-3">
+
+                        <div class="bg-primary bg-opacity-10 rounded-3 p-3 me-3">
+                            <i class="bi bi-calendar-check fs-3 text-primary"></i>
+                        </div>
+
+                        <div>
+                            <h5 class="fw-bold mb-1">
+                                My Bookings
+                            </h5>
+
+                            <p class="text-muted mb-0">
+                                View your travel bookings and their status.
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <a asp-controller="MyBookings"
+                       asp-action="Index"
+                       class="btn btn-primary">
+
+                        View My Bookings
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Explore -->
+        <div class="col-lg-6">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body p-4">
+
+                    <div class="d-flex align-items-center mb-3">
+
+                        <div class="bg-success bg-opacity-10 rounded-3 p-3 me-3">
+                            <i class="bi bi-compass fs-3 text-success"></i>
+                        </div>
+
+                        <div>
+                            <h5 class="fw-bold mb-1">
+                                Explore Travel
+                            </h5>
+
+                            <p class="text-muted mb-0">
+                                Discover destinations and tour packages.
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <a asp-controller="Home"
+                       asp-action="Index"
+                       class="btn btn-outline-success">
+
+                        Explore Now
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Recent Bookings -->
+    <div class="card border-0 shadow-sm">
+
+        <div class="card-header bg-white border-0 pt-4 px-4">
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <div>
+                    <h5 class="fw-bold mb-1">
+                        Recent Bookings
+                    </h5>
+
+                    <p class="text-muted small mb-0">
+                        Your latest travel bookings.
+                    </p>
+                </div>
+
+                <a asp-controller="MyBookings"
+                   asp-action="Index"
+                   class="btn btn-sm btn-outline-primary">
+
+                    View All
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div class="card-body px-4">
+
+            <div class="table-responsive">
+
+                <table class="table align-middle">
+
+                    <thead>
+                        <tr>
+                            <th>Package</th>
+                            <th>Travel Date</th>
+                            <th>Persons</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @if (ViewBag.RecentBookings != null &&
+                             ViewBag.RecentBookings.Count > 0)
+                        {
+                            foreach (var booking in ViewBag.RecentBookings)
+                            {
+                                <tr>
+
+                                    <td>
+                                        <strong>
+                                            @(booking.TourPackage?.PackageName ?? "N/A")
+                                        </strong>
+                                    </td>
+
+                                    <td>
+                                        @booking.TravelDate.ToString("dd MMM yyyy")
+                                    </td>
+
+                                    <td>
+                                        @booking.NumberOfPersons
+                                    </td>
+
+                                    <td>
+                                        Rs. @booking.TotalAmount.ToString("N0")
+                                    </td>
+
+                                    <td>
+                                        @if (booking.Status.ToString() == "Confirmed" ||
+                                             booking.Status.ToString() == "Approved")
+                                        {
+                                            <span class="badge bg-success">
+                                                @booking.Status
+                                            </span>
+                                        }
+                                        else if (booking.Status.ToString() == "Cancelled" ||
+                                                 booking.Status.ToString() == "Rejected")
+                                        {
+                                            <span class="badge bg-danger">
+                                                @booking.Status
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-warning text-dark">
+                                                @booking.Status
+                                            </span>
+                                        }
+                                    </td>
+
+                                    <td>
+                                        <a asp-controller="MyBookings"
+                                           asp-action="Details"
+                                           asp-route-id="@booking.Id"
+                                           class="btn btn-sm btn-outline-primary">
+
+                                            Details
+
+                                        </a>
+                                    </td>
+
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="6"
+                                    class="text-center text-muted py-4">
+
+                                    You don't have any bookings yet.
+
+                                    <div class="mt-2">
+                                        <a asp-controller="Home"
+                                           asp-action="Index"
+                                           class="btn btn-sm btn-primary">
+
+                                            Explore Tours
+
+                                        </a>
+                                    </div>
+
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

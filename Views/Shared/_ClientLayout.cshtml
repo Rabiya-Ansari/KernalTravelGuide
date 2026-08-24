@@ -50,30 +50,124 @@
 				<a href="index.html" class="logo m-0">Tour <span class="text-primary">.</span></a>
 
 				<ul class="js-clone-nav d-none d-lg-inline-block text-left site-menu float-right">
-					<li class="active"><a asp-controller="Home" asp-action="Index">Home</a></li>
-					<li><a asp-controller="About" asp-action="Index">About</a></li>
-					<li class="has-children">
-						<a href="#">Dropdown</a>
-						<ul class="dropdown">
-							<li><a href="elements.html">Elements</a></li>
-							<li><a href="#">Menu One</a></li>
-							<li class="has-children">
-								<a href="#">Menu Two</a>
-								<ul class="dropdown">
-									<li><a href="#">Tourist Spots</a></li>
-									<li><a href="#">Hotels</a></li>
-									<li><a href="#">Restaurants</a></li>
-									<li><a href="#">Resorts</a></li>
-									<li><a href="#">Travel Information</a></li>
-								</ul>
-							</li>
-							<li><a href="#">Menu Three</a></li>
-						</ul>
+
+					@* Home page link. *@
+					<li>
+						<a asp-controller="Home"
+						   asp-action="Index">
+							Home
+						</a>
 					</li>
-					<li><a href="services.html">Services</a></li>
-					<li><a asp-controller="About" asp-action="Index">Tour Packages</a></li>
-					<li><a asp-controller="About" asp-action="Index">Search</a></li>
-					<li><a asp-controller="Contact" asp-action="Index">Contact Us</a></li>
+
+
+					@* About Us page link. *@
+					<li>
+						<a asp-controller="About"
+						   asp-action="Index">
+							About Us
+						</a>
+					</li>
+
+
+					@* Information menu contains the five information categories required by the project. *@
+					<li class="has-children">
+
+						<a href="#">
+							Information
+						</a>
+
+						<ul class="dropdown">
+
+							@* Tourist spots information. *@
+							<li>
+								<a asp-controller="TouristSpots"
+								   asp-action="Index">
+									Tourist Spots
+								</a>
+							</li>
+
+							@* Travel and transportation information. *@
+							<li>
+								<a asp-controller="TravelInformations"
+								   asp-action="Index">
+									Travel Information
+								</a>
+							</li>
+
+							@* Hotel information. *@
+							<li>
+								<a asp-controller="Hotels"
+								   asp-action="Index">
+									Hotels
+								</a>
+							</li>
+
+							@* Restaurant information. *@
+							<li>
+								<a asp-controller="Restaurants"
+								   asp-action="Index">
+									Restaurants
+								</a>
+							</li>
+
+							@* Resort information. *@
+							<li>
+								<a asp-controller="Resorts"
+								   asp-action="Index">
+									Resorts
+								</a>
+							</li>
+
+						</ul>
+
+					</li>
+
+
+					@* Tour packages are part of the online travel functionality. *@
+					<li>
+						<a asp-controller="TourPackages"
+						   asp-action="Index">
+							Tour Packages
+						</a>
+					</li>
+
+
+					@* Search page for tourist spots, hotels, restaurants and resorts. *@
+					<li>
+						<a asp-controller="Search"
+						   asp-action="Index">
+							Search
+						</a>
+					</li>
+
+
+					@* Contact page where customers can contact the company. *@
+					<li>
+						<a asp-controller="Contact"
+						   asp-action="Index">
+							Contact Us
+						</a>
+					</li>
+
+
+					@* Show Login and Register only when the visitor is not authenticated. *@
+					@if (!User.Identity?.IsAuthenticated ?? true)
+					{
+						<li>
+							<a asp-area="Identity"
+							   asp-page="/Account/Login">
+								Login
+							</a>
+						</li>
+
+						<li>
+							<a asp-area="Identity"
+							   asp-page="/Account/Register">
+								Register
+							</a>
+						</li>
+					}
+
 				</ul>
 
 				<a href="#" class="burger ml-auto float-right site-menu-toggle js-menu-toggle d-inline-block d-lg-none light" data-toggle="collapse" data-target="#main-navbar">

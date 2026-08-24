@@ -1,0 +1,220 @@
+﻿@model KernalTravelGuide.Models.Booking
+
+@{
+    ViewData["Title"] = "Booking Details";
+}
+
+<div class="container py-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-8">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body p-4 p-lg-5">
+
+                    <!-- Header -->
+                    <div class="d-flex justify-content-between align-items-start mb-4">
+
+                        <div>
+                            <span class="text-primary fw-semibold">
+                                My Booking
+                            </span>
+
+                            <h2 class="fw-bold mt-2 mb-1">
+                                @(Model.TourPackage?.PackageName ?? "Tour Package")
+                            </h2>
+
+                            <p class="text-muted mb-0">
+                                Booking #@Model.Id
+                            </p>
+                        </div>
+
+                        <span class="badge bg-warning text-dark px-3 py-2">
+                            @Model.Status
+                        </span>
+
+                    </div>
+
+
+                    <!-- Package information -->
+                    <div class="border rounded p-4 mb-4">
+
+                        <h5 class="fw-bold mb-3">
+                            Tour Package
+                        </h5>
+
+                        <div class="row g-3">
+
+                            <div class="col-md-6">
+
+                                <small class="text-muted d-block">
+                                    Package
+                                </small>
+
+                                <strong>
+                                    @Model.TourPackage?.PackageName
+                                </strong>
+
+                            </div>
+
+
+                            <div class="col-md-6">
+
+                                <small class="text-muted d-block">
+                                    Duration
+                                </small>
+
+                                <strong>
+                                    @Model.TourPackage?.DurationDays Days
+                                </strong>
+
+                            </div>
+
+
+                            <div class="col-12">
+
+                                <small class="text-muted d-block">
+                                    Description
+                                </small>
+
+                                <span>
+                                    @Model.TourPackage?.Description
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Booking information -->
+                    <div class="border rounded p-4 mb-4">
+
+                        <h5 class="fw-bold mb-3">
+                            Booking Information
+                        </h5>
+
+                        <div class="row g-3">
+
+                            <div class="col-md-6">
+
+                                <small class="text-muted d-block">
+                                    Travel Date
+                                </small>
+
+                                <strong>
+                                    @Model.TravelDate.ToString("dd MMM yyyy")
+                                </strong>
+
+                            </div>
+
+
+                            <div class="col-md-6">
+
+                                <small class="text-muted d-block">
+                                    Number of Persons
+                                </small>
+
+                                <strong>
+                                    @Model.NumberOfPersons
+                                </strong>
+
+                            </div>
+
+
+                            <div class="col-md-6">
+
+                                <small class="text-muted d-block">
+                                    Booking Date
+                                </small>
+
+                                <strong>
+                                    @Model.BookingDate.ToString("dd MMM yyyy hh:mm tt")
+                                </strong>
+
+                            </div>
+
+
+                            <div class="col-md-6">
+
+                                <small class="text-muted d-block">
+                                    Total Amount
+                                </small>
+
+                                <strong class="text-primary fs-5">
+                                    @Model.TotalAmount.ToString("C")
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Status information -->
+                    <div class="alert alert-light border">
+
+                        <strong>
+                            Booking Status:
+                        </strong>
+
+                        <span class="ms-2">
+                            @Model.Status
+                        </span>
+
+                        @if (Model.Status.ToString() == "Pending")
+                        {
+                            <div class="small text-muted mt-2">
+                                Your booking is waiting for administrator approval.
+                            </div>
+                        }
+                        else if (Model.Status.ToString() == "Approved")
+                        {
+                            <div class="small text-success mt-2">
+                                Your booking has been approved.
+                            </div>
+                        }
+                        else if (Model.Status.ToString() == "Rejected")
+                        {
+                            <div class="small text-danger mt-2">
+                                Your booking has been rejected.
+                            </div>
+                        }
+
+                    </div>
+
+
+                    <!-- Actions -->
+                    <div class="d-flex gap-2 mt-4">
+
+                        <a asp-controller="MyBookings"
+                           asp-action="Index"
+                           class="btn btn-outline-secondary">
+
+                            Back to My Bookings
+
+                        </a>
+
+                        <a asp-controller="TourPackages"
+                           asp-action="Index"
+                           class="btn btn-primary">
+
+                            Explore More Tours
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
