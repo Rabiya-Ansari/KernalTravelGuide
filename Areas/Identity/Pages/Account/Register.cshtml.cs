@@ -70,6 +70,15 @@ public class RegisterModel : PageModel
     /// </summary>
     public class InputModel
     {
+        [Required]
+        [StringLength(50)]
+        [Display(Name = "First Name")]
+        public string FirstName { get; set; } = string.Empty;
+
+        [Required]
+        [StringLength(50)]
+        [Display(Name = "Last Name")]
+        public string LastName { get; set; } = string.Empty;
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
@@ -78,6 +87,10 @@ public class RegisterModel : PageModel
         [EmailAddress]
         [Display(Name = "Email")]
         public string Email { get; set; } = default!;
+        [Required]
+        [Phone]
+        [Display(Name = "Phone Number")] // Fixed: Name instead of PhoneNumber
+        public string PhoneNumber { get; set; } = default!;
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -113,14 +126,18 @@ public class RegisterModel : PageModel
         if (ModelState.IsValid)
         {
             var user = CreateUser();
+            user.FirstName = Input.FirstName;
+            user.LastName = Input.LastName;
+            user.PhoneNumber = Input.PhoneNumber;
 
             await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
             await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
             var result = await _userManager.CreateAsync(user, Input.Password);
-            await _signInManager.UserManager.AddToRoleAsync(user, "Customer");
+            //await _signInManager.UserManager.AddToRoleAsync(user, "Customer");
 
             if (result.Succeeded)
             {
+                await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
                 _logger.LogInformation("User created a new account with password.");
 
                 var userId = await _userManager.GetUserIdAsync(user);

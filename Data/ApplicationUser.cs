@@ -16,6 +16,11 @@ namespace KernalTravelGuide.Data
         [RegularExpression(@"^[A-Za-z ]+$")]
         public string LastName { get; set; } = string.Empty;
 
+        [Required]
+        [Phone]
+        [Display(Name = "Phone Number")]
+        public string PhoneNumber { get; set; } = default!;
+
         [StringLength(250)]
         public string? Address { get; set; }
 

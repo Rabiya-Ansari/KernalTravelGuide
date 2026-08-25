@@ -14,6 +14,7 @@
 
                 <div class="card-body p-4 p-lg-5">
 
+                    <!-- Header -->
                     <div class="mb-4">
 
                         <span class="text-primary fw-semibold">
@@ -24,14 +25,15 @@
                             @Model.PackageName
                         </h2>
 
-                        <p class="text-muted">
+                        <p class="text-muted mb-0">
                             @Model.Description
                         </p>
 
                     </div>
 
 
-                    <div class="row mb-4">
+                    <!-- Package Information -->
+                    <div class="row g-4 mb-4">
 
                         <div class="col-md-4">
 
@@ -53,7 +55,7 @@
                             </small>
 
                             <strong>
-                                @Model.Price.ToString("C")
+                                Rs. @Model.Price.ToString("N0")
                             </strong>
 
                         </div>
@@ -65,114 +67,148 @@
                                 Availability
                             </small>
 
-                            <strong class="text-success">
-                                Available
-                            </strong>
+                            @if (Model.IsAvailable)
+                            {
+                                <strong class="text-success">
+                                    <i class="bi bi-check-circle me-1"></i>
+                                    Available
+                                </strong>
+                            }
+                            else
+                            {
+                                <strong class="text-danger">
+                                    <i class="bi bi-x-circle me-1"></i>
+                                    Not Available
+                                </strong>
+                            }
 
                         </div>
 
                     </div>
 
 
-                    <form asp-controller="MyBookings"
-                          asp-action="Create"
-                          method="post">
-
-                        @Html.AntiForgeryToken()
-
-                        <input type="hidden"
-                               name="tourPackageId"
-                               value="@Model.Id" />
-
-
-                        <div class="mb-4">
-
-                            <label for="travelDate"
-                                   class="form-label fw-semibold">
-
-                                Travel Date
-
-                            </label>
-
-                            <input type="date"
-                                   id="travelDate"
-                                   name="travelDate"
-                                   class="form-control"
-                                   min="@DateTime.Today.ToString("yyyy-MM-dd")"
-                                   required />
-
-                            <span class="text-danger">
-                                @Html.ValidationMessage("travelDate")
-                            </span>
-
+                    @if (!Model.IsAvailable)
+                    {
+                        <div class="alert alert-danger">
+                            This tour package is currently unavailable.
                         </div>
+                    }
+                    else
+                    {
+                        <!-- Booking Form -->
+
+                        <form asp-controller="MyBookings"
+                              asp-action="Create"
+                              method="post">
+
+                            @Html.AntiForgeryToken()
+
+                            <input type="hidden"
+                                   name="tourPackageId"
+                                   value="@Model.Id" />
 
 
-                        <div class="mb-4">
+                            <!-- Travel Date -->
+                            <div class="mb-4">
 
-                            <label for="numberOfPersons"
-                                   class="form-label fw-semibold">
+                                <label for="travelDate"
+                                       class="form-label fw-semibold">
 
-                                Number of Persons
+                                    Travel Date
 
-                            </label>
+                                </label>
 
-                            <input type="number"
-                                   id="numberOfPersons"
-                                   name="numberOfPersons"
-                                   class="form-control"
-                                   min="1"
-                                   max="20"
-                                   value="1"
-                                   required />
+                                <input type="date"
+                                       id="travelDate"
+                                       name="travelDate"
+                                       class="form-control"
+                                       min="@DateTime.Today.ToString("yyyy-MM-dd")"
+                                       required />
 
-                            <span class="text-danger">
-                                @Html.ValidationMessage("numberOfPersons")
-                            </span>
-
-                        </div>
-
-
-                        <!-- Total preview -->
-                        <div class="alert alert-light border">
-
-                            <div class="d-flex justify-content-between">
-
-                                <span>
-                                    Estimated Total
+                                <span class="text-danger">
+                                    @Html.ValidationMessage("travelDate")
                                 </span>
-
-                                <strong id="totalAmount">
-                                    @Model.Price.ToString("C")
-                                </strong>
 
                             </div>
 
-                        </div>
+
+                            <!-- Number of Persons -->
+                            <div class="mb-4">
+
+                                <label for="numberOfPersons"
+                                       class="form-label fw-semibold">
+
+                                    Number of Persons
+
+                                </label>
+
+                                <input type="number"
+                                       id="numberOfPersons"
+                                       name="numberOfPersons"
+                                       class="form-control"
+                                       min="1"
+                                       max="20"
+                                       value="1"
+                                       required />
+
+                                <span class="text-danger">
+                                    @Html.ValidationMessage("numberOfPersons")
+                                </span>
+
+                            </div>
 
 
-                        <div class="d-flex gap-2">
+                            <!-- Total -->
+                            <div class="alert alert-light border">
 
-                            <a asp-controller="TourPackages"
-                               asp-action="Details"
-                               asp-route-id="@Model.Id"
-                               class="btn btn-outline-secondary">
+                                <div class="d-flex justify-content-between align-items-center">
 
-                                Back
+                                    <span class="fw-semibold">
+                                        Estimated Total
+                                    </span>
 
-                            </a>
+                                    <strong id="totalAmount"
+                                            class="fs-5 text-primary">
+
+                                        Rs. @Model.Price.ToString("N0")
+
+                                    </strong>
+
+                                </div>
+
+                                <small class="text-muted">
+                                    Final amount is calculated securely on the server.
+                                </small>
+
+                            </div>
 
 
-                            <button type="submit"
-                                    class="btn btn-primary">
+                            <!-- Buttons -->
+                            <div class="d-flex gap-2 flex-wrap">
 
-                                Confirm Booking
+                                <a asp-controller="TourPackages"
+                                   asp-action="Details"
+                                   asp-route-id="@Model.Id"
+                                   class="btn btn-outline-secondary">
 
-                            </button>
+                                    <i class="bi bi-arrow-left me-1"></i>
+                                    Back
 
-                        </div>
+                                </a>
 
-                    </form>
+
+                                <button type="submit"
+                                        class="btn btn-primary">
+
+                                    <i class="bi bi-calendar-check me-1"></i>
+                                    Confirm Booking
+
+                                </button>
+
+                            </div>
+
+                        </form>
+                    }
 
                 </div>
 
@@ -185,41 +221,46 @@
 </div>
 
 
-<script>
+@section Scripts {
 
-    // Package price coming from the server.
-    const packagePrice = @Model.Price.ToString(
-                System.Globalization.CultureInfo.InvariantCulture);
+    <script>
 
-    // Number of persons input.
-    const personsInput =
-        document.getElementById("numberOfPersons");
+        const packagePrice = @Model.Price.ToString(
+                            System.Globalization.CultureInfo.InvariantCulture);
 
-    // Total amount display.
-    const totalAmount =
-        document.getElementById("totalAmount");
+        const personsInput =
+            document.getElementById("numberOfPersons");
+
+        const totalAmount =
+            document.getElementById("totalAmount");
 
 
-    // Update the visual total whenever persons change.
-    personsInput.addEventListener("input", function () {
+        if (personsInput && totalAmount) {
 
-        let persons =
-            parseInt(personsInput.value) || 1;
+            personsInput.addEventListener("input", function() {
 
-        if (persons < 1)
-            persons = 1;
+                let persons =
+                    parseInt(personsInput.value) || 1;
 
-        const total =
-            packagePrice * persons;
+                if (persons < 1)
+                    persons = 1;
 
-        totalAmount.textContent =
-            total.toLocaleString(
-                undefined,
-                {
-                    style: "currency",
-                    currency: "USD"
-                });
+                if (persons > 20)
+                    persons = 20;
 
-    });
+                const total =
+                    packagePrice * persons;
 
-</script>
+                totalAmount.textContent =
+                    "Rs. " +
+                    total.toLocaleString("en-PK", {
+                        maximumFractionDigits: 0
+                    });
+
+            });
+
+        }
+
+    </script>
+
+}

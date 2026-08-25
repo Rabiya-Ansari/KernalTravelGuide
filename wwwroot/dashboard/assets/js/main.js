@@ -146,22 +146,79 @@
     initThemeToggle();
 
     // Initialize user profile values in UI. Provide a window.adminHMDUser object to override defaults.
-    function initUserProfile() {
-      var user = window.adminHMDUser || { name: "Admin Hasan", workspace: "Active Workspace", avatar: "../assets/images/avatar/avatar.jpg" };
+      function initUserProfile() {
 
-      var sidebarNameEl = document.querySelector(".sidebar-user strong");
-      var sidebarWorkspaceEl = document.querySelector(".sidebar-user small");
-      var sidebarAvatar = document.querySelector(".sidebar-user .avatar-img");
-      var profileNameEls = document.querySelectorAll(".profile-name");
-      var profileAvatarEls = document.querySelectorAll(".profile-button .avatar-img, .profile-button img");
+          var user = window.adminHMDUser;
 
-      if (sidebarNameEl) sidebarNameEl.textContent = user.name;
-      if (sidebarWorkspaceEl) sidebarWorkspaceEl.textContent = user.workspace;
-      if (sidebarAvatar && user.avatar) { sidebarAvatar.src = user.avatar; sidebarAvatar.alt = user.name; }
+          // If layout does not provide a user object,
+          // keep the names already rendered by Razor.
+          if (!user) {
+              return;
+          }
 
-      Array.prototype.forEach.call(profileNameEls, function (el) { el.textContent = user.name; });
-      Array.prototype.forEach.call(profileAvatarEls, function (img) { if (user.avatar) img.src = user.avatar; if (user.name) img.alt = user.name; });
-    }
+          var sidebarNameEl =
+              document.querySelector(".sidebar-user strong");
+
+          var sidebarWorkspaceEl =
+              document.querySelector(".sidebar-user small");
+
+          var sidebarAvatar =
+              document.querySelector(".sidebar-user .avatar-img");
+
+          var profileNameEls =
+              document.querySelectorAll(".profile-name");
+
+          var profileAvatarEls =
+              document.querySelectorAll(
+                  ".profile-button .avatar-img, .profile-button img"
+              );
+
+
+          if (sidebarNameEl && user.name) {
+              sidebarNameEl.textContent = user.name;
+          }
+
+
+          if (sidebarWorkspaceEl && user.workspace) {
+              sidebarWorkspaceEl.textContent = user.workspace;
+          }
+
+
+          if (sidebarAvatar && user.avatar) {
+
+              sidebarAvatar.src = user.avatar;
+              sidebarAvatar.alt = user.name || "User";
+
+          }
+
+
+          Array.prototype.forEach.call(
+              profileNameEls,
+              function (el) {
+
+                  if (user.name) {
+                      el.textContent = user.name;
+                  }
+
+              }
+          );
+
+
+          Array.prototype.forEach.call(
+              profileAvatarEls,
+              function (img) {
+
+                  if (user.avatar) {
+                      img.src = user.avatar;
+                  }
+
+                  if (user.name) {
+                      img.alt = user.name;
+                  }
+
+              }
+          );
+      }
 
     initUserProfile();
 

@@ -1,32 +1,32 @@
-﻿@{
+﻿@using KernalTravelGuide.Data
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+
+
+@{
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";
     ViewData["Title"] = "My Dashboard";
 }
+@{
+    var currentUser = await UserManager.GetUserAsync(User);
 
+    var customerName = currentUser != null
+        ? $"{currentUser.FirstName} {currentUser.LastName}"
+        : "Traveler";
+}
 <div class="container-fluid px-3 px-lg-4 py-4">
 
     <!-- Header -->
     <div class="mb-4">
         <h2 class="fw-bold mb-1">
-            Welcome, @(User.Identity?.Name ?? "Traveler") 👋
+            Welcome, @customerName 
         </h2>
 
         <p class="text-muted mb-0">
             Manage your bookings and explore your next journey.
         </p>
     </div>
-    <li>
-        @if (User.Identity?.IsAuthenticated ?? false)
-        {
-            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
-                <button type="submit" class="dropdown-item">Logout</button>
-            </form>
-        }
-        @* <a class="dropdown-item"
-                                       asp-area="Identity"
-                                       asp-page="/Account/Logout">
-                                        Sign out
-                                    </a> *@
-    </li>
+   
 
     <!-- Statistics -->
     <div class="row g-4 mb-4">
