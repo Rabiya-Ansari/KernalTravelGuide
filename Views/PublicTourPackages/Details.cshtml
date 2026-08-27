@@ -1,0 +1,63 @@
+﻿@model KernalTravelGuide.Models.TourPackage
+
+@{
+    Layout = "_ClientLayout";
+    ViewData["Title"] = Model.PackageName + " - Details";
+}
+
+<div class="untree_co-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow-sm border-0 p-4">
+
+                    <!-- Image -->
+                    <div class="mb-4 text-center">
+                        @if (!string.IsNullOrWhiteSpace(Model.ImagePath))
+                        {
+                            <img src="@Url.Content(Model.ImagePath)" alt="@Model.PackageName" class="img-fluid rounded" style="max-height: 400px; width: 100%; object-fit: cover;" />
+                        }
+                        else
+                        {
+                            <img src="~/client/assets/images/hero-slider-1.jpg" alt="@Model.PackageName" class="img-fluid rounded" style="max-height: 400px; width: 100%; object-fit: cover;" />
+                        }
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h2 class="text-primary mb-0">@Model.PackageName</h2>
+                        <span class="h3 text-success font-weight-bold mb-0">PKR @string.Format("{0:N0}", Model.Price)</span>
+                    </div>
+
+                    <hr />
+
+                    <!-- Action buttons -->
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <a asp-action="Index" class="btn btn-secondary">
+                            Back to Tour Packages
+                        </a>
+
+                        <div class="d-flex gap-2">
+                            @if (User.IsInRole("Customer"))
+                            {
+                                <a asp-controller="Feedback"
+                                   asp-action="Create"
+                                   asp-route-tourPackageId="@Model.Id"
+                                   class="btn btn-outline-primary me-2">
+                                    <i class="fa fa-star"></i> Give Your Review
+                                </a>
+                            }
+
+                            <a asp-controller="PublicTourPackages"
+                               asp-action="BookNow"
+                               asp-route-tourPackageId="@Model.Id"
+                               class="btn btn-primary btn-lg">
+                                Book Package Now
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

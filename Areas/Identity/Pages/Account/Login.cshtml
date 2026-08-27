@@ -5,76 +5,267 @@
     ViewData["Title"] = "Log in";
 }
 
-<div class="row p-5">
-    <div class="col-md-4 p-3">
-<h1>@ViewData["Title"]</h1>
-        <section>
-            <form id="account" method="post">
-                <h2>Use a local account to log in.</h2>
-                <hr />
-                <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-                <div class="form-floating mb-3">
-                    <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                    <label asp-for="Input.Email" class="form-label">Email</label>
-                    <span asp-validation-for="Input.Email" class="text-danger"></span>
-                </div>
-                <div class="form-floating mb-3">
-                    <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
-                    <label asp-for="Input.Password" class="form-label">Password</label>
-                    <span asp-validation-for="Input.Password" class="text-danger"></span>
-                </div>
-                <div class="checkbox mb-3">
-                    <label asp-for="Input.RememberMe" class="form-label">
-                        <input class="form-check-input" asp-for="Input.RememberMe" />
-                        @Html.DisplayNameFor(m => m.Input.RememberMe)
-                    </label>
-                </div>
-                <div>
-                    <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
-                </div>
-                <div>
-                    <p>
-                        <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
-                    </p>
-                    <p>
-                        <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
-                    </p>
-                    <p>
-                        <a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Resend email confirmation</a>
-                    </p>
-                </div>
-            </form>
-        </section>
-    </div>
-    <div class="col-md-6 col-md-offset-2">
-        <section>
-            <h3>Use another service to log in.</h3>
-            <hr />
-            @{
-                if ((Model.ExternalLogins?.Count ?? 0) == 0)
-                {
-                    <div>
-                        <p>
-                            There are no external authentication services configured. See this <a href="https://go.microsoft.com/fwlink/?LinkID=532715">article
-                            about setting up this ASP.NET application to support logging in via external services</a>.
-                        </p>
+<style>
+    :root {
+        --primary-theme: #6096A6;
+        --dark-theme: #1F384C;
+        --bg-light: #F4F7F8;
+    }
+
+    body {
+        background-color: var(--bg-light);
+    }
+
+    .auth-wrapper {
+        min-height: 85vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 0;
+        position: relative;
+    }
+
+    .btn-back {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        color: var(--dark-theme);
+        font-weight: 500;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #ffffff;
+        padding: 8px 16px;
+        border-radius: 30px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
+        z-index: 10;
+    }
+
+        .btn-back:hover {
+            background: var(--dark-theme);
+            color: #ffffff;
+        }
+
+    .auth-card {
+        background: #ffffff;
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: 0 20px 40px rgba(31, 56, 76, 0.08);
+        border: none;
+    }
+
+    .auth-image-side {
+        background-color: var(--primary-theme);
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 40px;
+        color: white;
+        min-height: 500px;
+    }
+
+    .auth-img-container {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0.85;
+    }
+
+    .auth-image-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(96, 150, 166, 0.4) 0%, rgba(31, 56, 76, 0.75) 100%);
+    }
+
+    .auth-image-content {
+        position: relative;
+        z-index: 2;
+    }
+
+    .auth-form-side {
+        padding: 40px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: 100%;
+    }
+
+    .form-floating > .form-control {
+        border-radius: 12px;
+        border: 1.5px solid #E2E8F0;
+    }
+
+        .form-floating > .form-control:focus {
+            border-color: var(--primary-theme);
+            box-shadow: 0 0 0 0.25rem rgba(96, 150, 166, 0.25);
+        }
+
+    .form-check-input:checked {
+        background-color: var(--primary-theme);
+        border-color: var(--primary-theme);
+    }
+
+    .btn-theme {
+        background-color: var(--dark-theme);
+        color: #fff;
+        border-radius: 12px;
+        padding: 12px;
+        font-weight: 600;
+        border: none;
+        transition: background 0.3s ease;
+    }
+
+        .btn-theme:hover {
+            background-color: var(--primary-theme);
+            color: #fff;
+        }
+
+    .btn-external {
+        border-radius: 12px;
+        border: 1px solid #E2E8F0;
+        background: #fff;
+        color: var(--dark-theme);
+        font-weight: 500;
+        padding: 10px;
+        width: 100%;
+        margin-bottom: 8px;
+    }
+
+        .btn-external:hover {
+            background: #F8FAFC;
+        }
+
+    .auth-links a {
+        color: var(--dark-theme);
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+        .auth-links a:hover {
+            color: var(--primary-theme);
+            text-decoration: underline;
+        }
+
+    .divider {
+        display: flex;
+        align-items: center;
+        text-align: center;
+        color: #94A3B8;
+        margin: 20px 0;
+    }
+
+        .divider::before,
+        .divider::after {
+            content: "";
+            flex: 1;
+            border-bottom: 1px solid #E2E8F0;
+        }
+
+        .divider:not(:empty)::before {
+            margin-right: .75em;
+        }
+
+        .divider:not(:empty)::after {
+            margin-left: .75em;
+        }
+</style>
+
+<div class="container auth-wrapper">
+
+    <a href="/" class="btn-back">
+        &larr; Back to Home
+    </a>
+
+    <div class="card auth-card w-100">
+        <div class="row g-0">
+            <!-- LEFT VISUAL SIDE (TRAVEL IMAGE) -->
+            <div class="col-lg-5 d-none d-lg-block">
+                <div class="auth-image-side h-100">
+                    <img src="https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=1000&q=80" alt="Travel" class="auth-img-container" />
+                    <div class="auth-image-overlay"></div>
+
+                    <div class="auth-image-content">
+                        <h2 class="fw-bold display-6">Welcome Back, Explorer.</h2>
                     </div>
-                }
-                else
-                {
-                    <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
-                        <div>
-                            <p>
+
+                    <div class="auth-image-content">
+                        <p class="mb-0 text-white-50">Log in to continue planning your next adventure.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT FORM SIDE -->
+            <div class="col-lg-7">
+                <div class="auth-form-side">
+                    <h3 class="fw-bold mb-1" style="color: var(--dark-theme);">Welcome Back</h3>
+                    <p class="text-muted mb-4">Please log in to your account to continue.</p>
+
+                    <form id="account" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3" role="alert"></div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                            <label asp-for="Input.Email">Email</label>
+                            <span asp-validation-for="Input.Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
+                            <label asp-for="Input.Password">Password</label>
+                            <span asp-validation-for="Input.Password" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" asp-for="Input.RememberMe" />
+                                <label class="form-check-label" asp-for="Input.RememberMe">
+                                    @Html.DisplayNameFor(m => m.Input.RememberMe)
+                                </label>
+                            </div>
+                            <a id="forgot-password" asp-page="./ForgotPassword" class="small">Forgot password?</a>
+                        </div>
+
+                        <button id="login-submit" type="submit" class="w-100 btn btn-theme btn-lg mt-2">Log in</button>
+                    </form>
+
+                    <!-- EXTERNAL LOGINS -->
+                    @if ((Model.ExternalLogins?.Count ?? 0) > 0)
+                    {
+                        <div class="divider">or continue with</div>
+                        <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                            <div class="d-flex flex-column gap-2">
                                 @foreach (var provider in Model.ExternalLogins!)
                                 {
-                                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+                                    <button type="submit" class="btn btn-external" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">
+                                        @provider.DisplayName
+                                    </button>
                                 }
-                            </p>
+                            </div>
+                        </form>
+                    }
+                    else
+                    {
+                        <div class="text-muted small text-center mt-2">
+                            There are no external authentication services configured.
                         </div>
-                    </form>
-                }
-            }
-        </section>
+                    }
+
+                    <div class="auth-links text-center mt-4 small">
+                        <p class="mb-1">
+                            Don't have an account? <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
+                        </p>
+                        <p class="mb-0">
+                            <a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Resend email confirmation</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

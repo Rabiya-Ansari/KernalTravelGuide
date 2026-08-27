@@ -20,8 +20,8 @@ namespace KernalTravelGuide.Models.ViewModels
         // Available tour packages shown on the Home page.
         public List<TourPackage> TourPackages { get; set; } = new();
 
-        // Latest customer reviews used as testimonials.
-        public List<Review> Reviews { get; set; } = new();
+        // FIXED: Changed List<Review> to List<Feedback>
+        public List<Feedback> Reviews { get; set; } = new();
 
         // Total number of tourist spots.
         public int TouristSpotCount { get; set; }

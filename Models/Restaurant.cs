@@ -18,6 +18,14 @@ namespace KernalTravelGuide.Models
         [Range(1, 5)]
         public double Rating { get; set; }
 
+        [Range(100, 100000)]
+        public double AveragePrice { get; set; }
+
+        [Range(1, 5000)]
+        public int Capacity { get; set; }
+
+        public bool Availability { get; set; }
+
         [Phone]
         [StringLength(30)]
         public string? Phone { get; set; }

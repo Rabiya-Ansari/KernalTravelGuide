@@ -1,0 +1,73 @@
+@model KernalTravelGuide.Models.Feedback
+
+@{
+    ViewData["Title"] = "Give Feedback";
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+}
+
+<div class="untree_co-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-7">
+                <div class="card shadow p-4">
+
+                    <h2 class="mb-1">Give Your Feedback</h2>
+
+                    @if (!string.IsNullOrEmpty(ViewBag.TargetName as string))
+                    {
+                        <p class="text-primary font-weight-bold mb-4">
+                            Reviewing: <span class="text-dark">@ViewBag.TargetName</span>
+                        </p>
+                    }
+                    else
+                    {
+                        <div class="mb-4"></div>
+                    }
+
+                    <form asp-controller="Feedback" asp-action="Create" method="post">
+                        @Html.AntiForgeryToken()
+
+                        <!-- Hidden Inputs -->
+                        <input type="hidden" asp-for="HotelId" />
+                        <input type="hidden" asp-for="ResortId" />
+                        <input type="hidden" asp-for="RestaurantId" />
+                        <input type="hidden" asp-for="TouristSpotId" />
+                        <input type="hidden" asp-for="TourPackageId" />
+
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <!-- Rating -->
+                        <div class="form-group mb-4">
+                            <label asp-for="Rating" class="form-label">Rating</label>
+                            <select asp-for="Rating" class="form-control">
+                                <option value="0">Select Rating</option>
+                                <option value="1">⭐ 1 / 5</option>
+                                <option value="2">⭐⭐ 2 / 5</option>
+                                <option value="3">⭐⭐⭐ 3 / 5</option>
+                                <option value="4">⭐⭐⭐⭐ 4 / 5</option>
+                                <option value="5">⭐⭐⭐⭐⭐ 5 / 5</option>
+                            </select>
+                            <span asp-validation-for="Rating" class="text-danger"></span>
+                        </div>
+
+                        <!-- Comments -->
+                        <div class="form-group mb-4">
+                            <label asp-for="Comments" class="form-label">Your Review</label>
+                            <textarea asp-for="Comments" class="form-control" rows="5" placeholder="Write your experience..."></textarea>
+                            <span asp-validation-for="Comments" class="text-danger"></span>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Submit Feedback</button>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

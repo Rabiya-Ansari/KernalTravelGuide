@@ -8,11 +8,11 @@
 <h1>Customer Feedback</h1>
 
 <table class="table table-bordered table-striped">
-
     <thead>
         <tr>
             <th>Customer Name</th>
             <th>Email</th>
+            <th>Reviewed Item</th>
             <th>Rating</th>
             <th>Comments</th>
             <th>Feedback Date</th>
@@ -21,50 +21,45 @@
     </thead>
 
     <tbody>
-
         @foreach (var item in Model)
         {
             <tr>
-
+                <td>@item.CustomerName</td>
+                <td>@item.Email</td>
                 <td>
-                    @item.CustomerName
+                    @if (item.Hotel != null)
+                    {
+                        <span class="badge bg-primary">Hotel: @item.Hotel.Name</span>
+                    }
+                    else if (item.Resort != null)
+                    {
+                        <span class="badge bg-info text-dark">Resort: @item.Resort.Name</span>
+                    }
+                    else if (item.Restaurant != null)
+                    {
+                        <span class="badge bg-warning text-dark">Restaurant: @item.Restaurant.Name</span>
+                    }
+                    else if (item.TouristSpot != null)
+                    {
+                        <span class="badge bg-success">Spot: @item.TouristSpot.Name</span>
+                    }
+                    else if (item.TourPackage != null)
+                    {
+                        <span class="badge bg-secondary">Package: @item.TourPackage.PackageName</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-dark">General</span>
+                    }
                 </td>
-
+                <td>@item.Rating / 5</td>
+                <td>@item.Comments</td>
+                <td>@item.FeedbackDate.ToString("dd MMM yyyy hh:mm tt")</td>
                 <td>
-                    @item.Email
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info">View</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Delete</a>
                 </td>
-
-                <td>
-                    @item.Rating / 5
-                </td>
-
-                <td>
-                    @item.Comments
-                </td>
-
-                <td>
-                    @item.FeedbackDate.ToString("dd MMM yyyy hh:mm tt")
-                </td>
-
-                <td>
-
-                    <a asp-action="Details"
-                       asp-route-id="@item.Id"
-                       class="btn btn-sm btn-info">
-                        View
-                    </a>
-
-                    <a asp-action="Delete"
-                       asp-route-id="@item.Id"
-                       class="btn btn-sm btn-danger">
-                        Delete
-                    </a>
-
-                </td>
-
             </tr>
         }
-
     </tbody>
-
 </table>

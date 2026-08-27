@@ -100,155 +100,132 @@
             <nav class="sidebar-nav">
 
                 <!-- Dashboard -->
-
                 <a class="nav-link"
                    asp-controller="Dashboard"
                    asp-action="Index">
-
                     <span class="nav-icon">
                         <i class="bi bi-speedometer2"></i>
                     </span>
-
                     <span class="nav-text">
                         Dashboard
                     </span>
-
                 </a>
 
 
                 <!-- Home -->
-
                 <a class="nav-link"
                    asp-controller="Home"
                    asp-action="Index">
-
                     <span class="nav-icon">
                         <i class="bi bi-house"></i>
                     </span>
-
                     <span class="nav-text">
                         Home
                     </span>
-
                 </a>
 
 
-                <!-- Tour Packages -->
-
+                @* <!-- Tour Packages (Changed to Public Controller) -->
                 <a class="nav-link"
-                   asp-controller="TourPackages"
+                   asp-controller="PublicTourPackages"
                    asp-action="Index">
-
                     <span class="nav-icon">
                         <i class="bi bi-map"></i>
                     </span>
-
                     <span class="nav-text">
                         Tour Packages
                     </span>
-
                 </a>
 
 
-                <!-- Tourist Spots -->
-
+                <!-- Tourist Spots (Changed to Public Controller) -->
                 <a class="nav-link"
-                   asp-controller="TouristSpots"
+                   asp-controller="PublicTouristSpots"
                    asp-action="Index">
-
                     <span class="nav-icon">
                         <i class="bi bi-geo-alt"></i>
                     </span>
-
                     <span class="nav-text">
                         Tourist Spots
                     </span>
-
                 </a>
 
 
-                <!-- Hotels -->
-
+                <!-- Hotels (Changed to Public Controller) -->
                 <a class="nav-link"
-                   asp-controller="Hotels"
+                   asp-controller="PublicHotels"
                    asp-action="Index">
-
                     <span class="nav-icon">
                         <i class="bi bi-building"></i>
                     </span>
-
                     <span class="nav-text">
                         Hotels
                     </span>
-
                 </a>
 
 
-                <!-- Restaurants -->
-
+                <!-- Restaurants (Changed to Public Controller) -->
                 <a class="nav-link"
-                   asp-controller="Restaurants"
+                   asp-controller="PublicRestaurants"
                    asp-action="Index">
-
                     <span class="nav-icon">
                         <i class="bi bi-cup-hot"></i>
                     </span>
-
                     <span class="nav-text">
                         Restaurants
                     </span>
-
                 </a>
 
 
-                <!-- Resorts -->
-
+                <!-- Resorts (Changed to Public Controller) -->
                 <a class="nav-link"
-                   asp-controller="Resorts"
+                   asp-controller="PublicResorts"
                    asp-action="Index">
-
                     <span class="nav-icon">
                         <i class="bi bi-house-heart"></i>
                     </span>
-
                     <span class="nav-text">
                         Resorts
                     </span>
-
                 </a>
 
 
-                <!-- My Bookings -->
+                <!-- Travel Information (Added Public Controller Link) -->
+                <a class="nav-link"
+                   asp-controller="PublicTravelInformation"
+                   asp-action="Index">
+                    <span class="nav-icon">
+                        <i class="bi bi-info-circle"></i>
+                    </span>
+                    <span class="nav-text">
+                        Travel Info
+                    </span>
+                </a> *@
 
+
+                <!-- My Bookings (User specific data) -->
                 <a class="nav-link"
                    asp-controller="MyBookings"
                    asp-action="Index">
-
                     <span class="nav-icon">
                         <i class="bi bi-calendar-check"></i>
                     </span>
-
                     <span class="nav-text">
                         My Bookings
                     </span>
-
                 </a>
 
 
-                <!-- Reviews -->
-
+                <!-- My Feedbacks (User specific data) -->
                 <a class="nav-link"
-                   asp-controller="MyBookings"
-                   asp-action="Index">
-
+                   asp-controller="Feedback"
+                   asp-action="MyFeedbacks">
                     <span class="nav-icon">
-                        <i class="bi bi-star"></i>
+                        <i class="bi bi-chat-text"></i>
                     </span>
-
                     <span class="nav-text">
-                        My Reviews
+                        My Feedbacks
                     </span>
-
                 </a>
 
             </nav>

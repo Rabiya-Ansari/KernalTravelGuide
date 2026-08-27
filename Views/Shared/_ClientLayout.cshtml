@@ -4,6 +4,9 @@
 * Tempalte URI: https://untree.co/
 * License: https://creativecommons.org/licenses/by/3.0/
 */ -->
+@using KernalTravelGuide.Data
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
 <!doctype html>
 <html lang="en">
 <head>
@@ -30,6 +33,37 @@
 	<link rel="stylesheet" href="~/client/assets/css/style.css">
 
 	<title>Tour Free Bootstrap Template for Travel Agency by Untree.co</title>
+<style>
+			.user-avatar {
+				width: 34px;
+				height: 34px;
+				border-radius: 50%;
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				background: #8A3F05;
+				color: #fff;
+				font-size: 16px;
+			}
+
+				.user-avatar i {
+					line-height: 1;
+				}
+
+			.dropdown-menu {
+				min-width: 210px;
+				border: 0;
+				border-radius: 12px;
+			}
+
+			.dropdown-item {
+				padding: 10px 14px;
+			}
+
+				.dropdown-item:hover {
+					border-radius: 8px;
+				}
+</style>
 </head>
 
 <body>
@@ -80,7 +114,7 @@
 
 							@* Tourist spots information. *@
 							<li>
-								<a asp-controller="TouristSpots"
+								<a asp-controller="PublicTouristSpots"
 								   asp-action="Index">
 									Tourist Spots
 								</a>
@@ -88,7 +122,7 @@
 
 							@* Travel and transportation information. *@
 							<li>
-								<a asp-controller="TravelInformations"
+								<a asp-controller="PublicTravelInformation"
 								   asp-action="Index">
 									Travel Information
 								</a>
@@ -96,7 +130,7 @@
 
 							@* Hotel information. *@
 							<li>
-								<a asp-controller="Hotels"
+								<a asp-controller="PublicHotels"
 								   asp-action="Index">
 									Hotels
 								</a>
@@ -104,7 +138,7 @@
 
 							@* Restaurant information. *@
 							<li>
-								<a asp-controller="Restaurants"
+								<a asp-controller="PublicRestaurants"
 								   asp-action="Index">
 									Restaurants
 								</a>
@@ -112,7 +146,7 @@
 
 							@* Resort information. *@
 							<li>
-								<a asp-controller="Resorts"
+								<a asp-controller="PublicResorts"
 								   asp-action="Index">
 									Resorts
 								</a>
@@ -125,7 +159,7 @@
 
 					@* Tour packages are part of the online travel functionality. *@
 					<li>
-						<a asp-controller="TourPackages"
+						<a asp-controller="PublicTourPackages"
 						   asp-action="Index">
 							Tour Packages
 						</a>
@@ -167,6 +201,85 @@
 							</a>
 						</li>
 					}
+					@if (User?.Identity?.IsAuthenticated == true)
+					{
+						var currentUser = await UserManager.GetUserAsync(User);
+
+						var displayName = currentUser != null
+							? $"{currentUser.FirstName} {currentUser.LastName}".Trim()
+							: (User.Identity?.Name ?? "User");
+
+						if (string.IsNullOrWhiteSpace(displayName))
+						{
+							displayName = "User";
+						}
+
+						<li class="has-children user-nav-item">
+
+							<a href="#"
+							   class="d-flex align-items-center text-decoration-none"
+							   style="gap:8px;">
+
+								<span class="user-avatar">
+									<i class="bi bi-person-fill"></i>
+								</span>
+
+								<span class="fw-semibold">
+									@displayName
+								</span>
+							</a>
+
+							<ul class="dropdown">
+
+								<li>
+									<h6 class="dropdown-header">
+										Welcome, @displayName
+									</h6>
+								</li>
+
+								<li>
+									<a asp-controller="Dashboard"
+									   asp-action="Index">
+										<i class="bi bi-speedometer2 me-2"></i>
+										Dashboard
+									</a>
+								</li>
+
+								<li>
+									<a asp-controller="MyBookings"
+									   asp-action="Index">
+										<i class="bi bi-calendar-check me-2"></i>
+										My Bookings
+									</a>
+								</li>
+
+								<li>
+									<hr />
+								</li>
+
+								<li>
+									<form asp-area="Identity"
+										  asp-page="/Account/Logout"
+										  method="post">
+
+										@Html.AntiForgeryToken()
+
+										<button type="submit"
+												class="dropdown-item text-danger">
+
+											<i class="bi bi-box-arrow-right me-2"></i>
+											Logout
+
+										</button>
+
+									</form>
+								</li>
+
+							</ul>
+
+						</li>
+					}
+
 
 				</ul>
 
@@ -187,7 +300,11 @@
 					<div class="col-md-6 col-lg-4">
 						<div class="widget">
 							<h3 class="heading">About Tour</h3>
-							<p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
+							<p>
+								Karnel Travel Guide provides information about tourist
+								spots, transportation, hotels, restaurants, resorts and
+								tour packages to help customers plan their journeys.
+							</p>
 						</div>
 						<div class="widget">
 							<ul class="list-unstyled social">
@@ -216,9 +333,9 @@
 						<div class="widget">
 							<h3 class="heading">Resources</h3>
 							<ul class="links list-unstyled">
-								<li><a href="#">Blog</a></li>
-								<li><a href="#">About</a></li>
-								<li><a href="#">Contact</a></li>
+								
+								<li><a asp-action="Index" asp-controller="About">About</a></li>
+								<li><a asp-action="Index" asp-controller="Contact">Contact</a></li>
 							</ul>
 						</div>
 					</div>
@@ -242,7 +359,7 @@
 			<div class="container">
 				<div class="row text-center">
 					<div class="col-md-8 mb-3 mb-md-0 mx-auto">
-						<p>Copyright &copy;<script>document.write(new Date().getFullYear());</script>. All Rights Reserved. &mdash; Designed with love by <a href="https://untree.co" class="link-highlight">Untree.co</a> <!-- License information: https://untree.co/license/ -->Distributed By <a href="https://themewagon.com" target="_blank" >ThemeWagon</a>
+						<p>Copyright &copy;<script>document.write(new Date().getFullYear());</script>. All Rights Reserved. &mdash; Designed with love by <a href="https://untree.co" class="link-highlight">Untree.co</a>
 						</p>
 					</div>
 					

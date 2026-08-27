@@ -6,7 +6,7 @@ using System.Security.Claims;
 
 namespace KernalTravelGuide.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Customer")]
     public class DashboardController : Controller
     {
         private readonly AppDbContext _context;

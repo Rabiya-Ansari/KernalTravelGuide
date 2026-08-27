@@ -29,10 +29,15 @@ namespace KernalTravelGuide.Controllers
 
             // Recent Bookings
             ViewBag.RecentBookings = await _context.Bookings
-                .Include(b => b.TourPackage)
-                .OrderByDescending(b => b.BookingDate)
-                .Take(5)
-                .ToListAsync();
+    .Include(b => b.TourPackage)
+    .Include(b => b.Hotel)      
+    .Include(b => b.Resort)     
+    .Include(b => b.Restaurant) 
+    .Include(b => b.TouristSpot) 
+    .Include(b => b.TravelInformation) 
+    .OrderByDescending(b => b.BookingDate)
+    .Take(5)
+    .ToListAsync();
 
             // Recent Feedbacks
             ViewBag.RecentFeedbacks = await _context.Feedbacks

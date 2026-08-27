@@ -2,8 +2,22 @@
 
 @{
     ViewData["Title"] = "Search";
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
 }
-
+<div class="hero hero-inner">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mx-auto text-center">
+                <div class="intro-wrap">
+                    <h1 class="mb-0">Search</h1>
+                    <p class="text-white">
+                        Find tourist spots, hotels, restaurants and resorts.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="container py-5">
 
     <div class="text-center mb-5">
@@ -118,10 +132,18 @@
                         </button>
 
                     </div>
+                    <div class="mt-3">
+                        <a asp-controller="Search"
+                           asp-action="Advanced"
+                           class="btn btn-primary w-300">
+                            Advanced Search
+                        </a>
+                    </div>
 
                 </div>
 
             </form>
+            
 
         </div>
     </div>

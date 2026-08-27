@@ -1,0 +1,110 @@
+﻿@model KernalTravelGuide.Models.Hotel
+
+@{
+    Layout = "_ClientLayout";
+    ViewData["Title"] = Model.Name + " - Details";
+}
+
+<div class="untree_co-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow-sm border-0 p-4">
+
+                    <!-- Hotel Image -->
+                    <div class="mb-4 text-center">
+                        @if (!string.IsNullOrWhiteSpace(Model.ImagePath))
+                        {
+                            <img src="@Url.Content(Model.ImagePath)" alt="@Model.Name" class="img-fluid rounded" style="max-height: 400px; width: 100%; object-fit: cover;" />
+                        }
+                        else
+                        {
+                            <img src="~/client/assets/images/hero-slider-1.jpg" alt="@Model.Name" class="img-fluid rounded" style="max-height: 400px; width: 100%; object-fit: cover;" />
+                        }
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h2 class="text-primary mb-0">@Model.Name</h2>
+                        @if (Model.StarRating > 0)
+                        {
+                            <span class="badge badge-warning p-2 h5 mb-0">★ @Model.StarRating Stars</span>
+                        }
+                    </div>
+
+                    <p class="text-muted mb-4">
+                        <i class="icon-room text-primary"></i> @(Model.City?.Name ?? "Pakistan")
+                    </p>
+
+                    <hr />
+
+                    <!-- Details grid -->
+                    <div class="row my-4">
+                        <div class="col-md-6 mb-3">
+                            <h6 class="text-muted">Price Per Night</h6>
+                            <h4 class="text-success font-weight-bold">PKR @Model.PricePerNight</h4>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <h6 class="text-muted">Availability</h6>
+                            <h4>
+                                @if (Model.Availability)
+                                {
+                                    <span class="badge badge-success">Available</span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-danger">Not Available</span>
+                                }
+                            </h4>
+                        </div>
+                    </div>
+
+                    <!-- Contact Details -->
+                    <div class="bg-light p-3 rounded mb-4">
+                        <h5 class="font-weight-bold mb-3">Contact Information</h5>
+                        <ul class="list-unstyled mb-0">
+                            @if (!string.IsNullOrEmpty(Model.ContactNo))
+                            {
+                                <li class="mb-2"><strong>Phone:</strong> @Model.ContactNo</li>
+                            }
+                            @if (!string.IsNullOrEmpty(Model.Email))
+                            {
+                                <li class="mb-2"><strong>Email:</strong> @Model.Email</li>
+                            }
+                            @if (!string.IsNullOrEmpty(Model.Website))
+                            {
+                                <li><strong>Website:</strong> <a href="@Model.Website" target="_blank" rel="noopener">@Model.Website</a></li>
+                            }
+                        </ul>
+                    </div>
+
+                    <!-- Actions (Resort/Restaurant Style Buttons) -->
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <a asp-action="Index" class="btn btn-secondary">
+                            Back to Hotels List
+                        </a>
+
+                        <div class="d-flex gap-2">
+                            @if (User.IsInRole("Customer"))
+                            {
+                                <a asp-controller="Feedback"
+                                   asp-action="Create"
+                                   asp-route-hotelId="@Model.Id"
+                                   class="btn btn-outline-primary me-2">
+                                    <i class="fa fa-star"></i> Give Your Review
+                                </a>
+                            }
+
+                            <a asp-controller="PublicHotels"
+                               asp-action="BookNow"
+                               asp-route-hotelId="@Model.Id"
+                               class="btn btn-primary btn-lg">
+                                Book Hotel Now
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

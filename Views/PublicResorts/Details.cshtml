@@ -1,0 +1,64 @@
+﻿@model KernalTravelGuide.Models.Resort
+
+@{
+    Layout = "_ClientLayout";
+    ViewData["Title"] = Model.Name + " - Details";
+}
+
+<div class="untree_co-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow-sm border-0 p-4">
+
+                    <!-- Resort Image -->
+                    <div class="mb-4 text-center">
+                        @if (!string.IsNullOrWhiteSpace(Model.ImagePath))
+                        {
+                            <img src="@Url.Content(Model.ImagePath)" alt="@Model.Name" class="img-fluid rounded" style="max-height: 400px; width: 100%; object-fit: cover;" />
+                        }
+                        else
+                        {
+                            <img src="~/client/assets/images/hero-slider-1.jpg" alt="@Model.Name" class="img-fluid rounded" style="max-height: 400px; width: 100%; object-fit: cover;" />
+                        }
+                    </div>
+
+                    <h2 class="text-primary mb-2">@Model.Name</h2>
+
+                    <p class="text-muted mb-4">
+                        <i class="icon-room text-primary"></i> @(Model.City?.Name ?? "Pakistan")
+                    </p>
+
+                    <hr />
+
+                    <!-- Actions -->
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <a asp-action="Index" class="btn btn-secondary">
+                            Back to Resorts List
+                        </a>
+
+                        <div class="d-flex gap-2">
+                            @if (User.IsInRole("Customer"))
+                            {
+                                <a asp-controller="Feedback"
+                                   asp-action="Create"
+                                   asp-route-resortId="@Model.Id"
+                                   class="btn btn-outline-primary me-2">
+                                    <i class="fa fa-star"></i> Give Your Review
+                                </a>
+                            }
+
+                            <a asp-controller="PublicResorts"
+                               asp-action="BookNow"
+                               asp-route-resortId="@Model.Id"
+                               class="btn btn-primary btn-lg">
+                                Book Resort Now
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

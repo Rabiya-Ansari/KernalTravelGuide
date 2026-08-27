@@ -1,0 +1,96 @@
+﻿@model IEnumerable<KernalTravelGuide.Models.Feedback>
+
+@{
+    ViewData["Title"] = "Give Feedback";
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";
+}
+
+<div class="container-fluid px-4 py-3">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="h3 text-gray-800">My Feedbacks</h2>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            You haven't submitted any feedback yet.
+        </div>
+    }
+    else
+    {
+        <div class="card shadow mb-4">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered align-middle" width="100%" cellspacing="0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Date</th>
+                                <th>Reviewed Item</th>
+                                <th>Rating</th>
+                                <th>Comment</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.FeedbackDate.ToString("dd MMM yyyy")</td>
+                                    <td>
+                                        @if (item.Hotel != null)
+                                        {
+                                            <span class="badge bg-primary">Hotel: @item.Hotel.Name</span>
+                                        }
+                                        else if (item.Resort != null)
+                                        {
+
+                                            <span class="badge bg-info text-white">Resort: @item.Resort.Name</span>
+                                        }
+                                        else if (item.Restaurant != null)
+                                        {
+
+                                            <span class="badge bg-warning text-dark">Restaurant: @item.Restaurant.Name</span>
+                                        }
+                                        else if (item.TouristSpot != null)
+                                        {
+
+                                            <span class="badge bg-success">Spot: @item.TouristSpot.Name</span>
+                                        }
+                                        else if (item.TourPackage != null)
+                                        {
+
+                                            <span class="badge bg-secondary">Package: @item.TourPackage.PackageName</span>
+                                        }
+                                        else
+                                        {
+
+                                            <span class="badge bg-dark">General</span>
+                                        }
+                                    </td>
+                                    <td class="text-warning">
+                                        @for (int i = 1; i <= 5; i++)
+                                        {
+                                            if (i <= item.Rating)
+                                            {
+                                                <i class="bi bi-star-fill"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="bi bi-star"></i>
+                                            }
+                                        }
+                                    </td>
+                                    <td>@item.Comments</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

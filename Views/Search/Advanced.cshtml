@@ -1,0 +1,290 @@
+﻿@model KernalTravelGuide.Models.ViewModels.SearchViewModel
+
+@{
+    ViewData["Title"] = "Advanced Search";
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+}
+
+<div class="hero hero-inner">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center">
+                <div class="intro-wrap">
+                    <h1 class="mb-3">Advanced Search</h1>
+                    <p class="text-white">
+                        Find tourist spots, hotels, restaurants and resorts
+                        according to your requirements.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="untree_co-section">
+    <div class="container">
+
+        <div class="row justify-content-center">
+
+            <div class="col-lg-10">
+
+                <div class="card border-0 shadow-sm p-4">
+
+                    <div class="mb-4">
+                        <h3>Search Travel Services</h3>
+
+                        <p class="text-muted mb-0">
+                            Use the filters below to find the most suitable
+                            travel facilities.
+                        </p>
+                    </div>
+
+
+                    <form asp-controller="Search"
+                          asp-action="Index"
+                          method="get">
+
+                        <!-- Keyword + Category -->
+                        <div class="row g-3">
+
+                            <div class="col-md-6">
+
+                                <label class="form-label">
+                                    Keyword
+                                </label>
+
+                                <input type="text"
+                                       name="keyword"
+                                       class="form-control"
+                                       placeholder="Search by name..." />
+
+                            </div>
+
+
+                            <div class="col-md-6">
+
+                                <label class="form-label">
+                                    Category
+                                </label>
+
+                                <select name="type"
+                                        class="form-select">
+
+                                    <option value="">
+                                        All Categories
+                                    </option>
+
+                                    <option value="TouristSpot">
+                                        Tourist Spots
+                                    </option>
+
+                                    <option value="Hotel">
+                                        Hotels
+                                    </option>
+
+                                    <option value="Restaurant">
+                                        Restaurants
+                                    </option>
+
+                                    <option value="Resort">
+                                        Resorts
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Location -->
+                        <div class="row g-3 mt-1">
+
+                            <div class="col-md-6">
+
+                                <label class="form-label">
+                                    Location / City
+                                </label>
+
+                                <select name="cityId"
+                                        class="form-select">
+
+                                    <option value="">
+                                        All Cities
+                                    </option>
+
+                                    @foreach (var city in Model.Cities)
+                                    {
+                                        <option value="@city.Id">
+                                            @city.Name
+                                        </option>
+                                    }
+
+                                </select>
+
+                            </div>
+
+
+                            <!-- Minimum Rating -->
+                            <div class="col-md-6">
+
+                                <label class="form-label">
+                                    Minimum Quality / Rating
+                                </label>
+
+                                <select name="minRating"
+                                        class="form-select">
+
+                                    <option value="">
+                                        Any Rating
+                                    </option>
+
+                                    <option value="1">
+                                        1+ Stars
+                                    </option>
+
+                                    <option value="2">
+                                        2+ Stars
+                                    </option>
+
+                                    <option value="3">
+                                        3+ Stars
+                                    </option>
+
+                                    <option value="4">
+                                        4+ Stars
+                                    </option>
+
+                                    <option value="5">
+                                        5 Stars
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Price -->
+                        <div class="row g-3 mt-1">
+
+                            <div class="col-md-6">
+
+                                <label class="form-label">
+                                    Minimum Price
+                                </label>
+
+                                <input type="number"
+                                       name="minPrice"
+                                       class="form-control"
+                                       min="0"
+                                       step="0.01"
+                                       placeholder="Minimum price" />
+
+                            </div>
+
+
+                            <div class="col-md-6">
+
+                                <label class="form-label">
+                                    Maximum Price
+                                </label>
+
+                                <input type="number"
+                                       name="maxPrice"
+                                       class="form-control"
+                                       min="0"
+                                       step="0.01"
+                                       placeholder="Maximum price" />
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Quantity + Availability -->
+                        <div class="row g-3 mt-1">
+
+                            <div class="col-md-6">
+
+                                <label class="form-label">
+                                    Minimum Quantity
+                                </label>
+
+                                <input type="number"
+                                       name="minQuantity"
+                                       class="form-control"
+                                       min="1"
+                                       placeholder="Rooms / Seats" />
+
+                                <small class="text-muted">
+                                    Hotels and resorts: available rooms.
+                                    Restaurants: seating capacity.
+                                </small>
+
+                            </div>
+
+
+                            <div class="col-md-6">
+
+                                <label class="form-label">
+                                    Availability
+                                </label>
+
+                                <div class="form-check mt-2">
+
+                                    <input type="checkbox"
+                                           name="availableOnly"
+                                           value="true"
+                                           class="form-check-input"
+                                           id="availableOnly"
+                                           checked />
+
+                                    <label class="form-check-label"
+                                           for="availableOnly">
+
+                                        Show available services only
+
+                                    </label>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Buttons -->
+                        <div class="d-flex gap-2 mt-4">
+
+                            <button type="submit"
+                                    class="btn btn-primary">
+
+                                Search
+
+                            </button>
+
+
+                            <a asp-controller="Search"
+                               asp-action="Index"
+                               class="btn btn-outline-secondary">
+
+                                Clear
+
+                            </a>
+
+                        </div>
+
+                    </form>
+                   
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>

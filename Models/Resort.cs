@@ -10,6 +10,7 @@ namespace KernalTravelGuide.Models
         [StringLength(100)]
         public string Name { get; set; } = string.Empty;
 
+        [Required]
         public int CityId { get; set; }
 
         public City? City { get; set; }
@@ -19,6 +20,9 @@ namespace KernalTravelGuide.Models
 
         [Range(1, 5)]
         public int Rating { get; set; }
+
+        [Range(0, 1000)]
+        public int AvailableRooms { get; set; }
 
         public bool Availability { get; set; }
 

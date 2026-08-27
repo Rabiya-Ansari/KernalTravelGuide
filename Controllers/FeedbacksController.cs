@@ -1,71 +1,91 @@
-﻿using KernalTravelGuide.Models;
+﻿using KernalTravelGuide.Data;
+using KernalTravelGuide.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-[Authorize(Roles = "Admin")]
-public class FeedbacksController : Controller
+namespace KernalTravelGuide.Controllers
 {
-    private readonly AppDbContext _context;
-
-    public FeedbacksController(AppDbContext context)
+    [Authorize(Roles = "Admin")]
+    public class FeedbacksController : Controller
     {
-        _context = context;
-    }
+        private readonly AppDbContext _context;
 
-    // GET: Feedbacks
-    public async Task<IActionResult> Index()
-    {
-        var feedbacks = await _context.Feedbacks
-            .OrderByDescending(x => x.FeedbackDate)
-            .ToListAsync();
+        public FeedbacksController(AppDbContext context)
+        {
+            _context = context;
+        }
 
-        return View(feedbacks);
-    }
+        // GET: Feedbacks
+        public async Task<IActionResult> Index()
+        {
+            // Sab navigation properties Include ki gayi hain
+            var feedbacks = await _context.Feedbacks
+                .Include(f => f.Hotel)
+                .Include(f => f.Resort)
+                .Include(f => f.Restaurant)
+                .Include(f => f.TouristSpot)
+                .Include(f => f.TourPackage)
+                .OrderByDescending(x => x.FeedbackDate)
+                .ToListAsync();
 
-    // GET: Feedbacks/Details/5
-    public async Task<IActionResult> Details(int? id)
-    {
-        if (id == null)
-            return NotFound();
+            return View(feedbacks);
+        }
 
-        var feedback = await _context.Feedbacks
-            .FirstOrDefaultAsync(x => x.Id == id);
+        // GET: Feedbacks/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+                return NotFound();
 
-        if (feedback == null)
-            return NotFound();
+            var feedback = await _context.Feedbacks
+                .Include(f => f.Hotel)
+                .Include(f => f.Resort)
+                .Include(f => f.Restaurant)
+                .Include(f => f.TouristSpot)
+                .Include(f => f.TourPackage)
+                .FirstOrDefaultAsync(x => x.Id == id);
 
-        return View(feedback);
-    }
+            if (feedback == null)
+                return NotFound();
 
-    // GET: Feedbacks/Delete/5
-    public async Task<IActionResult> Delete(int? id)
-    {
-        if (id == null)
-            return NotFound();
+            return View(feedback);
+        }
 
-        var feedback = await _context.Feedbacks
-            .FirstOrDefaultAsync(x => x.Id == id);
+        // GET: Feedbacks/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+                return NotFound();
 
-        if (feedback == null)
-            return NotFound();
+            var feedback = await _context.Feedbacks
+                .Include(f => f.Hotel)
+                .Include(f => f.Resort)
+                .Include(f => f.Restaurant)
+                .Include(f => f.TouristSpot)
+                .Include(f => f.TourPackage)
+                .FirstOrDefaultAsync(x => x.Id == id);
 
-        return View(feedback);
-    }
+            if (feedback == null)
+                return NotFound();
 
-    // POST: Feedbacks/Delete/5
-    [HttpPost, ActionName("Delete")]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> DeleteConfirmed(int id)
-    {
-        var feedback = await _context.Feedbacks.FindAsync(id);
+            return View(feedback);
+        }
 
-        if (feedback == null)
-            return NotFound();
+        // POST: Feedbacks/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var feedback = await _context.Feedbacks.FindAsync(id);
 
-        _context.Feedbacks.Remove(feedback);
-        await _context.SaveChangesAsync();
+            if (feedback == null)
+                return NotFound();
 
-        return RedirectToAction(nameof(Index));
+            _context.Feedbacks.Remove(feedback);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

@@ -21,6 +21,9 @@ namespace KernalTravelGuide.Models
         [Range(1, 5)]
         public int StarRating { get; set; }
 
+        [Range(0, 1000)]
+        public int AvailableRooms { get; set; }
+
         [Phone]
         public string? ContactNo { get; set; }
 

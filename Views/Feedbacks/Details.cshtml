@@ -8,70 +8,54 @@
 <h1>Feedback Details</h1>
 
 <div class="card">
-
     <div class="card-body">
-
         <dl class="row">
+            <dt class="col-sm-3">Customer Name</dt>
+            <dd class="col-sm-9">@Model.CustomerName</dd>
 
-            <dt class="col-sm-3">
-                Customer Name
-            </dt>
+            <dt class="col-sm-3">Email</dt>
+            <dd class="col-sm-9">@Model.Email</dd>
 
-            <dd class="col-sm-9">
-                @Model.CustomerName
+            <dt class="col-sm-3">Reviewed Item</dt>
+            <dd class="col-sm-9 font-weight-bold text-primary">
+                @if (Model.Hotel != null)
+                {
+                    <span>Hotel &mdash; @Model.Hotel.Name</span>
+                }
+                else if (Model.Resort != null)
+                {
+                    <span>Resort &mdash; @Model.Resort.Name</span>
+                }
+                else if (Model.Restaurant != null)
+                {
+                    <span>Restaurant &mdash; @Model.Restaurant.Name</span>
+                }
+                else if (Model.TouristSpot != null)
+                {
+                    <span>Tourist Spot &mdash; @Model.TouristSpot.Name</span>
+                }
+                else if (Model.TourPackage != null)
+                {
+                    <span>Tour Package &mdash; @Model.TourPackage.PackageName</span>
+                }
+                else
+                {
+                    <span>General Feedback</span>
+                }
             </dd>
 
+            <dt class="col-sm-3">Rating</dt>
+            <dd class="col-sm-9">@Model.Rating / 5</dd>
 
-            <dt class="col-sm-3">
-                Email
-            </dt>
+            <dt class="col-sm-3">Comments</dt>
+            <dd class="col-sm-9">@Model.Comments</dd>
 
-            <dd class="col-sm-9">
-                @Model.Email
-            </dd>
-
-
-            <dt class="col-sm-3">
-                Rating
-            </dt>
-
-            <dd class="col-sm-9">
-                @Model.Rating / 5
-            </dd>
-
-
-            <dt class="col-sm-3">
-                Comments
-            </dt>
-
-            <dd class="col-sm-9">
-                @Model.Comments
-            </dd>
-
-
-            <dt class="col-sm-3">
-                Feedback Date
-            </dt>
-
-            <dd class="col-sm-9">
-                @Model.FeedbackDate.ToString("dd MMM yyyy hh:mm tt")
-            </dd>
-
+            <dt class="col-sm-3">Feedback Date</dt>
+            <dd class="col-sm-9">@Model.FeedbackDate.ToString("dd MMM yyyy hh:mm tt")</dd>
         </dl>
-
     </div>
-
 </div>
 
 <br />
-
-<a asp-action="Delete"
-   asp-route-id="@Model.Id"
-   class="btn btn-danger">
-    Delete
-</a>
-
-<a asp-action="Index"
-   class="btn btn-secondary">
-    Back to Feedback
-</a>
+<a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>
+<a asp-action="Index" class="btn btn-secondary">Back to Feedback</a>

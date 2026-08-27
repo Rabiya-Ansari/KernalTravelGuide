@@ -115,7 +115,25 @@ namespace KernalTravelGuide.Migrations
                     b.Property<DateTime>("BookingDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("BookingType")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("HotelId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("NumberOfNights")
+                        .HasColumnType("int");
+
                     b.Property<int>("NumberOfPersons")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ResortId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("RestaurantId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("RoomsCount")
                         .HasColumnType("int");
 
                     b.Property<int>("Status")
@@ -124,11 +142,17 @@ namespace KernalTravelGuide.Migrations
                     b.Property<double>("TotalAmount")
                         .HasColumnType("float");
 
-                    b.Property<int>("TourPackageId")
+                    b.Property<int?>("TourPackageId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TouristSpotId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("TravelDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("TravelInformationId")
+                        .HasColumnType("int");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -136,7 +160,17 @@ namespace KernalTravelGuide.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("HotelId");
+
+                    b.HasIndex("ResortId");
+
+                    b.HasIndex("RestaurantId");
+
                     b.HasIndex("TourPackageId");
+
+                    b.HasIndex("TouristSpotId");
+
+                    b.HasIndex("TravelInformationId");
 
                     b.HasIndex("UserId");
 
@@ -248,10 +282,35 @@ namespace KernalTravelGuide.Migrations
                     b.Property<DateTime>("FeedbackDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("HotelId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Rating")
                         .HasColumnType("int");
 
+                    b.Property<int?>("ResortId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("RestaurantId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TourPackageId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TouristSpotId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("HotelId");
+
+                    b.HasIndex("ResortId");
+
+                    b.HasIndex("RestaurantId");
+
+                    b.HasIndex("TourPackageId");
+
+                    b.HasIndex("TouristSpotId");
 
                     b.ToTable("Feedbacks");
                 });
@@ -314,6 +373,9 @@ namespace KernalTravelGuide.Migrations
                     b.Property<bool>("Availability")
                         .HasColumnType("bit");
 
+                    b.Property<int>("AvailableRooms")
+                        .HasColumnType("int");
+
                     b.Property<int>("CityId")
                         .HasColumnType("int");
 
@@ -358,6 +420,9 @@ namespace KernalTravelGuide.Migrations
                     b.Property<bool>("Availability")
                         .HasColumnType("bit");
 
+                    b.Property<int>("AvailableRooms")
+                        .HasColumnType("int");
+
                     b.Property<int>("CityId")
                         .HasColumnType("int");
 
@@ -390,6 +455,15 @@ namespace KernalTravelGuide.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<bool>("Availability")
+                        .HasColumnType("bit");
+
+                    b.Property<double>("AveragePrice")
+                        .HasColumnType("float");
+
+                    b.Property<int>("Capacity")
+                        .HasColumnType("int");
+
                     b.Property<int>("CityId")
                         .HasColumnType("int");
 
@@ -413,56 +487,6 @@ namespace KernalTravelGuide.Migrations
                     b.HasIndex("CityId");
 
                     b.ToTable("Restaurants");
-                });
-
-            modelBuilder.Entity("KernalTravelGuide.Models.Review", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Comment")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<int?>("HotelId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Rating")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ResortId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("RestaurantId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("ReviewDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("TouristSpotId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("HotelId");
-
-                    b.HasIndex("ResortId");
-
-                    b.HasIndex("RestaurantId");
-
-                    b.HasIndex("TouristSpotId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("KernalTravelGuide.Models.TourPackage", b =>
@@ -714,19 +738,53 @@ namespace KernalTravelGuide.Migrations
 
             modelBuilder.Entity("KernalTravelGuide.Models.Booking", b =>
                 {
+                    b.HasOne("KernalTravelGuide.Models.Hotel", "Hotel")
+                        .WithMany()
+                        .HasForeignKey("HotelId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("KernalTravelGuide.Models.Resort", "Resort")
+                        .WithMany()
+                        .HasForeignKey("ResortId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("KernalTravelGuide.Models.Restaurant", "Restaurant")
+                        .WithMany()
+                        .HasForeignKey("RestaurantId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("KernalTravelGuide.Models.TourPackage", "TourPackage")
                         .WithMany()
                         .HasForeignKey("TourPackageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("KernalTravelGuide.Models.TouristSpot", "TouristSpot")
+                        .WithMany()
+                        .HasForeignKey("TouristSpotId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("KernalTravelGuide.Models.TravelInformation", "TravelInformation")
+                        .WithMany()
+                        .HasForeignKey("TravelInformationId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KernalTravelGuide.Data.ApplicationUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.Navigation("Hotel");
+
+                    b.Navigation("Resort");
+
+                    b.Navigation("Restaurant");
+
                     b.Navigation("TourPackage");
+
+                    b.Navigation("TouristSpot");
+
+                    b.Navigation("TravelInformation");
 
                     b.Navigation("User");
                 });
@@ -740,6 +798,44 @@ namespace KernalTravelGuide.Migrations
                         .IsRequired();
 
                     b.Navigation("Country");
+                });
+
+            modelBuilder.Entity("KernalTravelGuide.Models.Feedback", b =>
+                {
+                    b.HasOne("KernalTravelGuide.Models.Hotel", "Hotel")
+                        .WithMany()
+                        .HasForeignKey("HotelId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("KernalTravelGuide.Models.Resort", "Resort")
+                        .WithMany()
+                        .HasForeignKey("ResortId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("KernalTravelGuide.Models.Restaurant", "Restaurant")
+                        .WithMany()
+                        .HasForeignKey("RestaurantId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("KernalTravelGuide.Models.TourPackage", "TourPackage")
+                        .WithMany()
+                        .HasForeignKey("TourPackageId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("KernalTravelGuide.Models.TouristSpot", "TouristSpot")
+                        .WithMany()
+                        .HasForeignKey("TouristSpotId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.Navigation("Hotel");
+
+                    b.Navigation("Resort");
+
+                    b.Navigation("Restaurant");
+
+                    b.Navigation("TourPackage");
+
+                    b.Navigation("TouristSpot");
                 });
 
             modelBuilder.Entity("KernalTravelGuide.Models.Gallery", b =>
@@ -806,41 +902,6 @@ namespace KernalTravelGuide.Migrations
                         .IsRequired();
 
                     b.Navigation("City");
-                });
-
-            modelBuilder.Entity("KernalTravelGuide.Models.Review", b =>
-                {
-                    b.HasOne("KernalTravelGuide.Models.Hotel", "Hotel")
-                        .WithMany()
-                        .HasForeignKey("HotelId");
-
-                    b.HasOne("KernalTravelGuide.Models.Resort", "Resort")
-                        .WithMany()
-                        .HasForeignKey("ResortId");
-
-                    b.HasOne("KernalTravelGuide.Models.Restaurant", "Restaurant")
-                        .WithMany()
-                        .HasForeignKey("RestaurantId");
-
-                    b.HasOne("KernalTravelGuide.Models.TouristSpot", "TouristSpot")
-                        .WithMany()
-                        .HasForeignKey("TouristSpotId");
-
-                    b.HasOne("KernalTravelGuide.Data.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Hotel");
-
-                    b.Navigation("Resort");
-
-                    b.Navigation("Restaurant");
-
-                    b.Navigation("TouristSpot");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("KernalTravelGuide.Models.TouristSpot", b =>

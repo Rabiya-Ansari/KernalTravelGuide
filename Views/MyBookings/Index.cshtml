@@ -1,57 +1,58 @@
 ﻿@model IEnumerable<KernalTravelGuide.Models.Booking>
 
 @{
+    Layout = "_CustomerLayout";
     ViewData["Title"] = "My Bookings";
 }
 
 <div class="container py-5">
-
     <div class="d-flex justify-content-between align-items-center mb-4">
-
         <div>
-            <h2 class="fw-bold mb-1">
-                My Bookings
-            </h2>
-
-            <p class="text-muted mb-0">
-                View and manage your travel bookings.
-            </p>
+            <h2 class="fw-bold mb-1">My Bookings</h2>
+            <p class="text-muted mb-0">View and manage your travel bookings.</p>
         </div>
-
-        <a asp-controller="Home"
-           asp-action="Index"
-           class="btn btn-outline-primary">
-            Explore Tours
-        </a>
-
+        <a asp-controller="Home" asp-action="Index" class="btn btn-outline-primary">Explore Tours</a>
     </div>
 
-
-    @if (Model.Any())
+    @if (Model != null && Model.Any())
     {
         <div class="row">
-
             @foreach (var booking in Model)
             {
                 <div class="col-lg-6 mb-4">
-
                     <div class="card border-0 shadow-sm h-100">
-
                         <div class="card-body p-4">
-
                             <div class="d-flex justify-content-between mb-3">
-
                                 <div>
+                                    <!-- Dynamic Name Display -->
                                     <h4 class="mb-1">
-                                        @(booking.TourPackage?.PackageName
-                                            ?? "Tour Package")
+                                        @if (booking.TourPackage != null)
+                                        {
+                                            @booking.TourPackage.PackageName
+                                        }
+                                        else if (booking.TouristSpot != null)
+                                        {
+                                            @booking.TouristSpot.Name
+                                        }
+                                        else if (booking.Hotel != null)
+                                        {
+                                            @booking.Hotel.Name
+                                        }
+                                        else if (booking.Resort != null)
+                                        {
+                                            @booking.Resort.Name
+                                        }
+                                        else if (booking.Restaurant != null)
+                                        {
+                                            @booking.Restaurant.Name
+                                        }
+                                        else
+                                        {
+                                            <span>Booking #@booking.Id</span>
+                                        }
                                     </h4>
-
-                                    <small class="text-muted">
-                                        Booking #@booking.Id
-                                    </small>
+                                    <small class="text-muted">Booking #@booking.Id</small>
                                 </div>
-
 
                                 @{
                                     var status = booking.Status.ToString();
@@ -59,129 +60,57 @@
 
                                 @if (status == "Approved" || status == "Confirmed")
                                 {
-                                    <span class="badge bg-success">
-                                        @booking.Status
-                                    </span>
+                                    <span class="badge bg-success">@booking.Status</span>
                                 }
                                 else if (status == "Rejected" || status == "Cancelled")
                                 {
-                                    <span class="badge bg-danger">
-                                        @booking.Status
-                                    </span>
+                                    <span class="badge bg-danger">@booking.Status</span>
                                 }
                                 else
                                 {
-                                    <span class="badge bg-warning text-dark">
-                                        @booking.Status
-                                    </span>
+                                    <span class="badge bg-warning text-dark">@booking.Status</span>
                                 }
-
                             </div>
-
 
                             <div class="row g-3">
-
                                 <div class="col-sm-6">
-
-                                    <small class="text-muted d-block">
-                                        Travel Date
-                                    </small>
-
-                                    <strong>
-                                        @booking.TravelDate.ToString("dd MMM yyyy")
-                                    </strong>
-
+                                    <small class="text-muted d-block">Travel Date</small>
+                                    <strong>@booking.TravelDate.ToString("dd MMM yyyy")</strong>
                                 </div>
 
-
                                 <div class="col-sm-6">
-
-                                    <small class="text-muted d-block">
-                                        Persons
-                                    </small>
-
-                                    <strong>
-                                        @booking.NumberOfPersons
-                                    </strong>
-
+                                    <small class="text-muted d-block">Persons</small>
+                                    <strong>@booking.NumberOfPersons</strong>
                                 </div>
 
-
                                 <div class="col-sm-6">
-
-                                    <small class="text-muted d-block">
-                                        Total Amount
-                                    </small>
-
-                                    <strong>
-                                        @booking.TotalAmount.ToString("PKR")
-                                    </strong>
-
+                                    <small class="text-muted d-block">Total Amount</small>
+                                    <strong>PKR @booking.TotalAmount.ToString("N0")</strong>
                                 </div>
 
-
                                 <div class="col-sm-6">
-
-                                    <small class="text-muted d-block">
-                                        Booking Date
-                                    </small>
-
-                                    <strong>
-                                        @booking.BookingDate.ToString("dd MMM yyyy")
-                                    </strong>
-
+                                    <small class="text-muted d-block">Booking Date</small>
+                                    <strong>@booking.BookingDate.ToString("dd MMM yyyy")</strong>
                                 </div>
-
                             </div>
-
 
                             <div class="mt-4">
-
-                                <a asp-controller="MyBookings"
-                                   asp-action="Details"
-                                   asp-route-id="@booking.Id"
-                                   class="btn btn-primary btn-sm">
-
-                                    View Details
-
-                                </a>
-
+                                <a asp-controller="MyBookings" asp-action="Details" asp-route-id="@booking.Id" class="btn btn-primary btn-sm">View Details</a>
                             </div>
-
                         </div>
-
                     </div>
-
                 </div>
             }
-
         </div>
     }
     else
     {
         <div class="text-center py-5">
-
             <div class="mb-3">
                 <i class="bi bi-calendar-x fs-1 text-muted"></i>
             </div>
-
-            <h4>
-                No bookings yet
-            </h4>
-
-            <p class="text-muted">
-                Explore our tour packages and book your next journey.
-            </p>
-
-            <a asp-controller="TourPackages"
-               asp-action="Index"
-               class="btn btn-primary">
-
-                Explore Tour Packages
-
-            </a>
-
+            <h4>No bookings yet</h4>
+            <p class="text-muted">Explore our travel options and book your next journey.</p>
         </div>
     }
-
 </div>

@@ -6,70 +6,57 @@
 }
 
 <h1>Delete Feedback</h1>
-
 <h3>Are you sure you want to delete this feedback?</h3>
 
 <div class="card">
-
     <div class="card-body">
-
         <dl class="row">
+            <dt class="col-sm-3">Customer Name</dt>
+            <dd class="col-sm-9">@Model.CustomerName</dd>
 
-            <dt class="col-sm-3">
-                Customer Name
-            </dt>
+            <dt class="col-sm-3">Email</dt>
+            <dd class="col-sm-9">@Model.Email</dd>
 
-            <dd class="col-sm-9">
-                @Model.CustomerName
+            <dt class="col-sm-3">Reviewed Item</dt>
+            <dd class="col-sm-9 font-weight-bold">
+                @if (Model.Hotel != null)
+                {
+                    <span>Hotel: @Model.Hotel.Name</span>
+                }
+                else if (Model.Resort != null)
+                {
+                    <span>Resort: @Model.Resort.Name</span>
+                }
+                else if (Model.Restaurant != null)
+                {
+                    <span>Restaurant: @Model.Restaurant.Name</span>
+                }
+                else if (Model.TouristSpot != null)
+                {
+                    <span>Spot: @Model.TouristSpot.Name</span>
+                }
+                else if (Model.TourPackage != null)
+                {
+                    <span>Package: @Model.TourPackage.PackageName</span>
+                }
+                else
+                {
+                    <span>General</span>
+                }
             </dd>
 
+            <dt class="col-sm-3">Rating</dt>
+            <dd class="col-sm-9">@Model.Rating / 5</dd>
 
-            <dt class="col-sm-3">
-                Email
-            </dt>
-
-            <dd class="col-sm-9">
-                @Model.Email
-            </dd>
-
-
-            <dt class="col-sm-3">
-                Rating
-            </dt>
-
-            <dd class="col-sm-9">
-                @Model.Rating / 5
-            </dd>
-
-
-            <dt class="col-sm-3">
-                Comments
-            </dt>
-
-            <dd class="col-sm-9">
-                @Model.Comments
-            </dd>
-
+            <dt class="col-sm-3">Comments</dt>
+            <dd class="col-sm-9">@Model.Comments</dd>
         </dl>
-
     </div>
-
 </div>
 
 <br />
-
 <form asp-action="Delete" method="post">
-
     <input type="hidden" asp-for="Id" />
-
-    <button type="submit"
-            class="btn btn-danger">
-        Delete
-    </button>
-
-    <a asp-action="Index"
-       class="btn btn-secondary">
-        Cancel
-    </a>
-
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
 </form>

@@ -1,11 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace KernalTravelGuide.Models
 {
     public class Feedback
     {
+
         public int Id { get; set; }
 
+        // Customer information
         [Required]
         [StringLength(50)]
         [RegularExpression(@"^[A-Za-z ]+$")]
@@ -15,6 +18,7 @@ namespace KernalTravelGuide.Models
         [EmailAddress]
         public string Email { get; set; } = string.Empty;
 
+        // Review information
         [Required]
         [Range(1, 5)]
         public int Rating { get; set; }
@@ -24,5 +28,28 @@ namespace KernalTravelGuide.Models
         public string Comments { get; set; } = string.Empty;
 
         public DateTime FeedbackDate { get; set; } = DateTime.Now;
+
+        // Which item is being reviewed
+        public int? HotelId { get; set; }
+        public int? ResortId { get; set; }
+        public int? RestaurantId { get; set; }
+        public int? TouristSpotId { get; set; }
+        public int? TourPackageId { get; set; }
+
+        // Navigation properties
+        [ForeignKey(nameof(HotelId))]
+        public Hotel? Hotel { get; set; }
+
+        [ForeignKey(nameof(ResortId))]
+        public Resort? Resort { get; set; }
+
+        [ForeignKey(nameof(RestaurantId))]
+        public Restaurant? Restaurant { get; set; }
+
+        [ForeignKey(nameof(TouristSpotId))]
+        public TouristSpot? TouristSpot { get; set; }
+
+        [ForeignKey(nameof(TourPackageId))]
+        public TourPackage? TourPackage { get; set; }
     }
 }

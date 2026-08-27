@@ -1,7 +1,6 @@
 ﻿using KernalTravelGuide.Data;
 using KernalTravelGuide.Models.Enums;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace KernalTravelGuide.Models
 {
@@ -9,31 +8,113 @@ namespace KernalTravelGuide.Models
     {
         public int Id { get; set; }
 
+
+        // =========================
+        // CUSTOMER
+        // =========================
+
         [Required]
         public string UserId { get; set; } = string.Empty;
 
         public ApplicationUser? User { get; set; }
 
+
+        // =========================
+        // BOOKING TYPE
+        // =========================
+
         [Required]
-        public int TourPackageId { get; set; }
+        public BookingType BookingType { get; set; }
+
+
+        // =========================
+        // BOOKABLE ITEMS
+        // =========================
+
+        public int? TourPackageId { get; set; }
 
         public TourPackage? TourPackage { get; set; }
+
+
+        public int? HotelId { get; set; }
+
+        public Hotel? Hotel { get; set; }
+
+
+        public int? ResortId { get; set; }
+
+        public Resort? Resort { get; set; }
+
+
+        public int? RestaurantId { get; set; }
+
+        public Restaurant? Restaurant { get; set; }
+
+
+        public int? TouristSpotId { get; set; }
+
+        public TouristSpot? TouristSpot { get; set; }
+
+
+        public int? TravelInformationId { get; set; }
+
+        public TravelInformation? TravelInformation { get; set; }
+
+
+        // =========================
+        // BOOKING DATE / TRAVEL DATE
+        // =========================
 
         [Required]
         [DataType(DataType.Date)]
         public DateTime TravelDate { get; set; }
 
+
+        // =========================
+        // PERSONS / GUESTS / PASSENGERS
+        // =========================
+
         [Required]
         [Range(1, 20)]
         public int NumberOfPersons { get; set; }
 
+
+        // =========================
+        // HOTEL / RESORT
+        // =========================
+
+        [Range(1, 30)]
+        public int? NumberOfNights { get; set; }
+
+
+        [Range(1, 20)]
+        public int? RoomsCount { get; set; }
+
+
+        // =========================
+        // TOTAL
+        // =========================
+
         [Required]
-        [Range(typeof(double), "1", "999999")]
+        [Range(typeof(double), "0", "999999999")]
         public double TotalAmount { get; set; }
 
-        [Required]
-        public BookingStatus Status { get; set; } = BookingStatus.Pending;
 
-        public DateTime BookingDate { get; set; } = DateTime.Now;
+        // =========================
+        // STATUS
+        // =========================
+
+        [Required]
+        public BookingStatus Status { get; set; }
+            = BookingStatus.Pending;
+
+
+        // =========================
+        // CREATED DATE
+        // =========================
+
+        [Required]
+        public DateTime BookingDate { get; set; }
+            = DateTime.Now;
     }
 }

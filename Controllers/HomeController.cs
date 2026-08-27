@@ -5,24 +5,19 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KernalTravelGuide.Controllers
 {
-    // Controller responsible for the public website Home page.
     public class HomeController : Controller
     {
         private readonly AppDbContext _context;
 
-        // Inject the database context so the Home page can load real data.
         public HomeController(AppDbContext context)
         {
             _context = context;
         }
 
-        // Display the public Home page with dynamic database information.
         public async Task<IActionResult> Index()
         {
-            // Build the Home page view model.
             var model = new HomeViewModel
             {
-                // Load a limited number of active tourist spots.
                 TouristSpots = await _context.TouristSpots
                     .Include(x => x.City)
                     .Where(x => x.IsActive)
@@ -30,7 +25,6 @@ namespace KernalTravelGuide.Controllers
                     .Take(6)
                     .ToListAsync(),
 
-                // Load available hotels.
                 Hotels = await _context.Hotels
                     .Include(x => x.City)
                     .Where(x => x.Availability)
@@ -38,14 +32,12 @@ namespace KernalTravelGuide.Controllers
                     .Take(4)
                     .ToListAsync(),
 
-                // Load restaurants.
                 Restaurants = await _context.Restaurants
                     .Include(x => x.City)
                     .OrderByDescending(x => x.Id)
                     .Take(4)
                     .ToListAsync(),
 
-                // Load available resorts.
                 Resorts = await _context.Resorts
                     .Include(x => x.City)
                     .Where(x => x.Availability)
@@ -53,25 +45,23 @@ namespace KernalTravelGuide.Controllers
                     .Take(4)
                     .ToListAsync(),
 
-                // Load available tour packages.
                 TourPackages = await _context.TourPackages
                     .Where(x => x.IsAvailable)
                     .OrderByDescending(x => x.Id)
                     .Take(4)
                     .ToListAsync(),
 
-                // Load latest reviews for the testimonial section.
-                Reviews = await _context.Reviews
-                    .Include(x => x.User)
+                // Map Feedbacks to Reviews property in HomeViewModel
+                Reviews = await _context.Feedbacks
                     .Include(x => x.TouristSpot)
                     .Include(x => x.Hotel)
                     .Include(x => x.Restaurant)
                     .Include(x => x.Resort)
-                    .OrderByDescending(x => x.ReviewDate)
+                    .Include(x => x.TourPackage)
+                    .OrderByDescending(x => x.FeedbackDate)
                     .Take(6)
                     .ToListAsync(),
 
-                // Load counts for the statistics section.
                 TouristSpotCount = await _context.TouristSpots
                     .CountAsync(x => x.IsActive),
 
@@ -85,11 +75,9 @@ namespace KernalTravelGuide.Controllers
                     .CountAsync(x => x.Availability)
             };
 
-            // Send the populated model to the Home view.
             return View(model);
         }
 
-        // Display the privacy page.
         public IActionResult Privacy()
         {
             return View();

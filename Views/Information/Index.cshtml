@@ -1,0 +1,65 @@
+@model KernalTravelGuide.Models.ViewModels.HomeViewModel
+
+@{
+    ViewData["Title"] = "Information";
+}
+
+<div class="container py-5">
+    <!-- Required information page introduction. -->
+    <div class="text-center mb-5">
+        <h1 class="fw-bold">Travel Information</h1>
+        <p class="text-muted">Explore tourist spots, transportation, hotels, restaurants and resorts in one place.</p>
+    </div>
+
+    <!-- Five required information links. -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-6 col-lg">
+            <a asp-controller="TouristSpots" asp-action="Index" class="text-decoration-none"><div class="card h-100 border-0 shadow-sm p-4 text-center"><i class="bi bi-geo-alt fs-1 text-primary"></i><h5 class="fw-bold mt-3">Tourist Spots</h5><p class="text-muted mb-0">Discover destinations and attractions.</p></div></a>
+        </div>
+        <div class="col-md-6 col-lg">
+            <a asp-controller="TravelInformations" asp-action="Index" class="text-decoration-none"><div class="card h-100 border-0 shadow-sm p-4 text-center"><i class="bi bi-bus-front fs-1 text-primary"></i><h5 class="fw-bold mt-3">Travel Information</h5><p class="text-muted mb-0">View transport routes and fares.</p></div></a>
+        </div>
+        <div class="col-md-6 col-lg">
+            <a asp-controller="Hotels" asp-action="Index" class="text-decoration-none"><div class="card h-100 border-0 shadow-sm p-4 text-center"><i class="bi bi-building fs-1 text-primary"></i><h5 class="fw-bold mt-3">Hotels</h5><p class="text-muted mb-0">Find accommodation options.</p></div></a>
+        </div>
+        <div class="col-md-6 col-lg">
+            <a asp-controller="Restaurants" asp-action="Index" class="text-decoration-none"><div class="card h-100 border-0 shadow-sm p-4 text-center"><i class="bi bi-cup-hot fs-1 text-primary"></i><h5 class="fw-bold mt-3">Restaurants</h5><p class="text-muted mb-0">Explore dining options.</p></div></a>
+        </div>
+        <div class="col-md-6 col-lg">
+            <a asp-controller="Resorts" asp-action="Index" class="text-decoration-none"><div class="card h-100 border-0 shadow-sm p-4 text-center"><i class="bi bi-house-heart fs-1 text-primary"></i><h5 class="fw-bold mt-3">Resorts</h5><p class="text-muted mb-0">Discover resorts and stays.</p></div></a>
+        </div>
+    </div>
+
+    <!-- Current offers/highlights required by the specification. -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div><h2 class="fw-bold mb-1">Latest Travel Highlights</h2><p class="text-muted mb-0">Current available packages and information from the database.</p></div>
+        <a asp-controller="Search" asp-action="Advanced" class="btn btn-outline-primary">Advanced Search</a>
+    </div>
+
+    <div class="row g-4">
+        @foreach (var package in Model.TourPackages)
+        {
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 border-0 shadow-sm overflow-hidden">
+                    @if (!string.IsNullOrWhiteSpace(package.ImagePath))
+                    {
+                        <img src="@Url.Content(package.ImagePath)" class="card-img-top" style="height:180px;object-fit:cover;" alt="@package.PackageName" />
+                    }
+                    <div class="card-body">
+                        <span class="badge bg-success mb-2">Available Package</span>
+                        <h5 class="fw-bold">@package.PackageName</h5>
+                        <p class="small text-muted">@package.DurationDays days</p>
+                        <p class="fw-semibold mb-3">Rs. @package.Price.ToString("N0") / person</p>
+                        <a asp-controller="TourPackages" asp-action="Details" asp-route-id="@package.Id" class="btn btn-sm btn-outline-primary">View Package</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="row g-4 mt-2">
+        <div class="col-lg-4"><div class="card border-0 shadow-sm h-100"><div class="card-body"><h5 class="fw-bold">New Hotels</h5>@foreach (var hotel in Model.Hotels) { <div class="d-flex justify-content-between border-bottom py-2"><span>@hotel.Name</span><small>@hotel.City?.Name</small></div> }</div></div></div>
+        <div class="col-lg-4"><div class="card border-0 shadow-sm h-100"><div class="card-body"><h5 class="fw-bold">Restaurants</h5>@foreach (var restaurant in Model.Restaurants) { <div class="d-flex justify-content-between border-bottom py-2"><span>@restaurant.Name</span><small>⭐ @restaurant.Rating</small></div> }</div></div></div>
+        <div class="col-lg-4"><div class="card border-0 shadow-sm h-100"><div class="card-body"><h5 class="fw-bold">Resorts</h5>@foreach (var resort in Model.Resorts) { <div class="d-flex justify-content-between border-bottom py-2"><span>@resort.Name</span><small>Rs. @resort.Price.ToString("N0")</small></div> }</div></div></div>
+    </div>
+</div>

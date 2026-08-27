@@ -1,3 +1,7 @@
+
+using KernalTravelGuide.Data;
+using KernalTravelGuide.Models.Enums;
+using System.Security.Claims;
 using KernalTravelGuide.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
