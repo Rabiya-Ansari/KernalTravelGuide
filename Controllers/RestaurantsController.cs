@@ -18,127 +18,118 @@ public class RestaurantsController : Controller
         _environment = environment;
     }
 
-    // GET: Restaurants
+
+    // ============================================================
+    // INDEX
+    // Displays all restaurants with their city information.
+    // ============================================================
+
     public async Task<IActionResult> Index()
     {
         var restaurants = await _context.Restaurants
             .Include(r => r.City)
+            .OrderBy(r => r.Name)
             .ToListAsync();
 
         return View(restaurants);
     }
 
 
-    // GET: Restaurants/Details/5
+    // ============================================================
+    // DETAILS - GET
+    // Displays complete information about one restaurant.
+    // ============================================================
+
     public async Task<IActionResult> Details(int? id)
     {
         if (id == null)
+        {
             return NotFound();
+        }
 
         var restaurant = await _context.Restaurants
             .Include(r => r.City)
             .FirstOrDefaultAsync(r => r.Id == id);
 
         if (restaurant == null)
+        {
             return NotFound();
+        }
 
         return View(restaurant);
     }
 
 
-    // GET: Restaurants/Create
+    // ============================================================
+    // CREATE - GET
+    // Opens the restaurant creation form.
+    // ============================================================
+
     public IActionResult Create()
     {
-        ViewBag.CityId = new SelectList(
-            _context.Cities.OrderBy(c => c.Name),
-            "Id",
-            "Name"
-        );
+        LoadCities();
 
         return View();
     }
 
 
-    // POST: Restaurants/Create
+    // ============================================================
+    // CREATE - POST
+    // Saves restaurant information and uploaded image.
+    // ============================================================
+
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(
-        [Bind("Id,Name,CityId,Rating,Phone")]
+        [Bind("Id,Name,CityId,Rating,AveragePrice,Capacity,Availability,Phone")]
         Restaurant restaurant,
         IFormFile? ImageFile)
     {
+        // Validate model data first.
         if (!ModelState.IsValid)
         {
-            ViewBag.CityId = new SelectList(
-                _context.Cities.OrderBy(c => c.Name),
-                "Id",
-                "Name",
-                restaurant.CityId
-            );
+            LoadCities(restaurant.CityId);
 
             return View(restaurant);
         }
 
 
+        // --------------------------------------------------------
         // IMAGE UPLOAD
+        // --------------------------------------------------------
+
         if (ImageFile != null && ImageFile.Length > 0)
         {
-            string uploadsFolder = Path.Combine(
-                _environment.WebRootPath,
-                "uploads",
-                "restaurants"
-            );
-
-            if (!Directory.Exists(uploadsFolder))
+            // Validate image.
+            if (!ValidateImage(ImageFile))
             {
-                Directory.CreateDirectory(uploadsFolder);
-            }
-
-
-            string extension =
-                Path.GetExtension(ImageFile.FileName)
-                .ToLowerInvariant();
-
-
-            string[] allowedExtensions =
-            {
-                ".jpg",
-                ".jpeg",
-                ".png",
-                ".webp"
-            };
-
-
-            if (!allowedExtensions.Contains(extension))
-            {
-                ModelState.AddModelError(
-                    "ImageFile",
-                    "Only JPG, JPEG, PNG and WEBP images are allowed."
-                );
-
-                ViewBag.CityId = new SelectList(
-                    _context.Cities.OrderBy(c => c.Name),
-                    "Id",
-                    "Name",
-                    restaurant.CityId
-                );
+                LoadCities(restaurant.CityId);
 
                 return View(restaurant);
             }
 
 
-            // Unique filename
+            // Create upload directory.
+            string uploadsFolder = GetRestaurantImageFolder();
+
+
+            // Generate a unique filename.
+            string extension =
+                Path.GetExtension(ImageFile.FileName)
+                .ToLowerInvariant();
+
             string fileName =
-                Guid.NewGuid().ToString()
-                + extension;
+                Guid.NewGuid().ToString("N") + extension;
 
 
+            // Complete physical path.
             string filePath = Path.Combine(
                 uploadsFolder,
                 fileName
             );
 
 
+            // Save image to wwwroot/uploads/restaurants.
             using (var stream = new FileStream(
                 filePath,
                 FileMode.Create))
@@ -147,137 +138,155 @@ public class RestaurantsController : Controller
             }
 
 
-            // Save path in database
+            // Save relative path in database.
             restaurant.ImagePath =
                 "/uploads/restaurants/" + fileName;
         }
 
 
+        // Add restaurant to database.
         _context.Restaurants.Add(restaurant);
 
         await _context.SaveChangesAsync();
 
+
+        // Redirect to restaurant list.
         return RedirectToAction(nameof(Index));
     }
 
 
-    // GET: Restaurants/Edit/5
+    // ============================================================
+    // EDIT - GET
+    // Opens existing restaurant for editing.
+    // ============================================================
+
     public async Task<IActionResult> Edit(int? id)
     {
         if (id == null)
+        {
             return NotFound();
+        }
+
 
         var restaurant =
-            await _context.Restaurants.FindAsync(id);
+            await _context.Restaurants
+                .FirstOrDefaultAsync(r => r.Id == id);
+
 
         if (restaurant == null)
+        {
             return NotFound();
+        }
 
 
-        ViewBag.CityId = new SelectList(
-            _context.Cities.OrderBy(c => c.Name),
-            "Id",
-            "Name",
-            restaurant.CityId
-        );
+        // Load cities for dropdown.
+        LoadCities(restaurant.CityId);
+
 
         return View(restaurant);
     }
 
 
-    // POST: Restaurants/Edit/5
+    // ============================================================
+    // EDIT - POST
+    // Updates restaurant and optionally replaces its image.
+    // ============================================================
+
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(
         int id,
-        [Bind("Id,Name,CityId,Rating,Phone,ImagePath")]
+        [Bind("Id,Name,CityId,Rating,AveragePrice,Capacity,Availability,Phone")]
         Restaurant restaurant,
         IFormFile? ImageFile)
     {
+        // Check route ID and model ID.
         if (id != restaurant.Id)
+        {
             return NotFound();
+        }
 
 
+        // Get original restaurant from database.
         var existingRestaurant =
             await _context.Restaurants
-                .AsNoTracking()
                 .FirstOrDefaultAsync(r => r.Id == id);
 
+
         if (existingRestaurant == null)
+        {
             return NotFound();
+        }
 
 
+        // Validate restaurant information.
         if (!ModelState.IsValid)
         {
-            ViewBag.CityId = new SelectList(
-                _context.Cities.OrderBy(c => c.Name),
-                "Id",
-                "Name",
-                restaurant.CityId
-            );
+            LoadCities(restaurant.CityId);
 
             return View(restaurant);
         }
 
 
-        // Keep old image by default
-        restaurant.ImagePath =
-            existingRestaurant.ImagePath;
+        // --------------------------------------------------------
+        // UPDATE NORMAL RESTAURANT INFORMATION
+        // --------------------------------------------------------
+
+        existingRestaurant.Name =
+            restaurant.Name;
+
+        existingRestaurant.CityId =
+            restaurant.CityId;
+
+        existingRestaurant.Rating =
+            restaurant.Rating;
+
+        existingRestaurant.AveragePrice =
+            restaurant.AveragePrice;
+
+        existingRestaurant.Capacity =
+            restaurant.Capacity;
+
+        existingRestaurant.Availability =
+            restaurant.Availability;
+
+        existingRestaurant.Phone =
+            restaurant.Phone;
 
 
-        // NEW IMAGE UPLOADED
+        // --------------------------------------------------------
+        // IMAGE REPLACEMENT
+        // --------------------------------------------------------
+
         if (ImageFile != null && ImageFile.Length > 0)
         {
-            string extension =
-                Path.GetExtension(ImageFile.FileName)
-                .ToLowerInvariant();
-
-
-            string[] allowedExtensions =
+            // Validate new image.
+            if (!ValidateImage(ImageFile))
             {
-                ".jpg",
-                ".jpeg",
-                ".png",
-                ".webp"
-            };
-
-
-            if (!allowedExtensions.Contains(extension))
-            {
-                ModelState.AddModelError(
-                    "ImageFile",
-                    "Only JPG, JPEG, PNG and WEBP images are allowed."
-                );
-
-                ViewBag.CityId = new SelectList(
-                    _context.Cities.OrderBy(c => c.Name),
-                    "Id",
-                    "Name",
-                    restaurant.CityId
-                );
+                LoadCities(restaurant.CityId);
 
                 return View(restaurant);
             }
 
 
-            string uploadsFolder = Path.Combine(
-                _environment.WebRootPath,
-                "uploads",
-                "restaurants"
-            );
+            // Create upload directory.
+            string uploadsFolder =
+                GetRestaurantImageFolder();
 
 
-            if (!Directory.Exists(uploadsFolder))
-            {
-                Directory.CreateDirectory(uploadsFolder);
-            }
+            // Get extension.
+            string extension =
+                Path.GetExtension(ImageFile.FileName)
+                .ToLowerInvariant();
 
 
+            // Generate unique filename.
             string fileName =
-                Guid.NewGuid().ToString()
+                Guid.NewGuid().ToString("N")
                 + extension;
 
 
+            // Physical path for new image.
             string newFilePath =
                 Path.Combine(
                     uploadsFolder,
@@ -285,6 +294,7 @@ public class RestaurantsController : Controller
                 );
 
 
+            // Save new image.
             using (var stream = new FileStream(
                 newFilePath,
                 FileMode.Create))
@@ -293,105 +303,223 @@ public class RestaurantsController : Controller
             }
 
 
-            // Delete old image
-            if (!string.IsNullOrEmpty(
-                existingRestaurant.ImagePath))
-            {
-                string oldImagePath =
-                    Path.Combine(
-                        _environment.WebRootPath,
-                        existingRestaurant.ImagePath.TrimStart('/')
-                    );
+            // ----------------------------------------------------
+            // DELETE OLD IMAGE
+            // ----------------------------------------------------
 
-                if (System.IO.File.Exists(oldImagePath))
-                {
-                    System.IO.File.Delete(oldImagePath);
-                }
-            }
+            DeleteRestaurantImage(
+                existingRestaurant.ImagePath
+            );
 
 
-            restaurant.ImagePath =
+            // Save new image path.
+            existingRestaurant.ImagePath =
                 "/uploads/restaurants/" + fileName;
         }
 
 
-        try
-        {
-            _context.Update(restaurant);
-
-            await _context.SaveChangesAsync();
-        }
-        catch (DbUpdateConcurrencyException)
-        {
-            if (!RestaurantExists(restaurant.Id))
-                return NotFound();
-
-            throw;
-        }
+        // Save changes.
+        await _context.SaveChangesAsync();
 
 
+        // Return to restaurant list.
         return RedirectToAction(nameof(Index));
     }
 
 
-    // GET: Restaurants/Delete/5
+    // ============================================================
+    // DELETE - GET
+    // Shows confirmation page before deleting restaurant.
+    // ============================================================
+
     public async Task<IActionResult> Delete(int? id)
     {
         if (id == null)
+        {
             return NotFound();
+        }
+
 
         var restaurant =
             await _context.Restaurants
                 .Include(r => r.City)
                 .FirstOrDefaultAsync(r => r.Id == id);
 
+
         if (restaurant == null)
+        {
             return NotFound();
+        }
+
 
         return View(restaurant);
     }
 
+    // DELETE - POST
+    // Deletes restaurant and its physical image.
 
-    // POST: Restaurants/Delete/5
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
+        // Find restaurant.
         var restaurant =
-            await _context.Restaurants.FindAsync(id);
+            await _context.Restaurants
+                .FirstOrDefaultAsync(r => r.Id == id);
+
 
         if (restaurant == null)
-            return NotFound();
-
-
-        // Delete physical image
-        if (!string.IsNullOrEmpty(
-            restaurant.ImagePath))
         {
-            string imagePath =
-                Path.Combine(
-                    _environment.WebRootPath,
-                    restaurant.ImagePath.TrimStart('/')
-                );
-
-            if (System.IO.File.Exists(imagePath))
-            {
-                System.IO.File.Delete(imagePath);
-            }
+            return NotFound();
         }
 
 
+        // Delete restaurant image.
+        DeleteRestaurantImage(
+            restaurant.ImagePath
+        );
+
+
+        // Delete restaurant record.
         _context.Restaurants.Remove(restaurant);
 
         await _context.SaveChangesAsync();
 
+
         return RedirectToAction(nameof(Index));
     }
+
+    // LOAD CITIES
+    // Loads cities for Create/Edit dropdown.
+
+    private void LoadCities(int? selectedCityId = null)
+    {
+        ViewBag.CityId = new SelectList(
+            _context.Cities
+                .OrderBy(c => c.Name)
+                .ToList(),
+            "Id",
+            "Name",
+            selectedCityId
+        );
+    }
+
+    // GET IMAGE FOLDER
+    // Returns the physical restaurant image folder.
+
+    private string GetRestaurantImageFolder()
+    {
+        // wwwroot/uploads/restaurants
+        string uploadsFolder = Path.Combine(
+            _environment.WebRootPath,
+            "uploads",
+            "restaurants"
+        );
+
+
+        // Create folder if it does not exist.
+        if (!Directory.Exists(uploadsFolder))
+        {
+            Directory.CreateDirectory(uploadsFolder);
+        }
+
+
+        return uploadsFolder;
+    }
+
+    // IMAGE VALIDATION
+    // Checks image extension and file size.
+
+    private bool ValidateImage(IFormFile imageFile)
+    {
+        // Allowed image extensions.
+        string[] allowedExtensions =
+        {
+            ".jpg",
+            ".jpeg",
+            ".png",
+            ".webp"
+        };
+
+
+        // Get file extension.
+        string extension =
+            Path.GetExtension(imageFile.FileName)
+            .ToLowerInvariant();
+
+
+        // Check extension.
+        if (!allowedExtensions.Contains(extension))
+        {
+            ModelState.AddModelError(
+                "ImagePath",
+                "Only JPG, JPEG, PNG and WEBP images are allowed."
+            );
+
+            return false;
+        }
+
+
+        // Maximum file size = 5 MB.
+        const long maxFileSize =
+            5 * 1024 * 1024;
+
+
+        if (imageFile.Length > maxFileSize)
+        {
+            ModelState.AddModelError(
+                "ImagePath",
+                "Image size must not exceed 5 MB."
+            );
+
+            return false;
+        }
+
+
+        return true;
+    }
+
+    // DELETE IMAGE
+    // Deletes the physical image from wwwroot.
+
+    private void DeleteRestaurantImage(string? imagePath)
+    {
+        // No image means nothing to delete.
+        if (string.IsNullOrWhiteSpace(imagePath))
+        {
+            return;
+        }
+
+
+        // Remove starting slash.
+        string relativePath =
+            imagePath.TrimStart(
+                '/',
+                '\\'
+            );
+
+
+        string fullPath =
+            Path.Combine(
+                _environment.WebRootPath,
+                relativePath
+            );
+
+        if (System.IO.File.Exists(fullPath))
+        {
+            System.IO.File.Delete(fullPath);
+        }
+    }
+
+
+    
+    // RESTAURANT EXISTS
+    // Checks whether restaurant exists.
 
 
     private bool RestaurantExists(int id)
     {
         return _context.Restaurants
-            .Any(e => e.Id == id);
+            .Any(r => r.Id == id);
     }
 }

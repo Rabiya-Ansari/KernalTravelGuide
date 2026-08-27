@@ -6,20 +6,20 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KernalTravelGuide.Controllers
 {
-    // Only administrators can manage customer bookings.
+    
     [Authorize(Roles = "Admin")]
     public class BookingsController : Controller
     {
         private readonly AppDbContext _context;
 
-        // Inject the application database context.
+        
         public BookingsController(AppDbContext context)
         {
             _context = context;
         }
 
         // GET: Bookings
-        // Display all bookings for the administrator.
+       
         public async Task<IActionResult> Index()
         {
             var bookings = await _context.Bookings
@@ -32,7 +32,7 @@ namespace KernalTravelGuide.Controllers
         }
 
         // GET: Bookings/Details/5
-        // Display complete information about one booking.
+        
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -50,7 +50,7 @@ namespace KernalTravelGuide.Controllers
         }
 
         // GET: Bookings/Edit/5
-        // Admin can open a booking and change only its status.
+       
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -68,7 +68,7 @@ namespace KernalTravelGuide.Controllers
         }
 
         // POST: Bookings/Edit/5
-        // Update only the booking status.
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(
@@ -96,7 +96,7 @@ namespace KernalTravelGuide.Controllers
         }
 
         // GET: Bookings/Delete/5
-        // Display confirmation before deleting a booking.
+        
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -114,7 +114,7 @@ namespace KernalTravelGuide.Controllers
         }
 
         // POST: Bookings/Delete/5
-        // Permanently delete the selected booking.
+       
         [HttpPost]
         [ActionName("Delete")]
         [ValidateAntiForgeryToken]

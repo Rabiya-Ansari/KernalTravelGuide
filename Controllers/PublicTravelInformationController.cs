@@ -15,7 +15,7 @@ namespace KernalTravelGuide.Controllers
             _context = context;
         }
 
-        // GET: PublicTravelInformation/Index
+       
         public async Task<IActionResult> Index()
         {
             var travelInformations = await _context.TravelInformations

@@ -5,21 +5,21 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KernalTravelGuide.Controllers
 {
-    // Combines the five required information categories into one directory page.
+    
     public class InformationController : Controller
     {
         private readonly AppDbContext _context;
 
-        // Inject the database context for live information and package data.
+       
         public InformationController(AppDbContext context)
         {
             _context = context;
         }
 
-        // Display links and current highlights required by the project specification.
+        
         public async Task<IActionResult> Index()
         {
-            // Reuse the home view model because it already contains the required categories.
+            
             var model = new HomeViewModel
             {
                 TouristSpots = await _context.TouristSpots

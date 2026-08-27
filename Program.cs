@@ -23,17 +23,13 @@ builder.Services
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>();
 
-// MVC
 builder.Services.AddControllersWithViews();
 
-// Razor Pages - required for Identity
+
 builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
-// ============================
-// Seed Roles & Admin
-// ============================
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -49,9 +45,6 @@ using (var scope = app.Services.CreateScope())
     await SeedAdmin.SeedAdminAsync(userManager);
 }
 
-// ============================
-// HTTP Pipeline
-// ============================
 
 if (!app.Environment.IsDevelopment())
 {
@@ -69,12 +62,11 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
-// MVC Route
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-// Identity pages
 app.MapRazorPages();
 
 app.Run();

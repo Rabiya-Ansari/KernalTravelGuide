@@ -18,9 +18,11 @@ namespace KernalTravelGuide.Models
         [Range(1, 5)]
         public double Rating { get; set; }
 
+        [Required(ErrorMessage = "Average price is required.")]
         [Range(100, 100000)]
         public double AveragePrice { get; set; }
 
+        [Required(ErrorMessage = "Capacity is required.")]
         [Range(1, 5000)]
         public int Capacity { get; set; }
 

@@ -111,7 +111,7 @@ public class FeedbackController : Controller
     // GET: Feedback/MyFeedbacks
     public async Task<IActionResult> MyFeedbacks()
     {
-        // Logged-in user ka email get karein
+        
         var userEmail = User.FindFirstValue(ClaimTypes.Email) ?? User.Identity?.Name;
 
         var userFeedbacks = await _context.Feedbacks

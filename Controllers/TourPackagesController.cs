@@ -57,7 +57,7 @@ public class TourPackagesController : Controller
     {
         if (ModelState.IsValid)
         {
-            // Upload image
+            
             if (ImageFile != null && ImageFile.Length > 0)
             {
                 string folderPath = Path.Combine(

@@ -60,28 +60,23 @@ namespace KernalTravelGuide.Models
 
         public TravelInformation? TravelInformation { get; set; }
 
-
-        // =========================
         // BOOKING DATE / TRAVEL DATE
-        // =========================
+
 
         [Required]
         [DataType(DataType.Date)]
         public DateTime TravelDate { get; set; }
+      
+  
 
-
-        // =========================
-        // PERSONS / GUESTS / PASSENGERS
-        // =========================
 
         [Required]
         [Range(1, 20)]
         public int NumberOfPersons { get; set; }
 
 
-        // =========================
         // HOTEL / RESORT
-        // =========================
+
 
         [Range(1, 30)]
         public int? NumberOfNights { get; set; }
@@ -91,27 +86,17 @@ namespace KernalTravelGuide.Models
         public int? RoomsCount { get; set; }
 
 
-        // =========================
-        // TOTAL
-        // =========================
-
         [Required]
         [Range(typeof(double), "0", "999999999")]
         public double TotalAmount { get; set; }
 
-
-        // =========================
-        // STATUS
-        // =========================
+     
 
         [Required]
         public BookingStatus Status { get; set; }
             = BookingStatus.Pending;
 
 
-        // =========================
-        // CREATED DATE
-        // =========================
 
         [Required]
         public DateTime BookingDate { get; set; }

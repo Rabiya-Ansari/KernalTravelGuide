@@ -6,14 +6,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace KernalTravelGuide.Controllers
 {
-    // Only Admin users can manage Identity accounts.
+   
     [Authorize(Roles = "Admin")]
     public class UsersController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
 
-        // Inject Identity managers required for user and role management.
+       
         public UsersController(
             UserManager<ApplicationUser> userManager,
             RoleManager<IdentityRole> roleManager)
@@ -23,7 +23,6 @@ namespace KernalTravelGuide.Controllers
         }
 
         // GET: Users
-        // Display all registered users with their current roles.
         public async Task<IActionResult> Index()
         {
             var users = _userManager.Users
@@ -35,7 +34,7 @@ namespace KernalTravelGuide.Controllers
 
             foreach (var user in users)
             {
-                // Get roles assigned to this Identity user.
+               
                 var roles = await _userManager.GetRolesAsync(user);
 
                 model.Add(new UserListItemViewModel
@@ -53,7 +52,6 @@ namespace KernalTravelGuide.Controllers
         }
 
         // GET: Users/Details/5
-        // Display complete details of one user.
         public async Task<IActionResult> Details(string id)
         {
             if (string.IsNullOrWhiteSpace(id))
@@ -73,7 +71,7 @@ namespace KernalTravelGuide.Controllers
         }
 
         // GET: Users/Edit/5
-        // Load user data for editing.
+       
         public async Task<IActionResult> Edit(string id)
         {
             if (string.IsNullOrWhiteSpace(id))
@@ -86,10 +84,8 @@ namespace KernalTravelGuide.Controllers
 
             var roles = await _userManager.GetRolesAsync(user);
 
-            // Load available application roles.
             ViewBag.Roles = await GetAvailableRolesAsync();
 
-            // Check whether Admin is editing his own account.
             ViewBag.IsCurrentUser =
                 user.Id == _userManager.GetUserId(User);
 
@@ -108,7 +104,7 @@ namespace KernalTravelGuide.Controllers
         }
 
         // POST: Users/Edit/5
-        // Update user profile and role.
+       
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(UserEditViewModel model)
@@ -127,7 +123,6 @@ namespace KernalTravelGuide.Controllers
             if (user == null)
                 return NotFound();
 
-            // Check whether another account already uses this email.
             var existingUser =
                 await _userManager.FindByEmailAsync(model.Email.Trim());
 
@@ -144,7 +139,7 @@ namespace KernalTravelGuide.Controllers
                 return View(model);
             }
 
-            // Update application-specific user information.
+            
             user.FirstName = model.FirstName.Trim();
             user.LastName = model.LastName.Trim();
 
@@ -158,7 +153,7 @@ namespace KernalTravelGuide.Controllers
                     ? null
                     : model.Address.Trim();
 
-            // Update Identity email.
+           
             var emailResult =
                 await _userManager.SetEmailAsync(
                     user,
@@ -192,7 +187,7 @@ namespace KernalTravelGuide.Controllers
                 return View(model);
             }
 
-            // Save profile changes.
+            
             var updateResult =
                 await _userManager.UpdateAsync(user);
 
@@ -210,10 +205,10 @@ namespace KernalTravelGuide.Controllers
             var currentUserId =
                 _userManager.GetUserId(User);
 
-            // Admin cannot change his own Admin role.
+            
             if (user.Id != currentUserId)
             {
-                // Verify selected role exists.
+                
                 if (!await _roleManager.RoleExistsAsync(model.Role))
                 {
                     ModelState.AddModelError(
@@ -231,7 +226,7 @@ namespace KernalTravelGuide.Controllers
                 var currentRoles =
                     await _userManager.GetRolesAsync(user);
 
-                // Remove previous roles.
+                
                 if (currentRoles.Count > 0)
                 {
                     var removeResult =
@@ -252,7 +247,7 @@ namespace KernalTravelGuide.Controllers
                     }
                 }
 
-                // Assign selected role.
+                
                 var addRoleResult =
                     await _userManager.AddToRoleAsync(
                         user,
@@ -278,7 +273,7 @@ namespace KernalTravelGuide.Controllers
         }
 
         // GET: Users/Delete/5
-        // Display delete confirmation.
+       
         public async Task<IActionResult> Delete(string id)
         {
             if (string.IsNullOrWhiteSpace(id))
@@ -300,7 +295,7 @@ namespace KernalTravelGuide.Controllers
         }
 
         // POST: Users/Delete/5
-        // Delete the selected Identity account.
+        
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
@@ -314,7 +309,7 @@ namespace KernalTravelGuide.Controllers
             if (user == null)
                 return NotFound();
 
-            // Prevent Admin from deleting his own account.
+            
             if (user.Id == _userManager.GetUserId(User))
             {
                 TempData["Error"] =
@@ -359,7 +354,6 @@ namespace KernalTravelGuide.Controllers
             return roles;
         }
 
-        // Add Identity errors to ModelState.
         private void AddIdentityErrors(IdentityResult result)
         {
             foreach (var error in result.Errors)

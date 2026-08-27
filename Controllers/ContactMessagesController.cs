@@ -24,7 +24,7 @@ public class ContactMessagesController : Controller
         return View(messages);
     }
 
-    // GET: ContactMessages/Details/5
+    
     public async Task<IActionResult> Details(int? id)
     {
         if (id == null)
@@ -43,7 +43,7 @@ public class ContactMessagesController : Controller
         return View(message);
     }
 
-    // GET: ContactMessages/Delete/5
+    
     public async Task<IActionResult> Delete(int? id)
     {
         if (id == null)

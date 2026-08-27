@@ -17,7 +17,7 @@ namespace KernalTravelGuide.Controllers
 
         public async Task<IActionResult> Index()
         {
-            // Statistics
+      
             ViewBag.TotalUsers = await _context.Users.CountAsync();
             ViewBag.TotalPackages = await _context.TourPackages.CountAsync();
             ViewBag.TotalBookings = await _context.Bookings.CountAsync();
@@ -27,7 +27,7 @@ namespace KernalTravelGuide.Controllers
             ViewBag.TotalResorts = await _context.Resorts.CountAsync();
             ViewBag.TotalFeedbacks = await _context.Feedbacks.CountAsync();
 
-            // Recent Bookings
+          
             ViewBag.RecentBookings = await _context.Bookings
     .Include(b => b.TourPackage)
     .Include(b => b.Hotel)      
@@ -39,7 +39,7 @@ namespace KernalTravelGuide.Controllers
     .Take(5)
     .ToListAsync();
 
-            // Recent Feedbacks
+           
             ViewBag.RecentFeedbacks = await _context.Feedbacks
                 .OrderByDescending(f => f.FeedbackDate)
                 .Take(5)

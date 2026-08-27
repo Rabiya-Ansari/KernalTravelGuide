@@ -157,6 +157,7 @@
 
 
                 <!-- Current Image -->
+                <!-- Current Image -->
                 <div class="col-md-6 mb-3">
 
                     <label class="form-label fw-semibold">
@@ -164,7 +165,6 @@
                     </label>
 
                     <div>
-
                         @if (!string.IsNullOrEmpty(Model.ImagePath))
                         {
                             <img src="@Url.Content(Model.ImagePath)"
@@ -182,13 +182,12 @@
                                 No image uploaded.
                             </div>
                         }
-
                     </div>
 
                 </div>
 
 
-                <!-- New Image -->
+                <!-- Replace Image -->
                 <div class="col-md-6 mb-3">
 
                     <label class="form-label fw-semibold">
@@ -201,15 +200,13 @@
                            accept=".jpg,.jpeg,.png,.webp" />
 
                     <small class="text-muted">
-                        Leave empty to keep current image.
+                        Select a new image if you want to replace the current image.
                     </small>
 
-                    <span asp-validation-for="ImagePath"
-                          class="text-danger"></span>
+                    <span class="text-danger"
+                          asp-validation-for="ImagePath"></span>
 
                 </div>
-
-            </div>
 
 
             <div class="mt-3">

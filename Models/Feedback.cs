@@ -8,7 +8,6 @@ namespace KernalTravelGuide.Models
 
         public int Id { get; set; }
 
-        // Customer information
         [Required]
         [StringLength(50)]
         [RegularExpression(@"^[A-Za-z ]+$")]
@@ -18,7 +17,6 @@ namespace KernalTravelGuide.Models
         [EmailAddress]
         public string Email { get; set; } = string.Empty;
 
-        // Review information
         [Required]
         [Range(1, 5)]
         public int Rating { get; set; }
@@ -29,14 +27,13 @@ namespace KernalTravelGuide.Models
 
         public DateTime FeedbackDate { get; set; } = DateTime.Now;
 
-        // Which item is being reviewed
         public int? HotelId { get; set; }
         public int? ResortId { get; set; }
         public int? RestaurantId { get; set; }
         public int? TouristSpotId { get; set; }
         public int? TourPackageId { get; set; }
 
-        // Navigation properties
+
         [ForeignKey(nameof(HotelId))]
         public Hotel? Hotel { get; set; }
 

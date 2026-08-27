@@ -19,7 +19,7 @@ namespace KernalTravelGuide.Controllers
         // GET: Feedbacks
         public async Task<IActionResult> Index()
         {
-            // Sab navigation properties Include ki gayi hain
+           
             var feedbacks = await _context.Feedbacks
                 .Include(f => f.Hotel)
                 .Include(f => f.Resort)

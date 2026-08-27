@@ -16,7 +16,7 @@ namespace KernalTravelGuide.Controllers
             _context = context;
         }
 
-        // Customer Dashboard
+      
         public async Task<IActionResult> Index()
         {
             var userId = User.FindFirstValue(
@@ -25,7 +25,7 @@ namespace KernalTravelGuide.Controllers
             if (string.IsNullOrEmpty(userId))
                 return Challenge();
 
-            // Only current user's bookings.
+           
             var myBookings = await _context.Bookings
                 .Include(b => b.TourPackage)
                 .Where(b => b.UserId == userId)

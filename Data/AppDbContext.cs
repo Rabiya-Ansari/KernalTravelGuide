@@ -21,64 +21,63 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<ContactMessage> ContactMessages => Set<ContactMessage>();
     public DbSet<Feedback> Feedbacks => Set<Feedback>();
     public DbSet<Booking> Bookings => Set<Booking>();
-    public DbSet<Gallery> Galleries => Set<Gallery>();
-    // REMOVED: DbSet<Review> line deleted
+   
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
 
-        // TravelInformation: FromCity
+       
         builder.Entity<TravelInformation>()
             .HasOne(t => t.FromCity)
             .WithMany()
             .HasForeignKey(t => t.FromCityId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        // TravelInformation: ToCity
+        
         builder.Entity<TravelInformation>()
             .HasOne(t => t.ToCity)
             .WithMany()
             .HasForeignKey(t => t.ToCityId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        // Feedback: Hotel
+        
         builder.Entity<Feedback>()
             .HasOne(f => f.Hotel)
             .WithMany()
             .HasForeignKey(f => f.HotelId)
             .OnDelete(DeleteBehavior.NoAction);
 
-        // Feedback: Resort
+        
         builder.Entity<Feedback>()
             .HasOne(f => f.Resort)
             .WithMany()
             .HasForeignKey(f => f.ResortId)
             .OnDelete(DeleteBehavior.NoAction);
 
-        // Feedback: Restaurant
+        
         builder.Entity<Feedback>()
             .HasOne(f => f.Restaurant)
             .WithMany()
             .HasForeignKey(f => f.RestaurantId)
             .OnDelete(DeleteBehavior.NoAction);
 
-        // Feedback: Tourist Spot
+        
         builder.Entity<Feedback>()
             .HasOne(f => f.TouristSpot)
             .WithMany()
             .HasForeignKey(f => f.TouristSpotId)
             .OnDelete(DeleteBehavior.NoAction);
 
-        // Feedback: Tour Package
+        
         builder.Entity<Feedback>()
             .HasOne(f => f.TourPackage)
             .WithMany()
             .HasForeignKey(f => f.TourPackageId)
             .OnDelete(DeleteBehavior.NoAction);
-        // ============================
+        
         // Booking relationships
-        // ============================
+     
 
         builder.Entity<Booking>()
             .HasOne(b => b.User)
