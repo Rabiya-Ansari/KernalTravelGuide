@@ -5,265 +5,489 @@
     ViewData["Title"] = "Log in";
 }
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
 <style>
     :root {
-        --primary-theme: #6096A6;
-        --dark-theme: #1F384C;
-        --bg-light: #F4F7F8;
+        --ink: #1A374D;
+        --teal-deep: #6998AB;
+        --teal-mid: #6998AB;
+        --brass: #C9A15A;
+        --brass-soft: #E4CE9C;
+        --ivory: #FAF6EC;
+        --rust: #1A374D;
+        --line: rgba(18, 38, 42, 0.14);
     }
 
     body {
-        background-color: var(--bg-light);
+        background-color: var(--ivory);
+        background-image: radial-gradient(circle at 1px 1px, rgba(18,38,42,0.06) 1px, transparent 0);
+        background-size: 22px 22px;
+        font-family: 'Inter', sans-serif;
+        color: var(--ink);
+    }
+
+    .mono-label {
+        font-family: 'IBM Plex Mono', monospace;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        font-size: 0.68rem;
+        font-weight: 500;
+        color: var(--teal-mid);
     }
 
     .auth-wrapper {
-        min-height: 85vh;
+        min-height: 88vh;
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 40px 0;
+        padding: 56px 16px;
         position: relative;
     }
 
-    .btn-back {
-        position: absolute;
-        top: 10px;
-        left: 10px;
-        color: var(--dark-theme);
-        font-weight: 500;
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        background: #ffffff;
-        padding: 8px 16px;
-        border-radius: 30px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        transition: all 0.3s ease;
-        z-index: 10;
+    /* ---------- Boarding pass card ---------- */
+    .ticket {
+        max-width: 960px;
+        width: 100%;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        background: var(--ivory);
+        border-radius: 6px;
+        box-shadow: 0 30px 60px -20px rgba(15, 59, 61, 0.35);
+        position: relative;
+        overflow: visible;
     }
 
-        .btn-back:hover {
-            background: var(--dark-theme);
-            color: #ffffff;
+        /* punched notches at the perforation */
+        .ticket::before,
+        .ticket::after {
+            content: "";
+            position: absolute;
+            width: 26px;
+            height: 26px;
+            background: #EDE7D8;
+            border-radius: 50%;
+            left: calc(33.333% - 13px);
+            z-index: 3;
+            box-shadow: inset 0 0 0 1px var(--line);
         }
 
-    .auth-card {
-        background: #ffffff;
-        border-radius: 24px;
-        overflow: hidden;
-        box-shadow: 0 20px 40px rgba(31, 56, 76, 0.08);
-        border: none;
-    }
+        .ticket::before {
+            top: -13px;
+        }
 
-    .auth-image-side {
-        background-color: var(--primary-theme);
+        .ticket::after {
+            bottom: -13px;
+        }
+
+    /* ---------- Stub (left / image) side ---------- */
+    .stub {
+        background: var(--teal-deep);
+        color: var(--ivory);
+        border-radius: 6px 0 0 6px;
         position: relative;
+        padding: 34px 26px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        padding: 40px;
-        color: white;
-        min-height: 500px;
+        min-height: 560px;
+        overflow: hidden;
     }
 
-    .auth-img-container {
+    .stub-photo {
         position: absolute;
         inset: 0;
         width: 100%;
         height: 100%;
         object-fit: cover;
-        opacity: 0.85;
+        opacity: 0.32;
+        mix-blend-mode: luminosity;
     }
 
-    .auth-image-overlay {
+    .stub-scrim {
         position: absolute;
         inset: 0;
-        background: linear-gradient(180deg, rgba(96, 150, 166, 0.4) 0%, rgba(31, 56, 76, 0.75) 100%);
+        background: linear-gradient(195deg, #1A374D 0%, #6998AB, 100%);
     }
 
-    .auth-image-content {
+    .stub-content {
         position: relative;
         z-index: 2;
     }
 
-    .auth-form-side {
-        padding: 40px;
+    .stub-eyebrow {
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 0.68rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--brass-soft);
+        margin-bottom: 14px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+        .stub-eyebrow::before {
+            content: "";
+            width: 16px;
+            height: 1px;
+            background: var(--brass-soft);
+            display: inline-block;
+        }
+
+    .stub-headline {
+        font-family: 'Fraunces', serif;
+        font-weight: 500;
+        font-style: italic;
+        font-size: 2.15rem;
+        line-height: 1.12;
+        margin-bottom: 10px;
+    }
+
+    .stub-sub {
+        font-size: 0.92rem;
+        color: rgba(250, 246, 236, 0.75);
+        max-width: 30ch;
+    }
+
+    .stub-route {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-family: 'IBM Plex Mono', monospace;
+        border-top: 1px dashed rgba(250, 246, 236, 0.3);
+        padding-top: 16px;
+        margin-top: 20px;
+    }
+
+        .stub-route .code {
+            font-size: 1.4rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+        }
+
+        .stub-route .code-label {
+            display: block;
+            font-size: 0.6rem;
+            letter-spacing: 0.14em;
+            color: var(--brass-soft);
+            margin-top: 2px;
+        }
+
+        .stub-route .plane {
+            color: var(--brass-soft);
+            font-size: 1rem;
+            opacity: 0.85;
+        }
+
+    /* ---------- Form (right) side ---------- */
+    .form-side {
+        padding: 40px 44px;
         display: flex;
         flex-direction: column;
         justify-content: center;
-        height: 100%;
     }
 
+    .form-header {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        border-bottom: 1px dashed var(--line);
+        padding-bottom: 16px;
+        margin-bottom: 26px;
+    }
+
+    .form-title {
+        font-family: 'Fraunces', serif;
+        font-weight: 600;
+        font-size: 1.7rem;
+        color: var(--ink);
+    }
+
+    .form-header .mono-label {
+        color: var(--rust);
+    }
+
+    .field-block {
+        margin-bottom: 18px;
+    }
+
+        .field-block .mono-label {
+            display: block;
+            margin-bottom: 6px;
+        }
+
     .form-floating > .form-control {
-        border-radius: 12px;
-        border: 1.5px solid #E2E8F0;
+        border-radius: 4px;
+        border: 1.5px solid var(--line);
+        background: #fff;
+        font-family: 'Inter', sans-serif;
+        padding-top: 1.1rem;
     }
 
         .form-floating > .form-control:focus {
-            border-color: var(--primary-theme);
-            box-shadow: 0 0 0 0.25rem rgba(96, 150, 166, 0.25);
+            border-color: var(--teal-mid);
+            box-shadow: 0 0 0 3px rgba(31, 92, 88, 0.14);
         }
 
-    .form-check-input:checked {
-        background-color: var(--primary-theme);
-        border-color: var(--primary-theme);
+    .form-floating > label {
+        font-family: 'Inter', sans-serif;
+        color: #8a9a9a;
     }
 
+    .form-check-input:checked {
+        background-color: var(--teal-deep);
+        border-color: var(--teal-deep);
+    }
+
+    .form-check-input:focus {
+        box-shadow: 0 0 0 3px rgba(31, 92, 88, 0.14);
+        border-color: var(--teal-mid);
+    }
+
+    .row-utility {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 22px;
+        font-size: 0.88rem;
+    }
+
+    #forgot-password {
+        color: var(--teal-deep);
+        font-weight: 500;
+        text-decoration: none;
+        border-bottom: 1px solid var(--brass);
+    }
+
+        #forgot-password:hover {
+            color: var(--rust);
+            border-color: var(--rust);
+        }
+
     .btn-theme {
-        background-color: var(--dark-theme);
-        color: #fff;
-        border-radius: 12px;
-        padding: 12px;
+        background-color: var(--teal-deep);
+        color: var(--ivory);
+        border-radius: 4px;
+        padding: 13px;
+        font-family: 'IBM Plex Mono', monospace;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        font-size: 0.82rem;
         font-weight: 600;
         border: none;
-        transition: background 0.3s ease;
+        transition: background 0.25s ease, transform 0.15s ease;
     }
 
         .btn-theme:hover {
-            background-color: var(--primary-theme);
+            background-color: var(--rust);
             color: #fff;
+            transform: translateY(-1px);
+        }
+
+        .btn-theme:active {
+            transform: translateY(0);
         }
 
     .btn-external {
-        border-radius: 12px;
-        border: 1px solid #E2E8F0;
+        border-radius: 4px;
+        border: 1.5px solid var(--line);
         background: #fff;
-        color: var(--dark-theme);
+        color: var(--ink);
         font-weight: 500;
+        font-size: 0.9rem;
         padding: 10px;
         width: 100%;
         margin-bottom: 8px;
+        transition: border-color 0.2s ease, background 0.2s ease;
     }
 
         .btn-external:hover {
-            background: #F8FAFC;
-        }
-
-    .auth-links a {
-        color: var(--dark-theme);
-        text-decoration: none;
-        font-weight: 500;
-    }
-
-        .auth-links a:hover {
-            color: var(--primary-theme);
-            text-decoration: underline;
+            border-color: var(--teal-mid);
+            background: #F5F1E4;
         }
 
     .divider {
         display: flex;
         align-items: center;
         text-align: center;
-        color: #94A3B8;
-        margin: 20px 0;
+        margin: 22px 0;
     }
+
+        .divider span {
+            padding: 0 12px;
+        }
 
         .divider::before,
         .divider::after {
             content: "";
             flex: 1;
-            border-bottom: 1px solid #E2E8F0;
+            border-bottom: 1px dashed var(--line);
         }
 
-        .divider:not(:empty)::before {
-            margin-right: .75em;
+    .auth-links {
+        border-top: 1px dashed var(--line);
+        padding-top: 18px;
+        margin-top: 26px;
+    }
+
+        .auth-links a {
+            color: var(--teal-deep);
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 1px solid var(--brass);
         }
 
-        .divider:not(:empty)::after {
-            margin-left: .75em;
+            .auth-links a:hover {
+                color: var(--rust);
+                border-color: var(--rust);
+            }
+
+    @@media (max-width: 991.98px) {
+        .ticket {
+            grid-template-columns: 1fr;
         }
+
+        .stub {
+            border-radius: 6px 6px 0 0;
+            min-height: 220px;
+        }
+
+        .ticket::before,
+        .ticket::after {
+            left: auto;
+            right: 22px;
+        }
+
+        .ticket::before {
+            top: auto;
+            bottom: -13px;
+        }
+
+        .ticket::after {
+            bottom: -13px;
+            left: 22px;
+            right: auto;
+        }
+    }
 </style>
+
+<!-- Login Hero Section -->
+<div class="hero hero-inner">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8 mx-auto text-center">
+                <div class="intro-wrap">
+                    <h1 class="mb-3">Login to Your Account</h1>
+                    <p class="text-white">
+                        Your trusted travel guide for discovering tourist destinations,
+                        accommodation, transportation and tour packages.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="container auth-wrapper">
 
-    <a href="/" class="btn-back">
-        &larr; Back to Home
-    </a>
+    <div class="ticket">
+        <!-- STUB / LEFT SIDE -->
+        <div class="stub">
+            <img src="https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=1000&q=80" alt="Travel" class="stub-photo" />
+            <div class="stub-scrim"></div>
 
-    <div class="card auth-card w-100">
-        <div class="row g-0">
-            <!-- LEFT VISUAL SIDE (TRAVEL IMAGE) -->
-            <div class="col-lg-5 d-none d-lg-block">
-                <div class="auth-image-side h-100">
-                    <img src="https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=1000&q=80" alt="Travel" class="auth-img-container" />
-                    <div class="auth-image-overlay"></div>
-
-                    <div class="auth-image-content">
-                        <h2 class="fw-bold display-6">Welcome Back, Explorer.</h2>
-                    </div>
-
-                    <div class="auth-image-content">
-                        <p class="mb-0 text-white-50">Log in to continue planning your next adventure.</p>
-                    </div>
-                </div>
+            <div class="stub-content">
+                <div class="stub-eyebrow">Boarding Pass</div>
+                <div class="stub-headline">Welcome back,<br />explorer.</div>
+                <div class="stub-sub">Log in to continue planning your next adventure.</div>
             </div>
 
-            <!-- RIGHT FORM SIDE -->
-            <div class="col-lg-7">
-                <div class="auth-form-side">
-                    <h3 class="fw-bold mb-1" style="color: var(--dark-theme);">Welcome Back</h3>
-                    <p class="text-muted mb-4">Please log in to your account to continue.</p>
+            <div class="stub-route">
+                <div>
+                    <span class="code">HOME</span>
+                    <span class="code-label">ORIGIN</span>
+                </div>
+                <div class="plane">&#9992;</div>
+                <div style="text-align:right;">
+                    <span class="code">???</span>
+                    <span class="code-label">NEXT STOP</span>
+                </div>
+            </div>
+        </div>
 
-                    <form id="account" method="post">
-                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3" role="alert"></div>
+        <!-- FORM / RIGHT SIDE -->
+        <div class="form-side">
+            <div class="form-header">
+                <span class="form-title">Sign in</span>
+                <span class="mono-label">Gate opens now</span>
+            </div>
 
-                        <div class="form-floating mb-3">
-                            <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                            <label asp-for="Input.Email">Email</label>
-                            <span asp-validation-for="Input.Email" class="text-danger"></span>
-                        </div>
+            <form id="account" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3" role="alert"></div>
 
-                        <div class="form-floating mb-3">
-                            <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
-                            <label asp-for="Input.Password">Password</label>
-                            <span asp-validation-for="Input.Password" class="text-danger"></span>
-                        </div>
-
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <div class="form-check">
-                                <input class="form-check-input" asp-for="Input.RememberMe" />
-                                <label class="form-check-label" asp-for="Input.RememberMe">
-                                    @Html.DisplayNameFor(m => m.Input.RememberMe)
-                                </label>
-                            </div>
-                            <a id="forgot-password" asp-page="./ForgotPassword" class="small">Forgot password?</a>
-                        </div>
-
-                        <button id="login-submit" type="submit" class="w-100 btn btn-theme btn-lg mt-2">Log in</button>
-                    </form>
-
-                    <!-- EXTERNAL LOGINS -->
-                    @if ((Model.ExternalLogins?.Count ?? 0) > 0)
-                    {
-                        <div class="divider">or continue with</div>
-                        <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-                            <div class="d-flex flex-column gap-2">
-                                @foreach (var provider in Model.ExternalLogins!)
-                                {
-                                    <button type="submit" class="btn btn-external" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">
-                                        @provider.DisplayName
-                                    </button>
-                                }
-                            </div>
-                        </form>
-                    }
-                    else
-                    {
-                        <div class="text-muted small text-center mt-2">
-                            There are no external authentication services configured.
-                        </div>
-                    }
-
-                    <div class="auth-links text-center mt-4 small">
-                        <p class="mb-1">
-                            Don't have an account? <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
-                        </p>
-                        <p class="mb-0">
-                            <a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Resend email confirmation</a>
-                        </p>
+                <div class="field-block">
+                    <span class="mono-label">Passenger email</span>
+                    <div class="form-floating">
+                        <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                        <span asp-validation-for="Input.Email" class="text-danger"></span>
                     </div>
                 </div>
+
+                <div class="field-block">
+                    <span class="mono-label">Access code</span>
+                    <div class="form-floating">
+                        <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
+                        <span asp-validation-for="Input.Password" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row-utility">
+                    <div class="form-check">
+                        <input class="form-check-input" asp-for="Input.RememberMe" />
+                        <label class="form-check-label" asp-for="Input.RememberMe">
+                            @Html.DisplayNameFor(m => m.Input.RememberMe)
+                        </label>
+                    </div>
+                    <a id="forgot-password" asp-page="./ForgotPassword">Forgot password?</a>
+                </div>
+
+                <button id="login-submit" type="submit" class="w-100 btn btn-theme btn-lg"> Log in</button>
+            </form>
+
+            @if ((Model.ExternalLogins?.Count ?? 0) > 0)
+            {
+                <div class="divider"><span class="mono-label">or continue with</span></div>
+                <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                    <div class="d-flex flex-column gap-2">
+                        @foreach (var provider in Model.ExternalLogins!)
+                        {
+                            <button type="submit" class="btn btn-external" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">
+                                @provider.DisplayName
+                            </button>
+                        }
+                    </div>
+                </form>
+            }
+            else
+            {
+                <div class="text-muted small text-center mt-2">
+                    There are no external authentication services configured.
+                </div>
+            }
+
+            <div class="auth-links text-center small">
+                <p class="mb-1">
+                    Don't have an account? <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
+                </p>
+                <p class="mb-0">
+                    <a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Resend email confirmation</a>
+                </p>
             </div>
         </div>
     </div>

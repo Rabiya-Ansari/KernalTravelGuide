@@ -4,276 +4,566 @@
     ViewData["Title"] = "Register";
 }
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
 <style>
     :root {
-        --primary-theme: #6096A6;
-        --dark-theme: #1F384C;
-        --bg-light: #F4F7F8;
+        --ink: #1A374D;
+        --teal-deep: #6998AB;
+        --teal-mid: #6998AB;
+        --brass: #C9A15A;
+        --brass-soft: #E4CE9C;
+        --ivory: #FAF6EC;
+        --rust: #1A374D;
+        --line: rgba(18, 38, 42, 0.14);
     }
 
     body {
-        background-color: var(--bg-light);
+        background-color: var(--ivory);
+        background-image: radial-gradient(circle at 1px 1px, rgba(18,38,42,0.06) 1px, transparent 0);
+        background-size: 22px 22px;
+        font-family: 'Inter', sans-serif;
+        color: var(--ink);
+    }
+
+    .mono-label {
+        font-family: 'IBM Plex Mono', monospace;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        font-size: 0.68rem;
+        font-weight: 500;
+        color: var(--teal-mid);
     }
 
     .auth-wrapper {
-        min-height: 85vh;
+        min-height: 88vh;
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 40px 0;
+        padding: 56px 16px;
         position: relative;
     }
 
-    .btn-back {
-        position: absolute;
-        top: 10px;
-        left: 10px;
-        color: var(--dark-theme);
-        font-weight: 500;
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        background: #ffffff;
-        padding: 8px 16px;
-        border-radius: 30px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        transition: all 0.3s ease;
-        z-index: 10;
+ 
+
+    /* ---------- Boarding pass card ---------- */
+    .ticket {
+        max-width: 1040px;
+        width: 100%;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        background: var(--ivory);
+        border-radius: 6px;
+        box-shadow: 0 30px 60px -20px rgba(15, 59, 61, 0.35);
+        position: relative;
+        overflow: visible;
     }
 
-        .btn-back:hover {
-            background: var(--dark-theme);
-            color: #ffffff;
+        /* punched notches at the perforation */
+        .ticket::before,
+        .ticket::after {
+            content: "";
+            position: absolute;
+            width: 26px;
+            height: 26px;
+            background: #EDE7D8;
+            border-radius: 50%;
+            left: calc(33.333% - 13px);
+            z-index: 3;
+            box-shadow: inset 0 0 0 1px var(--line);
         }
 
-    .auth-card {
-        background: #ffffff;
-        border-radius: 24px;
-        overflow: hidden;
-        box-shadow: 0 20px 40px rgba(31, 56, 76, 0.08);
-        border: none;
-    }
+        .ticket::before {
+            top: -13px;
+        }
 
-    .auth-image-side {
-        background-color: var(--primary-theme);
+        .ticket::after {
+            bottom: -13px;
+        }
+
+    /* ---------- Stub (left / image) side ---------- */
+    .stub {
+        background: var(--teal-deep);
+        color: var(--ivory);
+        border-radius: 6px 0 0 6px;
         position: relative;
+        padding: 34px 26px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        padding: 40px;
-        color: white;
-        min-height: 500px;
+        min-height: 640px;
+        overflow: hidden;
     }
 
-    .auth-img-container {
+    .stub-photo {
         position: absolute;
         inset: 0;
         width: 100%;
         height: 100%;
         object-fit: cover;
-        opacity: 0.85;
+        opacity: 0.32;
+        mix-blend-mode: luminosity;
     }
 
-    .auth-image-overlay {
+    .stub-scrim {
         position: absolute;
         inset: 0;
-        background: linear-gradient(180deg, rgba(96, 150, 166, 0.4) 0%, rgba(31, 56, 76, 0.75) 100%);
+        background: linear-gradient(195deg, #1A374D 0%, #6998AB, 100%);
     }
 
-    .auth-image-content {
+    .stub-content {
         position: relative;
         z-index: 2;
     }
 
-    .auth-form-side {
-        padding: 40px;
+    .stub-eyebrow {
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 0.68rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--brass-soft);
+        margin-bottom: 14px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
     }
 
-    .form-floating > .form-control {
-        border-radius: 12px;
-        border: 1.5px solid #E2E8F0;
-    }
-
-        .form-floating > .form-control:focus {
-            border-color: var(--primary-theme);
-            box-shadow: 0 0 0 0.25rem rgba(96, 150, 166, 0.25);
+        .stub-eyebrow::before {
+            content: "";
+            width: 16px;
+            height: 1px;
+            background: var(--brass-soft);
+            display: inline-block;
         }
 
+    .stub-headline {
+        font-family: 'Fraunces', serif;
+        font-weight: 500;
+        font-style: italic;
+        font-size: 2.15rem;
+        line-height: 1.12;
+        margin-bottom: 10px;
+    }
+
+    .stub-sub {
+        font-size: 0.92rem;
+        color: rgba(250, 246, 236, 0.75);
+        max-width: 30ch;
+    }
+
+    .stub-checklist {
+        position: relative;
+        z-index: 2;
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 0.78rem;
+        border-top: 1px dashed rgba(250, 246, 236, 0.3);
+        padding-top: 16px;
+        margin-top: 20px;
+    }
+
+        .stub-checklist li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 9px;
+            color: rgba(250, 246, 236, 0.85);
+        }
+
+            .stub-checklist li::before {
+                content: "✓";
+                color: var(--brass-soft);
+                font-weight: 600;
+            }
+
+    /* ---------- Form (right) side ---------- */
+    .form-side {
+        padding: 40px 44px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .form-header {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        border-bottom: 1px dashed var(--line);
+        padding-bottom: 16px;
+        margin-bottom: 26px;
+    }
+
+    .form-title {
+        font-family: 'Fraunces', serif;
+        font-weight: 600;
+        font-size: 1.7rem;
+        color: var(--ink);
+    }
+
+    .form-header .mono-label {
+        color: var(--rust);
+    }
+
+    .field-block {
+        margin-bottom: 18px;
+    }
+
+        .field-block .mono-label {
+            display: block;
+            margin-bottom: 6px;
+        }
+
+    .form-floating {
+        position: relative;
+    }
+
+        .form-floating > .form-control {
+            border-radius: 4px;
+            border: 1.5px solid var(--line);
+            background: #fff;
+            font-family: 'Inter', sans-serif;
+            padding-top: 1.1rem;
+        }
+
+            .form-floating > .form-control:focus {
+                border-color: var(--teal-mid);
+                box-shadow: 0 0 0 3px rgba(31, 92, 88, 0.14);
+            }
+
+        .form-floating > label {
+            font-family: 'Inter', sans-serif;
+            color: #8a9a9a;
+        }
+
+    /* password field with visibility toggle */
+    .password-field .form-control {
+        padding-right: 46px;
+    }
+
+    .toggle-password {
+        position: absolute;
+        top: 0;
+        right: 0;
+        height: 100%;
+        width: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+        border: none;
+        color: #8a9a9a;
+        cursor: pointer;
+        z-index: 5;
+        transition: color 0.2s ease;
+    }
+
+        .toggle-password:hover {
+            color: var(--teal-deep);
+        }
+
+        .toggle-password:focus-visible {
+            outline: 2px solid var(--teal-mid);
+            outline-offset: 2px;
+            border-radius: 4px;
+        }
+
+        .toggle-password svg {
+            width: 19px;
+            height: 19px;
+        }
+
+        .toggle-password .icon-off {
+            display: none;
+        }
+
+        .toggle-password.is-visible .icon-on {
+            display: none;
+        }
+
+        .toggle-password.is-visible .icon-off {
+            display: block;
+        }
+
+    .form-check-input:checked {
+        background-color: var(--teal-deep);
+        border-color: var(--teal-deep);
+    }
+
+    .form-check-input:focus {
+        box-shadow: 0 0 0 3px rgba(31, 92, 88, 0.14);
+        border-color: var(--teal-mid);
+    }
+
     .btn-theme {
-        background-color: var(--dark-theme);
-        color: #fff;
-        border-radius: 12px;
-        padding: 12px;
+        background-color: var(--teal-deep);
+        color: var(--ivory);
+        border-radius: 4px;
+        padding: 13px;
+        font-family: 'IBM Plex Mono', monospace;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        font-size: 0.82rem;
         font-weight: 600;
         border: none;
-        transition: background 0.3s ease;
+        transition: background 0.25s ease, transform 0.15s ease;
     }
 
         .btn-theme:hover {
-            background-color: var(--primary-theme);
+            background-color: var(--rust);
             color: #fff;
+            transform: translateY(-1px);
+        }
+
+        .btn-theme:active {
+            transform: translateY(0);
         }
 
     .btn-external {
-        border-radius: 12px;
-        border: 1px solid #E2E8F0;
+        border-radius: 4px;
+        border: 1.5px solid var(--line);
         background: #fff;
-        color: var(--dark-theme);
+        color: var(--ink);
         font-weight: 500;
+        font-size: 0.9rem;
         padding: 10px;
         width: 100%;
         margin-bottom: 8px;
+        transition: border-color 0.2s ease, background 0.2s ease;
     }
 
         .btn-external:hover {
-            background: #F8FAFC;
-        }
-
-    .auth-links a {
-        color: var(--dark-theme);
-        text-decoration: none;
-        font-weight: 500;
-    }
-
-        .auth-links a:hover {
-            color: var(--primary-theme);
-            text-decoration: underline;
+            border-color: var(--teal-mid);
+            background: #F5F1E4;
         }
 
     .divider {
         display: flex;
         align-items: center;
         text-align: center;
-        color: #94A3B8;
-        margin: 20px 0;
+        margin: 22px 0;
     }
+
+        .divider span {
+            padding: 0 12px;
+        }
 
         .divider::before,
         .divider::after {
             content: "";
             flex: 1;
-            border-bottom: 1px solid #E2E8F0;
+            border-bottom: 1px dashed var(--line);
         }
 
-        .divider:not(:empty)::before {
-            margin-right: .75em;
+    .auth-links {
+        border-top: 1px dashed var(--line);
+        padding-top: 18px;
+        margin-top: 22px;
+    }
+
+        .auth-links a {
+            color: var(--teal-deep);
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 1px solid var(--brass);
         }
 
-        .divider:not(:empty)::after {
-            margin-left: .75em;
+            .auth-links a:hover {
+                color: var(--rust);
+                border-color: var(--rust);
+            }
+
+    @@media (max-width: 991.98px) {
+        .ticket {
+            grid-template-columns: 1fr;
         }
+
+        .stub {
+            border-radius: 6px 6px 0 0;
+            min-height: 220px;
+        }
+
+        .stub-checklist {
+            display: none;
+        }
+
+        .ticket::before,
+        .ticket::after {
+            left: auto;
+            right: 22px;
+        }
+
+        .ticket::before {
+            top: auto;
+            bottom: -13px;
+        }
+
+        .ticket::after {
+            bottom: -13px;
+            left: 22px;
+            right: auto;
+        }
+    }
 </style>
+
+<!-- Register Hero Section -->
+<div class="hero hero-inner">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8 mx-auto text-center">
+                <div class="intro-wrap">
+                    <h1 class="mb-3">Create an Account</h1>
+                    <p class="text-white">
+                        Your trusted travel guide for discovering tourist destinations,
+                        accommodation, transportation and tour packages.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="container auth-wrapper">
 
-    <a href="/" class="btn-back">
-        &larr; Back to Home
-    </a>
+    <div class="ticket">
+        <!-- STUB / LEFT SIDE -->
+        <div class="stub">
+            <img src="https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=1000&q=80" alt="Travel" class="stub-photo" />
+            <div class="stub-scrim"></div>
 
-    <div class="card auth-card w-100">
-        <div class="row g-0">
-            <!-- LEFT VISUAL SIDE (TRAVEL IMAGE) -->
-            <div class="col-lg-5 d-none d-lg-block">
-                <div class="auth-image-side h-100">
-                    <img src="https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=1000&q=80" alt="Travel" class="auth-img-container" />
-                    <div class="auth-image-overlay"></div>
-
-                    <div class="auth-image-content">
-                        <h2 class="fw-bold display-6">Start Your Journey With Us.</h2>
-                    </div>
-
-                    <div class="auth-image-content">
-                        <p class="mb-0 text-white-50">Discover new destinations and unforgettable travel experiences.</p>
-                    </div>
-                </div>
+            <div class="stub-content">
+                <div class="stub-eyebrow">New Passenger</div>
+                <div class="stub-headline">Start your journey with us.</div>
+                <div class="stub-sub">Discover new destinations and unforgettable travel experiences.</div>
             </div>
 
-            <!-- RIGHT FORM SIDE -->
-            <div class="col-lg-7">
-                <div class="auth-form-side">
-                    <h3 class="fw-bold mb-1" style="color: var(--dark-theme);">Create an Account</h3>
-                    <p class="text-muted mb-4">Please fill in your details to register.</p>
+            <ul class="stub-checklist">
+                <li>Personalised trip recommendations</li>
+                <li>Save destinations &amp; itineraries</li>
+                <li>Faster checkout on bookings</li>
+            </ul>
+        </div>
 
-                    <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3" role="alert"></div>
+        <!-- FORM / RIGHT SIDE -->
+        <div class="form-side">
+            <div class="form-header">
+                <span class="form-title">Create account</span>
+                <span class="mono-label">Check-in</span>
+            </div>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <div class="form-floating">
-                                    <input asp-for="Input.FirstName" class="form-control" autocomplete="given-name" aria-required="true" placeholder="First Name" />
-                                    <label asp-for="Input.FirstName">First Name</label>
-                                    <span asp-validation-for="Input.FirstName" class="text-danger"></span>
-                                </div>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <div class="form-floating">
-                                    <input asp-for="Input.LastName" class="form-control" autocomplete="family-name" aria-required="true" placeholder="Last Name" />
-                                    <label asp-for="Input.LastName">Last Name</label>
-                                    <span asp-validation-for="Input.LastName" class="text-danger"></span>
-                                </div>
-                            </div>
-                        </div>
+            <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3" role="alert"></div>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <div class="form-floating">
-                                    <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                                    <label asp-for="Input.Email">Email</label>
-                                    <span asp-validation-for="Input.Email" class="text-danger"></span>
-                                </div>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <div class="form-floating">
-                                    <input asp-for="Input.PhoneNumber" class="form-control" autocomplete="tel" aria-required="true" placeholder="Phone Number" />
-                                    <label asp-for="Input.PhoneNumber">Phone Number</label>
-                                    <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
-                                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="field-block">
+                            <span class="mono-label">First name</span>
+                            <div class="form-floating">
+                                <input asp-for="Input.FirstName" class="form-control" autocomplete="given-name" aria-required="true" placeholder="First Name" />
+                                <span asp-validation-for="Input.FirstName" class="text-danger"></span>
                             </div>
                         </div>
-
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <div class="form-floating">
-                                    <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                                    <label asp-for="Input.Password">Password</label>
-                                    <span asp-validation-for="Input.Password" class="text-danger"></span>
-                                </div>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <div class="form-floating">
-                                    <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                                    <label asp-for="Input.ConfirmPassword">Confirm Password</label>
-                                    <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
-                                </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="field-block">
+                            <span class="mono-label">Last name</span>
+                            <div class="form-floating">
+                                <input asp-for="Input.LastName" class="form-control" autocomplete="family-name" aria-required="true" placeholder="Last Name" />
+                                <span asp-validation-for="Input.LastName" class="text-danger"></span>
                             </div>
                         </div>
-
-                        <button id="registerSubmit" type="submit" class="w-100 btn btn-theme btn-lg mt-2">Register</button>
-                    </form>
-
-                    <!-- EXTERNAL LOGINS -->
-                    @if ((Model.ExternalLogins?.Count ?? 0) > 0)
-                    {
-                        <div class="divider">or continue with</div>
-                        <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-                            <div class="d-flex flex-column gap-2">
-                                @foreach (var provider in Model.ExternalLogins!)
-                                {
-                                    <button type="submit" class="btn btn-external" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">
-                                        @provider.DisplayName
-                                    </button>
-                                }
-                            </div>
-                        </form>
-                    }
-
-                    <div class="auth-links text-center mt-4 small">
-                        <p class="mb-0">
-                            Already have an account? <a asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl">Log in here</a>
-                        </p>
                     </div>
                 </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="field-block">
+                            <span class="mono-label">Email</span>
+                            <div class="form-floating">
+                                <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                 
+                                <span asp-validation-for="Input.Email" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="field-block">
+                            <span class="mono-label">Phone number</span>
+                            <div class="form-floating">
+                                <input asp-for="Input.PhoneNumber" class="form-control" autocomplete="tel" aria-required="true" placeholder="Phone Number" />
+                               
+                                <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="field-block">
+                            <span class="mono-label">Password</span>
+                            <div class="form-floating password-field">
+                                <input asp-for="Input.Password" type="password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
+                                
+                                <button type="button" class="toggle-password" data-target="Input_Password" aria-label="Show password" aria-pressed="false">
+                                    <svg class="icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M1.5 12S5 5 12 5s10.5 7 10.5 7-3.5 7-10.5 7S1.5 12 1.5 12Z" />
+                                        <circle cx="12" cy="12" r="3" />
+                                    </svg>
+                                    <svg class="icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M17.94 17.94A10.94 10.94 0 0 1 12 19.5C5 19.5 1.5 12 1.5 12a19.86 19.86 0 0 1 5.06-5.94M9.9 4.24A10.4 10.4 0 0 1 12 4.5c7 0 10.5 7.5 10.5 7.5a19.8 19.8 0 0 1-2.16 3.19M14.12 14.12a3 3 0 1 1-4.24-4.24" />
+                                        <path d="M1.5 1.5l21 21" />
+                                    </svg>
+                                </button>
+                                <span asp-validation-for="Input.Password" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="field-block">
+                            <span class="mono-label">Confirm password</span>
+                            <div class="form-floating password-field">
+                                <input asp-for="Input.ConfirmPassword" type="password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
+                                <label asp-for="Input.ConfirmPassword">Confirm Password</label>
+                                <button type="button" class="toggle-password" data-target="Input_ConfirmPassword" aria-label="Show password" aria-pressed="false">
+                                    <svg class="icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M1.5 12S5 5 12 5s10.5 7 10.5 7-3.5 7-10.5 7S1.5 12 1.5 12Z" />
+                                        <circle cx="12" cy="12" r="3" />
+                                    </svg>
+                                    <svg class="icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M17.94 17.94A10.94 10.94 0 0 1 12 19.5C5 19.5 1.5 12 1.5 12a19.86 19.86 0 0 1 5.06-5.94M9.9 4.24A10.4 10.4 0 0 1 12 4.5c7 0 10.5 7.5 10.5 7.5a19.8 19.8 0 0 1-2.16 3.19M14.12 14.12a3 3 0 1 1-4.24-4.24" />
+                                        <path d="M1.5 1.5l21 21" />
+                                    </svg>
+                                </button>
+                                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button id="registerSubmit" type="submit" class="w-100 btn btn-theme btn-lg mt-1"> Register</button>
+            </form>
+
+            @if ((Model.ExternalLogins?.Count ?? 0) > 0)
+            {
+                <div class="divider"><span class="mono-label">or continue with</span></div>
+                <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                    <div class="d-flex flex-column gap-2">
+                        @foreach (var provider in Model.ExternalLogins!)
+                        {
+                            <button type="submit" class="btn btn-external" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">
+                                @provider.DisplayName
+                            </button>
+                        }
+                    </div>
+                </form>
+            }
+
+            <div class="auth-links text-center small">
+                <p class="mb-0">
+                    Already have an account? <a asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl">Log in here</a>
+                </p>
             </div>
         </div>
     </div>
@@ -281,4 +571,21 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        (function() {
+            document.querySelectorAll('.toggle-password').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    var targetId = btn.getAttribute('data-target');
+                    var input = document.getElementById(targetId);
+                    if (!input) return;
+
+                    var isVisible = input.type === 'text';
+                    input.type = isVisible ? 'password' : 'text';
+                    btn.classList.toggle('is-visible', !isVisible);
+                    btn.setAttribute('aria-pressed', String(!isVisible));
+                    btn.setAttribute('aria-label', !isVisible ? 'Hide password' : 'Show password');
+                });
+            });
+        })();
+    </script>
 }

@@ -1,20 +1,24 @@
+
 using KernalTravelGuide.Data;
 using KernalTravelGuide.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using KernalTravelGuide.Models;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Connection String
+
 var connectionString = builder.Configuration.GetConnectionString("AppDbContext")
     ?? throw new InvalidOperationException(
         "Connection string 'AppDbContext' not found.");
 
-// DbContext
+
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(connectionString));
 
-// Identity + Roles
 builder.Services
     .AddDefaultIdentity<ApplicationUser>(options =>
     {
@@ -23,8 +27,37 @@ builder.Services
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>();
 
-builder.Services.AddControllersWithViews();
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Identity/Account/Login";
 
+    options.Events.OnRedirectToAccessDenied = context =>
+    {
+
+        if (context.HttpContext.User.Identity?.IsAuthenticated == true)
+        {
+            if (context.HttpContext.User.IsInRole("Admin"))
+            {
+
+                context.Response.Redirect("/Admin/Index");
+            }
+            else
+            {
+               
+                context.Response.Redirect("/Home/Index");
+            }
+        }
+        else
+        {
+        
+            context.Response.Redirect("/Identity/Account/Login");
+        }
+
+        return Task.CompletedTask;
+    };
+});
+
+builder.Services.AddControllersWithViews();
 
 builder.Services.AddRazorPages();
 
@@ -61,7 +94,6 @@ app.UseRouting();
 app.UseAuthentication();
 
 app.UseAuthorization();
-
 
 app.MapControllerRoute(
     name: "default",
