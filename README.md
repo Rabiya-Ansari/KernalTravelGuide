@@ -1,118 +1,219 @@
 # Kernal Travel Guide
 
-Kernal Travel Guide is an ASP.NET Core web application built with **.NET 10**, **Entity Framework Core**, **SQL Server**, and **ASP.NET Core Identity**.
+Kernal Travel Guide is an **ASP.NET Core MVC web application** built with **.NET 10**, **Entity Framework Core**, **SQL Server**, and **ASP.NET Core Identity**.
 
-## Overview
+The application is designed as a travel-guide platform where users can explore travel-related content, while administrators manage the application's data and users.
 
-The project is configured as an ASP.NET Core MVC application with:
+---
 
-- ASP.NET Core MVC
-- Entity Framework Core with SQL Server
-- ASP.NET Core Identity
-- Identity Roles
-- Razor Pages for Identity UI
-- Application user support through `ApplicationUser`
-- Automatic role seeding
-- Automatic admin-user seeding
-- HTTPS redirection and static-file support
+## Project Overview
 
-## Technologies Used
+### Technologies Used
 
 | Technology | Version / Details |
 |---|---|
 | .NET | 10.0 |
 | ASP.NET Core | 10 |
 | Entity Framework Core | 10.0.10 |
-| SQL Server Provider | Microsoft.EntityFrameworkCore.SqlServer 10.0.10 |
-| ASP.NET Core Identity | 10.0.10 |
-| Project Type | ASP.NET Core Web |
-| Pattern | MVC + Razor Pages |
+| Database | Microsoft SQL Server |
+| Authentication | ASP.NET Core Identity |
+| Authorization | Identity Roles |
+| UI | ASP.NET Core MVC + Razor Pages |
+| Pattern | MVC |
 
-## Project Configuration
+---
 
-The project targets `.NET 10` and has nullable reference types enabled.
+## Main Features
 
-Main project file:
+- ASP.NET Core MVC architecture
+- ASP.NET Core Identity authentication
+- Role-based authorization
+- Admin dashboard
+- Admin user management
+- Travel-related data management
+- SQL Server database
+- Entity Framework Core migrations
+- Razor Pages for Identity UI
+- Responsive public-facing travel website
+- Static assets through `wwwroot`
+- Automatic role seeding
+- Automatic administrator account seeding
+
+---
+
+# Database Configuration
+
+The project uses SQL Server with the following database configuration:
 
 ```text
-KernalTravelGuide.csproj
+Server=localhost\SQLEXPRESS;
+Database=KernalTourDb;
+Trusted_Connection=True;
+TrustServerCertificate=true
 ```
 
-The project includes the following NuGet packages:
-
-- `Microsoft.AspNetCore.Identity.EntityFrameworkCore`
-- `Microsoft.AspNetCore.Identity.UI`
-- `Microsoft.EntityFrameworkCore.SqlServer`
-- `Microsoft.EntityFrameworkCore.Tools`
-
-## Database
-
-The application uses SQL Server through Entity Framework Core.
-
-The configured connection string is:
-
-```text
-Server=localhost\SQLEXPRESS;Database=KernalTourDb;Trusted_Connection=True;TrustServerCertificate=true
-```
-
-The database name is:
+### Database Name
 
 ```text
 KernalTourDb
 ```
 
-Before running the application, make sure SQL Server / SQL Server Express is installed and the configured server instance is available.
-
-> **Security note:** For a shared or production environment, do not commit real database passwords or other secrets to source control. Use environment variables, user secrets, or another secure configuration provider.
-
-## Application Startup
-
-The application's startup and service configuration is handled in:
+### SQL Server Instance
 
 ```text
-Program.cs
+localhost\SQLEXPRESS
 ```
 
-The application:
+Make sure SQL Server Express is installed and the SQL Server instance is running before starting the application.
 
-1. Creates the web application builder.
-2. Reads the `AppDbContext` connection string.
-3. Registers `AppDbContext` with SQL Server.
-4. Configures ASP.NET Core Identity.
-5. Enables Identity roles.
-6. Uses Entity Framework Core as the Identity store.
-7. Registers MVC controllers and views.
-8. Registers Razor Pages.
-9. Seeds roles when the application starts.
-10. Seeds the admin user when the application starts.
-11. Configures the HTTP request pipeline.
-12. Maps the default MVC route.
-13. Maps Razor Pages for Identity.
+---
 
-## Authentication & Authorization
+# Admin Login Credentials
 
-ASP.NET Core Identity is configured with:
+Use the following credentials to access the administrator account:
 
-- `ApplicationUser`
-- Identity roles
-- Entity Framework Core stores
-- Confirmed-account sign-in requirement
+### Admin Email
 
-The project also runs role seeding through:
+```text
+admin@karnel.com
+```
+
+### Admin Password
+
+```text
+Admin@123
+```
+
+### Admin Role
+
+```text
+Admin
+```
+
+> **Security Warning:** These credentials are included here for development/demo purposes. Change the password before deploying the application to a production environment.
+
+---
+
+# Prerequisites
+
+Install the following software before running the project:
+
+- .NET 10 SDK
+- SQL Server / SQL Server Express
+- Visual Studio 2022/2026 or another compatible .NET IDE
+- .NET Entity Framework Core CLI tools
+
+Check the installed .NET version:
+
+```bash
+dotnet --version
+```
+
+---
+
+# Project Structure
+
+The main project follows the standard ASP.NET Core MVC structure:
+
+```text
+KernalTravelGuide/
+│
+├── Controllers/
+│
+├── Data/
+│   └── AppDbContext
+│
+├── Models/
+│
+├── Views/
+│   ├── Home/
+│   ├── Shared/
+│   └── ...
+│
+├── Areas/
+│   └── Identity/
+│
+├── Services/
+│
+├── Migrations/
+│
+├── wwwroot/
+│   └── client/
+│       └── assets/
+│
+├── Program.cs
+├── appsettings.json
+├── appsettings.Development.json
+└── KernalTravelGuide.csproj
+```
+
+The exact folders may grow as additional features are added.
+
+---
+
+# Authentication & Authorization
+
+The application uses **ASP.NET Core Identity** for authentication.
+
+Identity provides:
+
+- User registration/login
+- Password management
+- User authentication
+- Role management
+- Authorization
+- Account confirmation support
+- Razor Pages-based Identity UI
+
+The application also supports role-based access.
+
+Example:
+
+```csharp
+[Authorize(Roles = "Admin")]
+```
+
+This restricts an action or controller to administrators.
+
+---
+
+# Role Seeding
+
+Roles are automatically initialized when the application starts.
+
+The project uses:
 
 ```text
 SeedRoles.SeedAsync(roleManager)
 ```
 
-The admin account is initialized through:
+This ensures required roles exist in the database.
+
+---
+
+# Admin Seeding
+
+The administrator account is automatically initialized during application startup.
+
+The project uses:
 
 ```text
 SeedAdmin.SeedAdminAsync(userManager)
 ```
 
-These seed operations are executed when the application starts.
+The configured administrator credentials are:
 
-## MVC Routing
+```text
+Email: admin@karnel.com
+Password: Admin@123
+Role: Admin
+```
+
+If the account already exists, the seeding process should avoid creating a duplicate account.
+
+---
+
+# MVC Routing
 
 The default MVC route is:
 
@@ -120,120 +221,84 @@ The default MVC route is:
 {controller=Home}/{action=Index}/{id?}
 ```
 
-This means the default page is:
+Therefore, the default application page is:
 
 ```text
 Home/Index
 ```
 
-## Razor Pages
+---
 
-Razor Pages are enabled because ASP.NET Core Identity uses Razor Pages for its built-in authentication UI.
+# Razor Pages
 
-The application maps them with:
+Razor Pages are enabled because ASP.NET Core Identity uses Razor Pages for its built-in authentication interface.
 
-```text
+The application maps Razor Pages using:
+
+```csharp
 app.MapRazorPages();
 ```
 
-## Static Files
+---
+
+# Static Files
 
 Static files are enabled through:
 
-```text
+```csharp
 app.UseStaticFiles();
 ```
 
-The project also contains a configured web assets location:
+The project contains web assets under:
 
 ```text
 wwwroot/client/assets/
 ```
 
-## Configuration Files
+These assets can include:
 
-### `appsettings.json`
+- CSS
+- JavaScript
+- Images
+- Fonts
+- Vendor libraries
 
-Contains application configuration including:
+---
 
-- Logging configuration
-- Allowed hosts
-- SQL Server connection string
+# Program Startup
 
-### `appsettings.Development.json`
-
-Contains development-specific logging configuration.
-
-## Running the Project
-
-### Prerequisites
-
-Install:
-
-- .NET 10 SDK
-- SQL Server or SQL Server Express
-- Visual Studio 2022/2026 or another compatible .NET IDE
-
-### Step 1: Clone the repository
-
-```bash
-git clone <repository-url>
-cd KernalTravelGuide
-```
-
-Replace `<repository-url>` with the actual repository URL.
-
-### Step 2: Restore dependencies
-
-```bash
-dotnet restore
-```
-
-### Step 3: Verify the database connection
-
-Check the connection string in:
+The main application configuration is handled inside:
 
 ```text
-appsettings.json
+Program.cs
 ```
 
-Make sure the SQL Server instance and database configuration are correct.
+The startup process includes:
 
-### Step 4: Apply Entity Framework migrations
+1. Create the web application builder.
+2. Read the database connection string.
+3. Register `AppDbContext`.
+4. Configure SQL Server.
+5. Configure ASP.NET Core Identity.
+6. Enable Identity roles.
+7. Register Entity Framework Core Identity stores.
+8. Register MVC controllers and views.
+9. Register Razor Pages.
+10. Seed application roles.
+11. Seed the administrator account.
+12. Configure the HTTP request pipeline.
+13. Enable static files.
+14. Enable routing.
+15. Enable authentication.
+16. Enable authorization.
+17. Map MVC routes.
+18. Map Razor Pages.
 
-If migrations are available in the project, run:
+---
 
-```bash
-dotnet ef database update
-```
+# HTTP Request Pipeline
 
-If the `dotnet ef` command is not installed, install it with:
-
-```bash
-dotnet tool install --global dotnet-ef
-```
-
-### Step 5: Run the application
-
-```bash
-dotnet run
-```
-
-Or run the project directly from Visual Studio.
-
-## Development
-
-For development, the project uses:
-
-```text
-appsettings.Development.json
-```
-
-The application also enables the development-specific ASP.NET Core behavior automatically through the standard environment configuration.
-
-## HTTP Request Pipeline
-
-The configured request pipeline includes:
+The application follows this general request pipeline:
 
 ```text
 HTTPS Redirection
@@ -249,12 +314,209 @@ Authorization
 MVC / Razor Pages
 ```
 
-In production, the application also uses:
+In production, the application can also use:
 
-- Exception handler: `/Home/Error`
 - HSTS
+- Exception handling
+- `/Home/Error`
 
-## Solution
+---
+
+# Database Migration
+
+If migrations are already included in the project, update the database using:
+
+```bash
+dotnet ef database update
+```
+
+If Entity Framework CLI is not installed, install it with:
+
+```bash
+dotnet tool install --global dotnet-ef
+```
+
+Then run:
+
+```bash
+dotnet ef database update
+```
+
+---
+
+# Restore Dependencies
+
+After cloning or extracting the project, restore NuGet packages:
+
+```bash
+dotnet restore
+```
+
+Then build the project:
+
+```bash
+dotnet build
+```
+
+---
+
+# Run the Application
+
+Run the project using:
+
+```bash
+dotnet run
+```
+
+Or open the solution in Visual Studio and press:
+
+```text
+F5
+```
+
+or:
+
+```text
+Ctrl + F5
+```
+
+---
+
+# Configuration
+
+The main configuration file is:
+
+```text
+appsettings.json
+```
+
+It contains application settings such as:
+
+- Connection strings
+- Logging configuration
+- Allowed hosts
+
+Development-specific settings are located in:
+
+```text
+appsettings.Development.json
+```
+
+---
+
+# Connection String
+
+The development database connection string is:
+
+```text
+Server=localhost\SQLEXPRESS;Database=KernalTourDb;Trusted_Connection=True;TrustServerCertificate=true
+```
+
+For production, use a secure configuration provider instead of committing sensitive connection information to source control.
+
+Recommended options include:
+
+- Environment variables
+- User Secrets
+- Azure Key Vault
+- Other secure secret-management systems
+
+---
+
+# Git
+
+The project uses a Visual Studio-oriented `.gitignore`.
+
+Generated files and folders such as the following should not be committed:
+
+```text
+bin/
+obj/
+.vs/
+Debug/
+Release/
+*.user
+*.suo
+```
+
+Database files such as:
+
+```text
+*.mdf
+*.ldf
+```
+
+should also remain excluded when appropriate.
+
+---
+
+# Troubleshooting
+
+## SQL Server Connection Error
+
+If the application cannot connect to the database:
+
+1. Make sure SQL Server Express is installed.
+2. Make sure the SQL Server service is running.
+3. Verify the instance name:
+
+```text
+localhost\SQLEXPRESS
+```
+
+4. Check the connection string in `appsettings.json`.
+5. Run:
+
+```bash
+dotnet ef database update
+```
+
+---
+
+## Login Does Not Work
+
+Verify the administrator credentials:
+
+```text
+Email: admin@karnel.com
+Password: Admin@123
+```
+
+Also make sure the admin seeding code has executed successfully.
+
+---
+
+## Role Authorization Problem
+
+If an administrator receives an authorization error, verify that the user has the:
+
+```text
+Admin
+```
+
+role in the Identity database.
+
+---
+
+# Development Notes
+
+This project is intended for development and educational/project purposes.
+
+When preparing the project for production:
+
+- Change the default admin password.
+- Remove credentials from public documentation.
+- Move secrets to secure configuration.
+- Use HTTPS.
+- Review authorization rules.
+- Validate all user input.
+- Keep NuGet packages updated.
+- Apply database migrations carefully.
+- Configure production error handling.
+
+---
+
+# Solution
 
 The solution file is:
 
@@ -262,38 +524,66 @@ The solution file is:
 KernalTravelGuide.slnx
 ```
 
-It references:
+The main project is:
 
 ```text
 KernalTravelGuide/KernalTravelGuide.csproj
 ```
 
-## Git
+---
 
-The project includes a Visual Studio-oriented `.gitignore`.
+# Quick Start
 
-It excludes common generated files and folders such as:
+For a quick setup:
 
-- `bin/`
-- `obj/`
-- `Debug/`
-- `Release/`
-- `.vs/`
-- NuGet packages
-- Visual Studio user-specific files
-- Build output
-- SQL Server database files such as `.mdf` and `.ldf`
+```bash
+# Restore packages
+dotnet restore
 
-## Important Notes
+# Build project
+dotnet build
 
-- Make sure the SQL Server instance matches the connection string.
-- Make sure the database is available before starting the application if the application expects it.
-- Identity roles and the admin user are seeded during application startup.
-- Keep production secrets outside the repository.
-- If database migrations are part of the project, apply them before first use.
+# Apply database migrations
+dotnet ef database update
 
-## Project Status
+# Run application
+dotnet run
+```
 
-This README is based on the project files provided with the application, including the project configuration, startup configuration, application settings, and solution configuration.
+Then open the application in your browser using the URL displayed by `dotnet run`.
 
-Additional controllers, models, views, services, migrations, and other project-specific features should be documented here as they are added to the project.
+For administrator access, use:
+
+```text
+Email: admin@karnel.com
+Password: Admin@123
+```
+
+---
+
+# Project Status
+
+**Project:** Kernal Travel Guide
+
+**Framework:** ASP.NET Core / .NET 10
+
+**Database:** SQL Server
+
+**Authentication:** ASP.NET Core Identity
+
+**Architecture:** MVC + Razor Pages
+
+**Status:** Development
+
+---
+
+## Security Notice
+
+The administrator credentials in this README are development/demo credentials:
+
+```text
+admin@karnel.com
+Admin@123
+```
+
+Do not use these credentials unchanged in a production environment.

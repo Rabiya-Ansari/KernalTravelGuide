@@ -1,427 +1,890 @@
-﻿@model KernalTravelGuide.Models.ViewModels.SearchViewModel
+﻿
+@model KernalTravelGuide.Models.ViewModels.SearchViewModel
 
 @{
     ViewData["Title"] = "Search";
     Layout = "~/Views/Shared/_ClientLayout.cshtml";
 }
-<div class="hero hero-inner">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-6 mx-auto text-center">
-                <div class="intro-wrap">
-                    <h1 class="mb-0">Search</h1>
-                    <p class="text-white">
-                        Find tourist spots, hotels, restaurants and resorts.
-                    </p>
+
+<style>
+    :root {
+        --ink: #1A374D;
+        --teal-deep: #6998AB;
+        --teal-mid: #6998AB;
+        --brass: #C9A15A;
+        --brass-soft: #E4CE9C;
+        --ivory: #FAF6EC;
+        --rust: #1A374D;
+        --line: rgba(18, 38, 42, 0.14);
+    }
+
+    .kt-search-page {
+        min-height: 100vh;
+    }
+
+    .kt-search-hero {
+        position: relative;
+        padding: 90px 0 100px;
+        background: linear-gradient(135deg, rgba(26,55,77,.94), #1A374D);
+        overflow: hidden;
+    }
+
+        .kt-search-hero::after {
+            content: "";
+            position: absolute;
+            width: 320px;
+            height: 320px;
+            border: 1px solid rgba(228,206,156,.18);
+            border-radius: 50%;
+            right: -100px;
+            top: -100px;
+        }
+
+    .kt-search-hero-content {
+        position: relative;
+        z-index: 2;
+        text-align: center;
+    }
+
+    .kt-search-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        margin-bottom: 18px;
+        border: 1px solid rgba(228,206,156,.35);
+        border-radius: 50px;
+        background: rgba(250,246,236,.10);
+        color: var(--brass-soft);
+        font-size: 13px;
+        font-weight: 600;
+        backdrop-filter: blur(8px);
+    }
+
+    .kt-search-hero h1 {
+        color: #fff;
+        font-size: clamp(38px, 5vw, 58px);
+        font-weight: 800;
+        margin-bottom: 12px;
+        letter-spacing: -.8px;
+    }
+
+    .kt-search-hero p {
+        max-width: 650px;
+        margin: 0 auto;
+        color: rgba(250,246,236,.88);
+        font-size: 17px;
+    }
+
+    .kt-search-content {
+        padding: 60px 0 80px;
+    }
+
+    .kt-search-box {
+        position: relative;
+        margin-top: -105px;
+        z-index: 5;
+        background: #fff;
+        border-radius: 22px;
+        padding: 30px;
+        box-shadow: 0 18px 55px rgba(26,55,77,.14);
+        border: 1px solid var(--line);
+    }
+
+    .kt-search-heading {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+        margin-bottom: 25px;
+    }
+
+    .kt-search-heading-icon {
+        width: 45px;
+        height: 45px;
+        flex: 0 0 45px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 13px;
+        background: rgba(105,152,171,.13);
+        color: var(--ink);
+        font-size: 20px;
+    }
+
+    .kt-search-heading h3 {
+        margin: 0;
+        color: var(--ink);
+        font-size: 21px;
+        font-weight: 750;
+    }
+
+    .kt-search-heading p {
+        margin: 3px 0 0;
+        color: #71808a;
+        font-size: 13px;
+    }
+
+    .kt-label {
+        display: block;
+        margin-bottom: 8px;
+        color: var(--ink);
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .kt-field {
+        height: 52px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: #fff;
+        color: var(--ink);
+        transition: all .2s ease;
+    }
+
+        .kt-field:focus {
+            border-color: var(--teal-deep);
+            box-shadow: 0 0 0 4px rgba(105,152,171,.12);
+        }
+
+    .kt-input-wrap {
+        position: relative;
+    }
+
+        .kt-input-wrap > i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--teal-deep);
+            z-index: 2;
+        }
+
+        .kt-input-wrap .kt-field {
+            padding-left: 44px;
+        }
+
+    .kt-search-btn {
+        height: 52px;
+        width: 100%;
+        border: 0;
+        border-radius: 12px;
+        background: var(--ink);
+        color: #fff;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+        transition: all .25s ease;
+    }
+
+        .kt-search-btn:hover {
+            background: var(--teal-deep);
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 9px 20px rgba(26,55,77,.20);
+        }
+
+    .kt-advanced-row {
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid var(--line);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .kt-advanced-text {
+        color: #71808a;
+        font-size: 13px;
+    }
+
+        .kt-advanced-text i {
+            color: var(--brass);
+            margin-right: 5px;
+        }
+
+    .kt-advanced-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        min-height: 42px;
+        padding: 9px 18px;
+        border: 1px solid var(--teal-deep);
+        border-radius: 10px;
+        color: var(--ink);
+        background: #fff;
+        font-size: 13px;
+        font-weight: 700;
+        text-decoration: none;
+        transition: all .2s ease;
+    }
+
+        .kt-advanced-btn:hover {
+            background: var(--teal-deep);
+            border-color: var(--teal-deep);
+            color: #fff;
+        }
+
+    .kt-results-header {
+        margin: 55px 0 25px;
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 20px;
+    }
+
+        .kt-results-header h2 {
+            margin: 0;
+            color: var(--ink);
+            font-size: 28px;
+            font-weight: 800;
+        }
+
+        .kt-results-header p {
+            margin: 5px 0 0;
+            color: #71808a;
+        }
+
+    .kt-result-section {
+        margin-bottom: 55px;
+    }
+
+    .kt-section-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 22px;
+        color: var(--ink);
+        font-size: 22px;
+        font-weight: 800;
+    }
+
+        .kt-section-title i {
+            color: var(--brass);
+        }
+
+    .kt-card {
+        height: 100%;
+        overflow: hidden;
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 17px;
+        box-shadow: 0 8px 25px rgba(26,55,77,.08);
+        transition: all .3s ease;
+    }
+
+        .kt-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 16px 38px rgba(26,55,77,.15);
+        }
+
+    .kt-image-wrap {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .kt-card-image {
+        width: 100%;
+        height: 215px;
+        object-fit: cover;
+        display: block;
+        transition: transform .45s ease;
+    }
+
+    .kt-card:hover .kt-card-image {
+        transform: scale(1.04);
+    }
+
+    .kt-card-body {
+        padding: 20px;
+    }
+
+    .kt-card-title {
+        margin-bottom: 8px;
+        color: var(--ink);
+        font-size: 18px;
+        font-weight: 750;
+    }
+
+    .kt-location {
+        margin-bottom: 12px;
+        color: #71808a;
+        font-size: 13px;
+    }
+
+        .kt-location i {
+            color: var(--teal-deep);
+            margin-right: 4px;
+        }
+
+    .kt-description {
+        color: #64727a;
+        font-size: 14px;
+        line-height: 1.65;
+    }
+
+    .kt-price {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        margin-top: 8px;
+        color: var(--ink);
+        font-size: 15px;
+        font-weight: 800;
+    }
+
+        .kt-price span {
+            color: #71808a;
+            font-weight: 500;
+            font-size: 12px;
+        }
+
+    .kt-stars {
+        margin-top: 8px;
+        color: var(--brass);
+        font-size: 14px;
+    }
+
+    .kt-empty {
+        padding: 30px;
+        text-align: center;
+        border: 1px dashed rgba(26,55,77,.22);
+        border-radius: 15px;
+        background: #fff;
+        color: #71808a;
+    }
+
+        .kt-empty i {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--teal-deep);
+            font-size: 25px;
+        }
+</style>
+
+
+<div class="kt-search-page">
+
+    <section class="kt-search-hero">
+        <div class="container">
+            <div class="kt-search-hero-content">
+
+                <div class="kt-search-badge">
+                    <i class="bi bi-compass"></i>
+                    Explore Pakistan
                 </div>
+
+                <h1>Find Your Perfect Destination</h1>
+
+                <p>
+                    Discover tourist spots, hotels, restaurants and resorts
+                    for your next unforgettable journey.
+                </p>
+
             </div>
         </div>
-    </div>
-</div>
-<div class="container py-5">
+    </section>
 
-    <div class="text-center mb-5">
-        <h1 class="fw-bold">Explore & Search</h1>
-        <p class="text-muted">
-            Find tourist spots, hotels, restaurants and resorts.
-        </p>
-    </div>
+    <main class="kt-search-content">
+
+        <div class="container">
+
+            <div class="kt-search-box">
+
+                <div class="kt-search-heading">
+
+                    <div class="kt-search-heading-icon">
+                        <i class="bi bi-search"></i>
+                    </div>
+
+                    <div>
+                        <h3>Search & Explore</h3>
+                        <p>Use the filters below to find what you're looking for.</p>
+                    </div>
+
+                </div>
 
 
-    <!-- Search Form -->
+                <form asp-controller="Search"
+                      asp-action="Index"
+                      method="get">
 
-    <div class="card border-0 shadow-sm mb-5">
-        <div class="card-body p-4">
+                    <div class="row g-3 align-items-end">
 
-            <form asp-controller="Search"
-                  asp-action="Index"
-                  method="get">
+                        <!-- Keyword -->
+                        <div class="col-lg-4 col-md-6">
 
-                <div class="row g-3">
+                            <label class="kt-label">
+                                Search
+                            </label>
 
-                    <!-- Keyword -->
+                            <div class="kt-input-wrap">
 
-                    <div class="col-lg-4">
+                                <i class="bi bi-search"></i>
 
-                        <label class="form-label fw-semibold">
-                            Search
-                        </label>
+                                <input type="text"
+                                       name="keyword"
+                                       value="@Model.Keyword"
+                                       class="form-control kt-field"
+                                       placeholder="Destination, hotel, restaurant..." />
 
-                        <input type="text"
-                               name="keyword"
-                               value="@Model.Keyword"
-                               class="form-control"
-                               placeholder="Search destination, hotel..." />
+                            </div>
+
+                        </div>
+
+
+                        <!-- Location -->
+                        <div class="col-lg-3 col-md-6">
+
+                            <label class="kt-label">
+                                Location
+                            </label>
+
+                            <div class="kt-input-wrap">
+
+                                <i class="bi bi-geo-alt"></i>
+
+                                <select name="cityId"
+                                        class="form-select kt-field">
+
+                                    <option value="">
+                                        All Locations
+                                    </option>
+
+                                    @foreach (var city in Model.Cities)
+                                    {
+                                        <option value="@city.Id"
+                                                selected="@(Model.CityId == city.Id)">
+                                            @city.Name
+                                        </option>
+                                    }
+
+                                </select>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Min Price -->
+                        <div class="col-lg-2 col-md-6">
+
+                            <label class="kt-label">
+                                Minimum Price
+                            </label>
+
+                            <div class="kt-input-wrap">
+
+                                <i class="bi bi-cash"></i>
+
+                                <input type="number"
+                                       name="minPrice"
+                                       value="@Model.MinPrice"
+                                       class="form-control kt-field"
+                                       min="0"
+                                       placeholder="Min" />
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Max Price -->
+                        <div class="col-lg-2 col-md-6">
+
+                            <label class="kt-label">
+                                Maximum Price
+                            </label>
+
+                            <div class="kt-input-wrap">
+
+                                <i class="bi bi-cash-stack"></i>
+
+                                <input type="number"
+                                       name="maxPrice"
+                                       value="@Model.MaxPrice"
+                                       class="form-control kt-field"
+                                       min="0"
+                                       placeholder="Max" />
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Search Button -->
+                        <div class="col-lg-1 col-md-6">
+
+                            <button type="submit"
+                                    class="kt-search-btn">
+
+                                <i class="bi bi-search"></i>
+
+                                <span class="d-lg-none btn btn-dark">
+                                    Search
+                                </span>
+
+                            </button>
+
+                        </div>
 
                     </div>
 
 
-                    <!-- City -->
+                    <!-- Advanced Search -->
+                    <div class="kt-advanced-row">
 
-                    <div class="col-lg-3">
+                        <div class="kt-advanced-text">
+                            <i class="bi bi-sliders"></i>
+                            Need more filters? Try advanced search.
+                        </div>
 
-                        <label class="form-label fw-semibold">
-                            Location
-                        </label>
-
-                        <select name="cityId"
-                                class="form-select">
-
-                            <option value="">
-                                All Locations
-                            </option>
-
-                            @foreach (var city in Model.Cities)
-                            {
-                                <option value="@city.Id"
-                                        selected="@(Model.CityId == city.Id)">
-                                    @city.Name
-                                </option>
-                            }
-
-                        </select>
-
-                    </div>
-
-
-                    <!-- Minimum Price -->
-
-                    <div class="col-lg-2">
-
-                        <label class="form-label fw-semibold">
-                            Min Price
-                        </label>
-
-                        <input type="number"
-                               name="minPrice"
-                               value="@Model.MinPrice"
-                               class="form-control"
-                               min="0"
-                               placeholder="Min" />
-
-                    </div>
-
-
-                    <!-- Maximum Price -->
-
-                    <div class="col-lg-2">
-
-                        <label class="form-label fw-semibold">
-                            Max Price
-                        </label>
-
-                        <input type="number"
-                               name="maxPrice"
-                               value="@Model.MaxPrice"
-                               class="form-control"
-                               min="0"
-                               placeholder="Max" />
-
-                    </div>
-
-
-                    <!-- Search Button -->
-
-                    <div class="col-lg-1 d-flex align-items-end">
-
-                        <button type="submit"
-                                class="btn btn-primary w-300">
-
-                            <i class="bi bi-search"> Search</i>
-
-                        </button>
-
-                    </div>
-                    <div class="mt-3">
                         <a asp-controller="Search"
                            asp-action="Advanced"
-                           class="btn btn-primary w-300">
+                           class="kt-advanced-btn">
+
+                            <i class="bi bi-sliders2"></i>
                             Advanced Search
+                            <i class="bi bi-arrow-right"></i>
+
                         </a>
-                    </div>
-
-                </div>
-
-            </form>
-            
-
-        </div>
-    </div>
-
-
-    <!-- Tourist Spots -->
-
-    <section class="mb-5">
-
-        <h3 class="fw-bold mb-4">
-            <i class="bi bi-geo-alt me-2"></i>
-            Tourist Spots
-        </h3>
-
-        <div class="row g-4">
-
-            @if (Model.TouristSpots.Any())
-            {
-                foreach (var item in Model.TouristSpots)
-                {
-                    <div class="col-md-6 col-lg-4">
-
-                        <div class="card h-100 border-0 shadow-sm">
-
-                            @if (!string.IsNullOrEmpty(item.ImagePath))
-                            {
-                                <img src="@item.ImagePath"
-                                     class="card-img-top"
-                                     style="height:220px;object-fit:cover;"
-                                     alt="@item.Name" />
-                            }
-
-                            <div class="card-body">
-
-                                <h5 class="fw-bold">
-                                    @item.Name
-                                </h5>
-
-                                <p class="text-muted mb-2">
-                                    <i class="bi bi-geo-alt"></i>
-                                    @item.City?.Name
-                                </p>
-
-                                <p>
-                                    @item.Description
-                                </p>
-
-                                <strong>
-                                    Entry Fee:
-                                    Rs. @item.EntryFee.ToString("N0")
-                                </strong>
-
-                            </div>
-
-                        </div>
 
                     </div>
-                }
-            }
-            else
-            {
-                <div class="col-12">
-                    <p class="text-muted">
-                        No tourist spots found.
+
+                </form>
+
+            </div>
+
+
+            <!-- =========================
+                 RESULTS HEADER
+            ========================== -->
+            <div class="kt-results-header">
+
+                <div>
+                    <h2>Explore Results</h2>
+                    <p>
+                        Discover places and experiences for your journey.
                     </p>
                 </div>
-            }
 
-        </div>
-
-    </section>
+            </div>
 
 
-    <!-- Hotels -->
+            <section class="kt-result-section">
 
-    <section class="mb-5">
+                <h3 class="kt-section-title">
+                    <i class="bi bi-geo-alt-fill"></i>
+                    Tourist Spots
+                </h3>
 
-        <h3 class="fw-bold mb-4">
-            <i class="bi bi-building me-2"></i>
-            Hotels
-        </h3>
+                <div class="row g-4">
 
-        <div class="row g-4">
+                    @if (Model.TouristSpots.Any())
+                    {
+                        foreach (var item in Model.TouristSpots)
+                        {
+                            <div class="col-md-6 col-lg-4">
 
-            @if (Model.Hotels.Any())
-            {
-                foreach (var item in Model.Hotels)
-                {
-                    <div class="col-md-6 col-lg-3">
+                                <div class="kt-card">
 
-                        <div class="card h-100 border-0 shadow-sm">
-
-                            @if (!string.IsNullOrEmpty(item.ImagePath))
-                            {
-                                <img src="@item.ImagePath"
-                                     class="card-img-top"
-                                     style="height:200px;object-fit:cover;"
-                                     alt="@item.Name" />
-                            }
-
-                            <div class="card-body">
-
-                                <h5 class="fw-bold">
-                                    @item.Name
-                                </h5>
-
-                                <p class="text-muted">
-                                    @item.City?.Name
-                                </p>
-
-                                <div class="mb-2">
-                                    @for (int i = 0; i < item.StarRating; i++)
+                                    @if (!string.IsNullOrEmpty(item.ImagePath))
                                     {
-                                        <i class="bi bi-star-fill text-warning"></i>
+                                        <div class="kt-image-wrap">
+
+                                            <img src="@item.ImagePath"
+                                                 class="kt-card-image"
+                                                 alt="@item.Name" />
+
+                                        </div>
                                     }
-                                </div>
 
-                                <strong>
-                                    Rs. @item.PricePerNight.ToString("N0")
-                                    / night
-                                </strong>
+                                    <div class="kt-card-body">
 
-                            </div>
+                                        <h5 class="kt-card-title">
+                                            @item.Name
+                                        </h5>
 
-                        </div>
+                                        <div class="kt-location">
+                                            <i class="bi bi-geo-alt-fill"></i>
+                                            @item.City?.Name
+                                        </div>
 
-                    </div>
-                }
-            }
-            else
-            {
-                <div class="col-12">
-                    <p class="text-muted">
-                        No hotels found.
-                    </p>
-                </div>
-            }
+                                        <p class="kt-description">
+                                            @item.Description
+                                        </p>
 
-        </div>
+                                        <div class="kt-price">
+                                            Entry Fee:
+                                            Rs. @item.EntryFee.ToString("N0")
+                                        </div>
 
-    </section>
-
-
-    <!-- Restaurants -->
-
-    <section class="mb-5">
-
-        <h3 class="fw-bold mb-4">
-            <i class="bi bi-cup-hot me-2"></i>
-            Restaurants
-        </h3>
-
-        <div class="row g-4">
-
-            @if (Model.Restaurants.Any())
-            {
-                foreach (var item in Model.Restaurants)
-                {
-                    <div class="col-md-6 col-lg-3">
-
-                        <div class="card h-100 border-0 shadow-sm">
-
-                            @if (!string.IsNullOrEmpty(item.ImagePath))
-                            {
-                                <img src="@item.ImagePath"
-                                     class="card-img-top"
-                                     style="height:200px;object-fit:cover;"
-                                     alt="@item.Name" />
-                            }
-
-                            <div class="card-body">
-
-                                <h5 class="fw-bold">
-                                    @item.Name
-                                </h5>
-
-                                <p class="text-muted">
-                                    @item.City?.Name
-                                </p>
-
-                                <div>
-
-                                    @for (int i = 0; i < (int)item.Rating; i++)
-                                    {
-                                        <i class="bi bi-star-fill text-warning"></i>
-                                    }
+                                    </div>
 
                                 </div>
 
                             </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="col-12">
 
-                        </div>
+                            <div class="kt-empty">
 
-                    </div>
-                }
-            }
-            else
-            {
-                <div class="col-12">
-                    <p class="text-muted">
-                        No restaurants found.
-                    </p>
-                </div>
-            }
+                                <i class="bi bi-geo-alt"></i>
 
-        </div>
-
-    </section>
-
-
-    <!-- Resorts -->
-
-    <section>
-
-        <h3 class="fw-bold mb-4">
-            <i class="bi bi-house-heart me-2"></i>
-            Resorts
-        </h3>
-
-        <div class="row g-4">
-
-            @if (Model.Resorts.Any())
-            {
-                foreach (var item in Model.Resorts)
-                {
-                    <div class="col-md-6 col-lg-3">
-
-                        <div class="card h-100 border-0 shadow-sm">
-
-                            @if (!string.IsNullOrEmpty(item.ImagePath))
-                            {
-                                <img src="@item.ImagePath"
-                                     class="card-img-top"
-                                     style="height:200px;object-fit:cover;"
-                                     alt="@item.Name" />
-                            }
-
-                            <div class="card-body">
-
-                                <h5 class="fw-bold">
-                                    @item.Name
-                                </h5>
-
-                                <p class="text-muted">
-                                    @item.City?.Name
-                                </p>
-
-                                <div>
-
-                                    @for (int i = 0; i < item.Rating; i++)
-                                    {
-                                        <i class="bi bi-star-fill text-warning"></i>
-                                    }
-
-                                </div>
-
-                                <strong>
-                                    Rs. @item.Price.ToString("N0")
-                                </strong>
+                                No tourist spots found.
 
                             </div>
 
                         </div>
+                    }
 
-                    </div>
-                }
-            }
-            else
-            {
-                <div class="col-12">
-                    <p class="text-muted">
-                        No resorts found.
-                    </p>
                 </div>
-            }
+
+            </section>
+
+            <section class="kt-result-section">
+
+                <h3 class="kt-section-title">
+                    <i class="bi bi-building-fill"></i>
+                    Hotels
+                </h3>
+
+                <div class="row g-4">
+
+                    @if (Model.Hotels.Any())
+                    {
+                        foreach (var item in Model.Hotels)
+                        {
+                            <div class="col-md-6 col-lg-3">
+
+                                <div class="kt-card">
+
+                                    @if (!string.IsNullOrEmpty(item.ImagePath))
+                                    {
+                                        <div class="kt-image-wrap">
+
+                                            <img src="@item.ImagePath"
+                                                 class="kt-card-image"
+                                                 alt="@item.Name" />
+
+                                        </div>
+                                    }
+
+                                    <div class="kt-card-body">
+
+                                        <h5 class="kt-card-title">
+                                            @item.Name
+                                        </h5>
+
+                                        <div class="kt-location">
+                                            <i class="bi bi-geo-alt-fill"></i>
+                                            @item.City?.Name
+                                        </div>
+
+                                        <div class="kt-stars">
+
+                                            @for (int i = 0; i < item.StarRating; i++)
+                                            {
+                                                <i class="bi bi-star-fill"></i>
+                                            }
+
+                                        </div>
+
+                                        <div class="kt-price">
+                                            Rs. @item.PricePerNight.ToString("N0")
+                                            <span>/ night</span>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="col-12">
+
+                            <div class="kt-empty">
+
+                                <i class="bi bi-building"></i>
+
+                                No hotels found.
+
+                            </div>
+
+                        </div>
+                    }
+
+                </div>
+
+            </section>
+
+
+            <section class="kt-result-section">
+
+                <h3 class="kt-section-title">
+                    <i class="bi bi-cup-hot-fill"></i>
+                    Restaurants
+                </h3>
+
+                <div class="row g-4">
+
+                    @if (Model.Restaurants.Any())
+                    {
+                        foreach (var item in Model.Restaurants)
+                        {
+                            <div class="col-md-6 col-lg-3">
+
+                                <div class="kt-card">
+
+                                    @if (!string.IsNullOrEmpty(item.ImagePath))
+                                    {
+                                        <div class="kt-image-wrap">
+
+                                            <img src="@item.ImagePath"
+                                                 class="kt-card-image"
+                                                 alt="@item.Name" />
+
+                                        </div>
+                                    }
+
+                                    <div class="kt-card-body">
+
+                                        <h5 class="kt-card-title">
+                                            @item.Name
+                                        </h5>
+
+                                        <div class="kt-location">
+                                            <i class="bi bi-geo-alt-fill"></i>
+                                            @item.City?.Name
+                                        </div>
+
+                                        <div class="kt-stars">
+
+                                            @for (int i = 0; i < (int)item.Rating; i++)
+                                            {
+                                                <i class="bi bi-star-fill"></i>
+                                            }
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="col-12">
+
+                            <div class="kt-empty">
+
+                                <i class="bi bi-cup-hot"></i>
+
+                                No restaurants found.
+
+                            </div>
+
+                        </div>
+                    }
+
+                </div>
+
+            </section>
+
+
+            <!-- =========================
+                 RESORTS
+            ========================== -->
+            <section class="kt-result-section">
+
+                <h3 class="kt-section-title">
+                    <i class="bi bi-house-heart-fill"></i>
+                    Resorts
+                </h3>
+
+                <div class="row g-4">
+
+                    @if (Model.Resorts.Any())
+                    {
+                        foreach (var item in Model.Resorts)
+                        {
+                            <div class="col-md-6 col-lg-3">
+
+                                <div class="kt-card">
+
+                                    @if (!string.IsNullOrEmpty(item.ImagePath))
+                                    {
+                                        <div class="kt-image-wrap">
+
+                                            <img src="@item.ImagePath"
+                                                 class="kt-card-image"
+                                                 alt="@item.Name" />
+
+                                        </div>
+                                    }
+
+                                    <div class="kt-card-body">
+
+                                        <h5 class="kt-card-title">
+                                            @item.Name
+                                        </h5>
+
+                                        <div class="kt-location">
+                                            <i class="bi bi-geo-alt-fill"></i>
+                                            @item.City?.Name
+                                        </div>
+
+                                        <div class="kt-stars">
+
+                                            @for (int i = 0; i < item.Rating; i++)
+                                            {
+                                                <i class="bi bi-star-fill"></i>
+                                            }
+
+                                        </div>
+
+                                        <div class="kt-price">
+                                            Rs. @item.Price.ToString("N0")
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="col-12">
+
+                            <div class="kt-empty">
+
+                                <i class="bi bi-house-heart"></i>
+
+                                No resorts found.
+
+                            </div>
+
+                        </div>
+                    }
+
+                </div>
+
+            </section>
 
         </div>
 
-    </section>
+    </main>
 
 </div>

@@ -1,4 +1,3 @@
-
 using KernalTravelGuide.Data;
 using KernalTravelGuide.Models;
 using Microsoft.AspNetCore.Identity;

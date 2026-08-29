@@ -5,286 +5,718 @@
     Layout = "~/Views/Shared/_ClientLayout.cshtml";
 }
 
-<div class="hero hero-inner">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8 mx-auto text-center">
-                <div class="intro-wrap">
-                    <h1 class="mb-3">Advanced Search</h1>
-                    <p class="text-white">
-                        Find tourist spots, hotels, restaurants and resorts
-                        according to your requirements.
-                    </p>
+<style>
+
+    :root {
+        --ink: #1A374D;
+        --teal-deep: #6998AB;
+        --teal-mid: #6998AB;
+        --brass: #C9A15A;
+        --brass-soft: #E4CE9C;
+        --ivory: #FAF6EC;
+        --rust: #1A374D;
+        --line: rgba(18, 38, 42, 0.14);
+    }
+    .kt-advanced-page {
+        min-height: 100vh;
+    }
+
+    .kt-advanced-hero {
+        position: relative;
+        padding: 85px 0 110px;
+        background: linear-gradient(135deg, rgba(26,55,77,.95), #1A374D);
+        overflow: hidden;
+    }
+
+        .kt-advanced-hero::before {
+            content: "";
+            position: absolute;
+            width: 360px;
+            height: 360px;
+            border: 1px solid rgba(228,206,156,.18);
+            border-radius: 50%;
+            right: -130px;
+            top: -140px;
+        }
+
+        .kt-advanced-hero::after {
+            content: "";
+            position: absolute;
+            width: 220px;
+            height: 220px;
+            border: 1px solid rgba(228,206,156,.12);
+            border-radius: 50%;
+            left: -100px;
+            bottom: -130px;
+        }
+
+    .kt-advanced-hero-content {
+        position: relative;
+        z-index: 2;
+        text-align: center;
+    }
+
+    .kt-advanced-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        margin-bottom: 18px;
+        border: 1px solid rgba(228,206,156,.35);
+        border-radius: 50px;
+        background: rgba(250,246,236,.10);
+        color: var(--brass-soft);
+        font-size: 13px;
+        font-weight: 700;
+        backdrop-filter: blur(8px);
+    }
+
+    .kt-advanced-hero h1 {
+        margin-bottom: 12px;
+        color: #fff;
+        font-size: clamp(38px, 5vw, 56px);
+        font-weight: 800;
+        letter-spacing: -.8px;
+    }
+
+    .kt-advanced-hero p {
+        max-width: 680px;
+        margin: 0 auto;
+        color: rgba(250,246,236,.88);
+        font-size: 16px;
+        line-height: 1.7;
+    }
+
+    .kt-advanced-content {
+        padding: 0 0 80px;
+    }
+
+    .kt-advanced-card {
+        position: relative;
+        z-index: 5;
+        margin-top: -80px;
+        padding: 34px;
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 22px;
+        box-shadow: 0 20px 55px rgba(26,55,77,.13);
+    }
+
+    .kt-advanced-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding-bottom: 25px;
+        margin-bottom: 28px;
+        border-bottom: 1px solid var(--line);
+    }
+
+    .kt-advanced-icon {
+        width: 52px;
+        height: 52px;
+        flex: 0 0 52px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 15px;
+        background: rgba(105,152,171,.13);
+        color: var(--ink);
+        font-size: 22px;
+    }
+
+    .kt-advanced-header h3 {
+        margin: 0;
+        color: var(--ink);
+        font-size: 23px;
+        font-weight: 800;
+    }
+
+    .kt-advanced-header p {
+        margin: 4px 0 0;
+        color: #71808a;
+        font-size: 13px;
+    }
+
+    .kt-filter-title {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        margin: 28px 0 18px;
+        color: var(--ink);
+        font-size: 15px;
+        font-weight: 800;
+    }
+
+        .kt-filter-title i {
+            color: var(--brass);
+            font-size: 16px;
+        }
+
+    .kt-field-group {
+        height: 100%;
+    }
+
+    .kt-label {
+        display: block;
+        margin-bottom: 8px;
+        color: var(--ink);
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .kt-field-wrap {
+        position: relative;
+    }
+
+        .kt-field-wrap > i {
+            position: absolute;
+            z-index: 2;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--teal-deep);
+            pointer-events: none;
+        }
+
+    .kt-advanced-field {
+        width: 100%;
+        height: 50px;
+        padding-left: 43px;
+        border: 1px solid var(--line);
+        border-radius: 11px;
+        background: #fff;
+        color: var(--ink);
+        font-size: 14px;
+        transition: all .2s ease;
+    }
+
+        .kt-advanced-field:focus {
+            border-color: var(--teal-deep);
+            box-shadow: 0 0 0 4px rgba(105,152,171,.12);
+            outline: none;
+        }
+
+        .kt-advanced-field::placeholder {
+            color: #9aa5aa;
+        }
+
+    .kt-help {
+        display: block;
+        margin-top: 7px;
+        color: #849096;
+        font-size: 11px;
+        line-height: 1.5;
+    }
+
+    .kt-rating-select {
+        appearance: none;
+        background-image: linear-gradient(45deg, transparent 50%, var(--teal-deep) 50%), linear-gradient(135deg, var(--teal-deep) 50%, transparent 50%);
+        background-position: calc(100% - 18px) 21px, calc(100% - 13px) 21px;
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+    }
+
+    .kt-availability {
+        height: 100%;
+        min-height: 50px;
+        display: flex;
+        align-items: center;
+        padding: 0 16px;
+        border: 1px solid var(--line);
+        border-radius: 11px;
+        background: #fff;
+    }
+
+        .kt-availability .form-check {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0;
+        }
+
+        .kt-availability .form-check-input {
+            width: 20px;
+            height: 20px;
+            margin: 0;
+            border-color: rgba(26,55,77,.30);
+            cursor: pointer;
+        }
+
+            .kt-availability .form-check-input:checked {
+                background-color: var(--teal-deep);
+                border-color: var(--teal-deep);
+            }
+
+        .kt-availability .form-check-label {
+            color: var(--ink);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+    .kt-actions {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+        margin-top: 32px;
+        padding-top: 25px;
+        border-top: 1px solid var(--line);
+    }
+
+    .kt-action-info {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #71808a;
+        font-size: 12px;
+    }
+
+        .kt-action-info i {
+            color: var(--brass);
+            font-size: 16px;
+        }
+
+    .kt-action-buttons {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .kt-search-submit {
+        min-width: 145px;
+        height: 48px;
+        padding: 0 22px;
+        border: 0;
+        border-radius: 11px;
+        background: var(--ink);
+        color: #fff;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+        font-size: 14px;
+        font-weight: 700;
+        transition: all .25s ease;
+    }
+
+        .kt-search-submit:hover {
+            background: var(--teal-deep);
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(26,55,77,.18);
+        }
+
+    .kt-clear-btn {
+        min-width: 100px;
+        height: 48px;
+        padding: 0 20px;
+        border: 1px solid var(--line);
+        border-radius: 11px;
+        background: #fff;
+        color: var(--ink);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-size: 14px;
+        font-weight: 700;
+        text-decoration: none;
+        transition: all .2s ease;
+    }
+
+        .kt-clear-btn:hover {
+            border-color: var(--teal-deep);
+            color: var(--teal-deep);
+            background: rgba(105,152,171,.06);
+        }
+
+</style>
+
+<div class="kt-advanced-page">
+
+    <section class="kt-advanced-hero">
+        <div class="container">
+            <div class="kt-advanced-hero-content">
+
+                <div class="kt-advanced-badge">
+                    <i class="bi bi-sliders2"></i>
+                    Advanced Travel Search
                 </div>
+
+                <h1>Find Exactly What You Need</h1>
+
+                <p>
+                    Refine your search with detailed filters and discover
+                    the right tourist spots, hotels, restaurants and resorts.
+                </p>
+
             </div>
         </div>
-    </div>
-</div>
+    </section>
 
+    <main class="kt-advanced-content">
+        <div class="container">
 
-<div class="untree_co-section">
-    <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-xl-10 col-lg-11">
 
-        <div class="row justify-content-center">
+                    <div class="kt-advanced-card">
 
-            <div class="col-lg-10">
+                        <div class="kt-advanced-header">
 
-                <div class="card border-0 shadow-sm p-4">
-
-                    <div class="mb-4">
-                        <h3>Search Travel Services</h3>
-
-                        <p class="text-muted mb-0">
-                            Use the filters below to find the most suitable
-                            travel facilities.
-                        </p>
-                    </div>
-
-
-                    <form asp-controller="Search"
-                          asp-action="Index"
-                          method="get">
-
-                        <!-- Keyword + Category -->
-                        <div class="row g-3">
-
-                            <div class="col-md-6">
-
-                                <label class="form-label">
-                                    Keyword
-                                </label>
-
-                                <input type="text"
-                                       name="keyword"
-                                       class="form-control"
-                                       placeholder="Search by name..." />
-
+                            <div class="kt-advanced-icon">
+                                <i class="bi bi-search"></i>
                             </div>
 
+                            <div>
+                                <h3>Search Travel Services</h3>
 
-                            <div class="col-md-6">
-
-                                <label class="form-label">
-                                    Category
-                                </label>
-
-                                <select name="type"
-                                        class="form-select">
-
-                                    <option value="">
-                                        All Categories
-                                    </option>
-
-                                    <option value="TouristSpot">
-                                        Tourist Spots
-                                    </option>
-
-                                    <option value="Hotel">
-                                        Hotels
-                                    </option>
-
-                                    <option value="Restaurant">
-                                        Restaurants
-                                    </option>
-
-                                    <option value="Resort">
-                                        Resorts
-                                    </option>
-
-                                </select>
-
+                                <p>
+                                    Choose your preferences to get more relevant results.
+                                </p>
                             </div>
 
                         </div>
 
 
-                        <!-- Location -->
-                        <div class="row g-3 mt-1">
+                        <form asp-controller="Search"
+                              asp-action="Index"
+                              method="get">
 
-                            <div class="col-md-6">
-
-                                <label class="form-label">
-                                    Location / City
-                                </label>
-
-                                <select name="cityId"
-                                        class="form-select">
-
-                                    <option value="">
-                                        All Cities
-                                    </option>
-
-                                    @foreach (var city in Model.Cities)
-                                    {
-                                        <option value="@city.Id">
-                                            @city.Name
-                                        </option>
-                                    }
-
-                                </select>
-
+                            <div class="kt-filter-title">
+                                <i class="bi bi-compass"></i>
+                                Destination & Category
                             </div>
 
+                            <div class="row g-4">
 
-                            <!-- Minimum Rating -->
-                            <div class="col-md-6">
+                                <div class="col-md-6">
 
-                                <label class="form-label">
-                                    Minimum Quality / Rating
-                                </label>
+                                    <div class="kt-field-group">
 
-                                <select name="minRating"
-                                        class="form-select">
+                                        <label class="kt-label">
+                                            Keyword
+                                        </label>
 
-                                    <option value="">
-                                        Any Rating
-                                    </option>
+                                        <div class="kt-field-wrap">
 
-                                    <option value="1">
-                                        1+ Stars
-                                    </option>
+                                            <i class="bi bi-search"></i>
 
-                                    <option value="2">
-                                        2+ Stars
-                                    </option>
+                                            <input type="text"
+                                                   name="keyword"
+                                                   class="kt-advanced-field"
+                                                   placeholder="Search by name..." />
 
-                                    <option value="3">
-                                        3+ Stars
-                                    </option>
+                                        </div>
 
-                                    <option value="4">
-                                        4+ Stars
-                                    </option>
+                                    </div>
 
-                                    <option value="5">
-                                        5 Stars
-                                    </option>
-
-                                </select>
-
-                            </div>
-
-                        </div>
+                                </div>
 
 
-                        <!-- Price -->
-                        <div class="row g-3 mt-1">
+                                <div class="col-md-6">
 
-                            <div class="col-md-6">
+                                    <div class="kt-field-group">
 
-                                <label class="form-label">
-                                    Minimum Price
-                                </label>
+                                        <label class="kt-label">
+                                            Category
+                                        </label>
 
-                                <input type="number"
-                                       name="minPrice"
-                                       class="form-control"
-                                       min="0"
-                                       step="0.01"
-                                       placeholder="Minimum price" />
+                                        <div class="kt-field-wrap">
 
-                            </div>
+                                            <i class="bi bi-grid"></i>
 
+                                            <select name="type"
+                                                    class="kt-advanced-field kt-rating-select">
 
-                            <div class="col-md-6">
+                                                <option value="">
+                                                    All Categories
+                                                </option>
 
-                                <label class="form-label">
-                                    Maximum Price
-                                </label>
+                                                <option value="TouristSpot">
+                                                    Tourist Spots
+                                                </option>
 
-                                <input type="number"
-                                       name="maxPrice"
-                                       class="form-control"
-                                       min="0"
-                                       step="0.01"
-                                       placeholder="Maximum price" />
+                                                <option value="Hotel">
+                                                    Hotels
+                                                </option>
 
-                            </div>
+                                                <option value="Restaurant">
+                                                    Restaurants
+                                                </option>
 
-                        </div>
+                                                <option value="Resort">
+                                                    Resorts
+                                                </option>
 
+                                            </select>
 
-                        <!-- Quantity + Availability -->
-                        <div class="row g-3 mt-1">
+                                        </div>
 
-                            <div class="col-md-6">
+                                    </div>
 
-                                <label class="form-label">
-                                    Minimum Quantity
-                                </label>
-
-                                <input type="number"
-                                       name="minQuantity"
-                                       class="form-control"
-                                       min="1"
-                                       placeholder="Rooms / Seats" />
-
-                                <small class="text-muted">
-                                    Hotels and resorts: available rooms.
-                                    Restaurants: seating capacity.
-                                </small>
-
-                            </div>
+                                </div>
 
 
-                            <div class="col-md-6">
+                                <div class="col-md-6">
 
-                                <label class="form-label">
-                                    Availability
-                                </label>
+                                    <div class="kt-field-group">
 
-                                <div class="form-check mt-2">
+                                        <label class="kt-label">
+                                            Location / City
+                                        </label>
 
-                                    <input type="checkbox"
-                                           name="availableOnly"
-                                           value="true"
-                                           class="form-check-input"
-                                           id="availableOnly"
-                                           checked />
+                                        <div class="kt-field-wrap">
 
-                                    <label class="form-check-label"
-                                           for="availableOnly">
+                                            <i class="bi bi-geo-alt"></i>
 
-                                        Show available services only
+                                            <select name="cityId"
+                                                    class="kt-advanced-field kt-rating-select">
 
-                                    </label>
+                                                <option value="">
+                                                    All Cities
+                                                </option>
+
+                                                @foreach (var city in Model.Cities)
+                                                {
+                                                    <option value="@city.Id">
+                                                        @city.Name
+                                                    </option>
+                                                }
+
+                                            </select>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="col-md-6">
+
+                                    <div class="kt-field-group">
+
+                                        <label class="kt-label">
+                                            Minimum Rating
+                                        </label>
+
+                                        <div class="kt-field-wrap">
+
+                                            <i class="bi bi-star"></i>
+
+                                            <select name="minRating"
+                                                    class="kt-advanced-field kt-rating-select">
+
+                                                <option value="">
+                                                    Any Rating
+                                                </option>
+
+                                                <option value="1">
+                                                    1+ Stars
+                                                </option>
+
+                                                <option value="2">
+                                                    2+ Stars
+                                                </option>
+
+                                                <option value="3">
+                                                    3+ Stars
+                                                </option>
+
+                                                <option value="4">
+                                                    4+ Stars
+                                                </option>
+
+                                                <option value="5">
+                                                    5 Stars
+                                                </option>
+
+                                            </select>
+
+                                        </div>
+
+                                    </div>
 
                                 </div>
 
                             </div>
 
-                        </div>
+
+                            <div class="kt-filter-title">
+                                <i class="bi bi-cash-stack"></i>
+                                Price & Budget
+                            </div>
+
+                            <div class="row g-4">
+
+                                <div class="col-md-6">
+
+                                    <div class="kt-field-group">
+
+                                        <label class="kt-label">
+                                            Minimum Price
+                                        </label>
+
+                                        <div class="kt-field-wrap">
+
+                                            <i class="bi bi-cash"></i>
+
+                                            <input type="number"
+                                                   name="minPrice"
+                                                   class="kt-advanced-field"
+                                                   min="0"
+                                                   step="0.01"
+                                                   placeholder="Minimum price" />
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
 
 
-                        <!-- Buttons -->
-                        <div class="d-flex gap-2 mt-4">
+                                <div class="col-md-6">
 
-                            <button type="submit"
-                                    class="btn btn-primary">
+                                    <div class="kt-field-group">
 
-                                Search
+                                        <label class="kt-label">
+                                            Maximum Price
+                                        </label>
 
-                            </button>
+                                        <div class="kt-field-wrap">
+
+                                            <i class="bi bi-cash-coin"></i>
+
+                                            <input type="number"
+                                                   name="maxPrice"
+                                                   class="kt-advanced-field"
+                                                   min="0"
+                                                   step="0.01"
+                                                   placeholder="Maximum price" />
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
 
 
-                            <a asp-controller="Search"
-                               asp-action="Index"
-                               class="btn btn-outline-secondary">
+                            <div class="kt-filter-title">
+                                <i class="bi bi-sliders"></i>
+                                Capacity & Availability
+                            </div>
 
-                                Clear
+                            <div class="row g-4">
 
-                            </a>
+                                <div class="col-md-6">
 
-                        </div>
+                                    <div class="kt-field-group">
 
-                    </form>
-                   
+                                        <label class="kt-label">
+                                            Minimum Quantity
+                                        </label>
+
+                                        <div class="kt-field-wrap">
+
+                                            <i class="bi bi-people"></i>
+
+                                            <input type="number"
+                                                   name="minQuantity"
+                                                   class="kt-advanced-field"
+                                                   min="1"
+                                                   placeholder="Rooms / Seats" />
+
+                                        </div>
+
+                                        <small class="kt-help">
+                                            Hotels and resorts: available rooms.
+                                            Restaurants: seating capacity.
+                                        </small>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="col-md-6">
+
+                                    <div class="kt-field-group">
+
+                                        <label class="kt-label">
+                                            Availability
+                                        </label>
+
+                                        <div class="kt-availability">
+
+                                            <div class="form-check">
+
+                                                <input type="checkbox"
+                                                       name="availableOnly"
+                                                       value="true"
+                                                       class="form-check-input"
+                                                       id="availableOnly"
+                                                       checked />
+
+                                                <label class="form-check-label"
+                                                       for="availableOnly">
+
+                                                    Show available services only
+
+                                                </label>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="kt-actions">
+
+                                <div class="kt-action-info">
+                                    <i class="bi bi-info-circle"></i>
+                                    Use multiple filters for more precise results.
+                                </div>
+
+                                <div class="kt-action-buttons">
+
+                                    <a asp-controller="Search"
+                                       asp-action="Index"
+                                       class="kt-clear-btn">
+
+                                        <i class="bi bi-arrow-counterclockwise"></i>
+                                        Clear
+
+                                    </a>
+
+                                    <button type="submit"
+                                            class="kt-search-submit">
+
+                                        <i class="bi bi-search"></i>
+                                        Search
+
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                        </form>
+
+                    </div>
 
                 </div>
-
             </div>
 
         </div>
+    </main>
 
-    </div>
 </div>

@@ -1384,3 +1384,50 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4 {
       content: "\f095"; }
     .site-footer ul.quick-info li.address:before {
       content: "\e8b4"; }
+
+
+/* Responsive */
+@media (max-width: 991.98px) {
+    .kt-search-box {
+        margin-top: -75px;
+    }
+
+    .kt-search-hero {
+        padding: 75px 0 90px;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .kt-search-box {
+        margin-top: -55px;
+        padding: 22px;
+        border-radius: 17px;
+    }
+
+    .kt-search-content {
+        padding-top: 35px;
+    }
+
+    .kt-advanced-row {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .kt-advanced-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .kt-results-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .kt-search-hero {
+        padding: 65px 0 80px;
+    }
+
+        .kt-search-hero h1 {
+            font-size: 40px;
+        }
+}
